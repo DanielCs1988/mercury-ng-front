@@ -1,0 +1,12 @@
+<div class="pane">
+  <form #postForm="ngForm" (ngSubmit)="onPost()">
+    <div id="editor">
+      <textarea name="post" id="post" rows="5" placeholder="What's on your mind?"></textarea>
+      <button class="btn btn-success btn-block" type="submit">Post</button>
+    </div>
+    <div id="preview">
+      <img src="https://www.pets4homes.co.uk/images/breeds/141/large/ba3a4f8b92948d9b5bb3417ead72fe00.jpg"
+           class="img-fluid rounded" alt="preview">
+    </div>
+  </form>
+</div>

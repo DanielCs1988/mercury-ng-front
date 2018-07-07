@@ -1,0 +1,14 @@
+textarea {
+  width: 100%;
+}
+
+#editor {
+  display: inline-block;
+  width: 45%;
+}
+
+#preview {
+  display: inline-block;
+  margin-left: 5%;
+  width: 45%;
+}

@@ -1,0 +1,69 @@
+$fancy-shadow: 0 3px 1px -2px rgba(0, 0, 0, .2), 0 2px 2px 0 rgba(0, 0, 0, .14), 0 1px 5px 0 rgba(0, 0, 0, .12);
+
+@mixin colored-shadow($color) {
+  box-shadow: 1px 1px 5px 2px rgba($color, 0.6);
+}
+
+a:hover {
+  cursor: pointer;
+}
+
+textarea {
+  resize: none;
+}
+
+.chat-message {
+  padding: 0.15rem 0.3rem;
+  margin: 0.5rem 0.5rem 0.2rem auto;
+  background: green;
+  color: white;
+  border-radius: 10px;
+  width: fit-content;
+
+  &.own-message {
+    background: darkgreen;
+    margin: 0.5rem 0.5rem;
+  }
+}
+
+.pane {
+  padding: 10px;
+  border-radius: 3px;
+  box-shadow: $fancy-shadow;
+}
+.center-block {
+  width: 30rem;
+  margin: 0 auto
+}
+
+input + .helper-text {
+  display: none;
+}
+
+.form-control {
+
+  &.ng-invalid.ng-touched {
+    border: 1px solid red;
+    @include colored-shadow(red);
+  }
+
+  &.ng-invalid.ng-touched + .helper-text {
+    display: block;
+  }
+
+  &.ng-pending {
+    animation: flashingBorder 1s infinite;
+  }
+}
+@keyframes flashingBorder {
+  0% {
+    box-shadow: none;
+  }
+  50% {
+    box-shadow: 1px 1px 5px 3px purple;
+  }
+  100% {
+    box-shadow: none;
+  }
+}
+
