@@ -1,8 +1,7 @@
-<nav class="navbar navbar-light bg-primary">
+<nav class="navbar navbar-light bg-primary" *ngIf="user">
   <a href="#" class="navbar-brand">
-    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRg0D9TmiRXoWe2EQQby3d5jiWK5anHcWowsy4Pa_P9hfZyqSw"
-         width="30" height="30" alt="Profile picture" class="rounded-circle">
-    Mr. John Smith
+    <img [src]="user.pictureUrl" width="30" height="30" alt="Profile picture" class="rounded-circle">
+    {{ user.givenName }}
   </a>
   <!--<ul class="navbar-nav mr-auto">-->
     <!--<li class="nav-item">-->
@@ -12,10 +11,26 @@
     <!--</li>-->
     <!--<li class="nav-item">-->
       <!--<a href="#" class="nav-link">-->
-        <!--Feed-->
+        <!--FEED_QUERY-->
       <!--</a>-->
     <!--</li>-->
   <!--</ul>-->
+    <ul *ngIf="!isLoggedIn()" class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" (click)="login()">
+                Login
+            </a>
+        </li>
+    </ul>
+
+    <ul *ngIf="isLoggedIn()" class="navbar-nav px-3">
+        <li class="nav-item">
+            <a class="nav-link" (click)="logout()">
+                Logout
+            </a>
+        </li>
+    </ul>
+
   <form action="#" class="form-inline my-2 my-lg-0">
     <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>

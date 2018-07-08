@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {NgForm} from '@angular/forms';
+import {PostService} from '../../services/post.service';
 
 @Component({
   selector: 'app-editor',
@@ -7,9 +9,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class EditorComponent implements OnInit {
 
-  constructor() { }
+  @ViewChild('postForm') postForm: NgForm;
+
+  constructor(private postService: PostService) { }
 
   ngOnInit() {
   }
 
+  onPost() {
+    const text = this.postForm.value.post;
+    const pictureUrl = this.postForm.value.picture;
+    this.postForm.reset();
+    this.postService.createPost(text, pictureUrl);
+  }
 }

@@ -1,2 +1,7 @@
-<app-editor></app-editor>
-<app-post *ngFor="let post of posts" [post]="post"></app-post>
+<div class="pane p-2">
+  <app-editor></app-editor>
+</div>
+<div class="pane p-2 mt-3" id="feed">
+  <h2 class="text-center" *ngIf="loading">Loading posts...</h2>
+  <app-post *ngFor="let post of posts" [post]="post"></app-post>
+</div>

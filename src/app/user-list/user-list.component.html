@@ -1,3 +1,4 @@
-<p>
-  user-list works!
-</p>
+<div *ngFor="let user of users" class="pane m-2 p-1">
+  <img src="{{ user.pictureUrl }}" width="30" height="30" alt="Profile picture" class="rounded-circle">
+  <span>{{ user.givenName }} {{ user.familyName }}</span>
+</div>

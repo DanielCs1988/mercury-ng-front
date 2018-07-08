@@ -1,3 +1,5 @@
 <div class="pane">
-  {{ comment.text }}
+  <img src="{{ comment.user.pictureUrl }}" width="30" height="30" alt="Profile picture" class="rounded-circle">
+  <span class="ml-1">{{ comment.user.givenName }} {{ comment.user.familyName }}: {{ comment.text }}</span>
+  <div>At: {{ comment.createdAt | date:'mediumTime' }} | Likes: {{ comment.likes.length }}</div>
 </div>

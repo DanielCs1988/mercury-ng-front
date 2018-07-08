@@ -1,12 +1,21 @@
-<div class="pane">
-  <form #postForm="ngForm" (ngSubmit)="onPost()">
-    <div id="editor">
-      <textarea name="post" id="post" rows="5" placeholder="What's on your mind?"></textarea>
-      <button class="btn btn-success btn-block" type="submit">Post</button>
+<form #postForm="ngForm" (ngSubmit)="onPost()" class="post-form">
+
+  <div class="editor">
+    <div class="form-group">
+      <textarea name="post" id="post" rows="5" placeholder="What's on your mind?" class="form-control"
+                required minlength="1" ngModel></textarea>
     </div>
-    <div id="preview">
-      <img src="https://www.pets4homes.co.uk/images/breeds/141/large/ba3a4f8b92948d9b5bb3417ead72fe00.jpg"
-           class="img-fluid rounded" alt="preview">
+
+    <div class="form-group">
+      <input type="text" id="picture" class="form-control" name="picture"
+             placeholder="Picture url here..." ngModel #pictureUrl>
     </div>
-  </form>
-</div>
+
+    <button class="btn btn-success btn-block mt-2" type="submit" [disabled]="!postForm.valid">Post</button>
+  </div>
+
+  <div class="preview">
+    <img *ngIf="pictureUrl.value" [src]="pictureUrl.value" class="rounded preview-image" alt="preview">
+  </div>
+
+</form>
