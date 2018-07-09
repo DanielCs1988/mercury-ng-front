@@ -55,11 +55,28 @@ export const DELETE_POST_MUTATION = gql`
 export const POST_SUBSCRIPTION = gql`
   subscription postSub {
     postSub {
-      node { ...PostParts }
+      node {
+          id
+          text
+          pictureUrl
+          createdAt
+          __typename
+          user {
+              id
+              givenName
+              familyName
+              pictureUrl
+          }
+          likes {
+              id
+          }
+          comments {
+              id
+          }
+      }
       previousValues { id }
     }
   }
-  ${POST_FRAGMENT}
 `;
 
 export const MIN_POST_FRAGMENT = gql`

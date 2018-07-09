@@ -36,18 +36,20 @@ export class FeedComponent implements OnInit, OnDestroy {
     this.feedQuery.subscribeToMore({
       document: POST_SUBSCRIPTION,
       updateQuery: (prev, { subscriptionData }) => {
-        console.log(subscriptionData);
         if (!subscriptionData.data.postSub) {
           return;
         }
-        console.log(subscriptionData.data);
-        const newPost = subscriptionData.data.postSub;
-        if (isDuplicateEntry(newPost, prev.feed)) {
-          console.log('Found duplicate');
-          return prev;
-        }
-        console.log('Within sub: ', newPost);
-        return { ...prev, feed: [newPost, ...prev.feed] };
+        const isNewValue = subscriptionData.data.postSub.node != null;
+        const newPost = isNewValue ? subscriptionData.data.postSub.node : subscriptionData.data.postSub.previousValues;
+          if (isNewValue) {
+              if (isDuplicateEntry(newPost, prev.feed)) {
+                  return prev;
+              }
+            return {...prev, feed: [newPost, ...prev.feed]};
+          } else {
+            const filteredPosts = prev.feed.filter(post => post.id !== newPost.id);
+            return {...prev, feed: filteredPosts};
+          }
       }
     });
   }
