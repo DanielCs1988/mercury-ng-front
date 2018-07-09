@@ -1,0 +1,65 @@
+import { Injectable } from '@angular/core';
+import {POST_SUBSCRIPTION} from '../queries/post';
+import {isDuplicateEntry} from './utils';
+import {QueryRef} from 'apollo-angular';
+import {COMMENT_SUBSCRIPTION} from '../queries/comment';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class SubscriptionService {
+
+    constructor() { }
+
+    subscribeToPosts(feedQuery: QueryRef<any>) {
+        feedQuery.subscribeToMore({
+            document: POST_SUBSCRIPTION,
+            updateQuery: (prev, { subscriptionData }) => {
+                if (!subscriptionData.data.postSub) {
+                    return;
+                }
+                const isNewValue = subscriptionData.data.postSub.node != null;
+                const newPost = isNewValue ? subscriptionData.data.postSub.node : subscriptionData.data.postSub.previousValues;
+                if (isNewValue) {
+                    if (isDuplicateEntry(newPost, prev.feed)) {
+                        return prev;
+                    }
+                    return {...prev, feed: [newPost, ...prev.feed]};
+                } else {
+                    const filteredPosts = prev.feed.filter(post => post.id !== newPost.id);
+                    return {...prev, feed: filteredPosts};
+                }
+            }
+        });
+    }
+
+    subscribeToComments(feedQuery: QueryRef<any>) {
+        feedQuery.subscribeToMore({
+            document: COMMENT_SUBSCRIPTION,
+
+            updateQuery: (prev, { subscriptionData }) => {
+                if (!subscriptionData.data.commentSub) {
+                    return;
+                }
+                const isNewValue = subscriptionData.data.commentSub.node != null;
+                const newComment = isNewValue ? subscriptionData.data.commentSub.node : subscriptionData.data.commentSub.previousValues;
+                let post = isNewValue ?
+                    prev.feed.find(post => post.id === newComment.post.id) :
+                    prev.feed.find(post => post.comments.filter(comment => comment.id === newComment.id).length > 0);
+                if (!post) {
+                    return;
+                }
+                if (isNewValue) {
+                    if (isDuplicateEntry(newComment, post.comments)) {
+                        return prev;
+                    }
+                    post = {...post, comments: [...post.comments, newComment]};
+                } else {
+                    post = {...post, comments: post.comments.filter(comment => comment.id !== newComment.id)};
+                }
+                const filteredFeed = prev.feed.filter(pst => pst.id !== post.id);
+                return {...prev, feed: [post, ...filteredFeed]};
+            }
+        })
+    }
+}

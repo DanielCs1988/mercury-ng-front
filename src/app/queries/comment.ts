@@ -54,3 +54,31 @@ export const DELETE_COMMENT_MUTATION = gql`
         }
     }
 `;
+
+export const COMMENT_SUBSCRIPTION = gql`
+    subscription commentSub {
+        commentSub {
+            node {
+                id
+                text
+                createdAt
+                __typename
+                user {
+                    id
+                    givenName
+                    familyName
+                    pictureUrl
+                }
+                likes {
+                    id
+                }
+                post {
+                    id
+                }
+            }
+            previousValues {
+                id
+            }
+        }
+    }
+`;
