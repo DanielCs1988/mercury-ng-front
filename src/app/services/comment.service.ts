@@ -1,19 +1,21 @@
-import {Injectable} from '@angular/core';
+import {Injectable, OnDestroy} from '@angular/core';
 import {User} from '../models';
 import {Apollo} from 'apollo-angular';
 import {UserService} from './user.service';
 import {CREATE_COMMENT_MUTATION, DELETE_COMMENT_MUTATION, UPDATE_COMMENT_MUTATION} from '../queries/comment';
 import {MIN_POST_FRAGMENT} from '../queries/post';
+import {Subscription} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CommentService {
+export class CommentService implements OnDestroy {
 
+    private userSubscription: Subscription;
     private currentUser: User;
 
     constructor(private apollo: Apollo, private userService: UserService) {
-        this.userService.currentUser.subscribe(user => this.currentUser = user);
+        this.userSubscription = this.userService.currentUser.subscribe(user => this.currentUser = user);
     }
 
     createComment(postId: string, text: string) {
@@ -94,5 +96,9 @@ export class CommentService {
                 });
             }
         }).subscribe();
+    }
+
+    ngOnDestroy(): void {
+        this.userSubscription.unsubscribe();
     }
 }

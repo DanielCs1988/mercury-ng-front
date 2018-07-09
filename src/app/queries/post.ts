@@ -1,5 +1,6 @@
 import gql from 'graphql-tag';
 import {COMMENT_FRAGMENT} from './comment';
+import {POST_LIKE_PARTS} from './likes';
 
 const POST_FRAGMENT = gql`
   fragment PostParts on Post {
@@ -88,4 +89,15 @@ export const MIN_POST_FRAGMENT = gql`
         }
     }
     ${COMMENT_FRAGMENT}
+`;
+
+export const POST_LIKES = gql`
+    fragment postLikes on Post {
+        id
+        __typename
+        likes {
+            ...PostLikeParts
+        }
+    }
+    ${POST_LIKE_PARTS}
 `;

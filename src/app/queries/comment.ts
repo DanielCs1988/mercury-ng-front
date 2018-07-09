@@ -1,4 +1,5 @@
 import gql from 'graphql-tag';
+import {COMMENT_LIKE_PARTS, POST_LIKE_PARTS} from './likes';
 
 export const COMMENT_FRAGMENT = gql`
     fragment CommentParts on Comment {
@@ -81,4 +82,15 @@ export const COMMENT_SUBSCRIPTION = gql`
             }
         }
     }
+`;
+
+export const COMMENT_LIKES = gql`
+    fragment commentLikes on Comment {
+        id
+        __typename
+        likes {
+            ...CommentLikeParts
+        }
+    }
+    ${COMMENT_LIKE_PARTS}
 `;
