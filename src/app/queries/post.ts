@@ -1,4 +1,5 @@
 import gql from 'graphql-tag';
+import {COMMENT_FRAGMENT} from './comment';
 
 const POST_FRAGMENT = gql`
   fragment PostParts on Post {
@@ -34,10 +35,10 @@ export const CREATE_POST_MUTATION = gql`
 export const UPDATE_POST_MUTATION = gql`
   mutation updatePost($id: ID!, $text: String, $pictureUrl: String) {
     updatePost(id: $id, text: $text, pictureUrl: $pictureUrl) {
-      __typename
       id
       text
       pictureUrl
+      __typename
     }
   }
 `;
@@ -45,8 +46,8 @@ export const UPDATE_POST_MUTATION = gql`
 export const DELETE_POST_MUTATION = gql`
   mutation deletePost($id: ID!) {
     deletePost(id: $id) {
-      __typename
       id
+      __typename
     }
   }
 `;
@@ -59,4 +60,15 @@ export const POST_SUBSCRIPTION = gql`
     }
   }
   ${POST_FRAGMENT}
+`;
+
+export const MIN_POST_FRAGMENT = gql`
+    fragment minPost on Post {
+        id
+        __typename
+        comments {
+            ...CommentParts
+        }
+    }
+    ${COMMENT_FRAGMENT}
 `;

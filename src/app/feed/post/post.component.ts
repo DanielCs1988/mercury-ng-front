@@ -2,6 +2,7 @@ import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {Post} from '../../models';
 import {NgForm} from '@angular/forms';
 import {PostService} from '../../services/post.service';
+import {CommentService} from '../../services/comment.service';
 
 @Component({
   selector: 'app-post',
@@ -12,9 +13,10 @@ export class PostComponent implements OnInit {
 
   @Input('post') post: Post;
   @ViewChild('postForm') postForm: NgForm;
+  @ViewChild('commentForm') commentForm: NgForm;
   editing = false;
 
-  constructor(private postService: PostService) { }
+  constructor(private postService: PostService, private commentService: CommentService) { }
 
   ngOnInit() {
   }
@@ -39,4 +41,10 @@ export class PostComponent implements OnInit {
   onDelete() {
     this.postService.deletePost(this.post.id);
   }
+
+    onNewComment() {
+        const text = this.commentForm.value.comment;
+        this.commentService.createComment(this.post.id, text);
+        this.commentForm.reset();
+    }
 }

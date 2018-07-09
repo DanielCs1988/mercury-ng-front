@@ -13,9 +13,9 @@ export class PostService {
 
     private currentUser: User;
 
-  constructor(private apollo: Apollo, private userService: UserService) {
-      this.userService.currentUser.subscribe(user => this.currentUser = user);
-  }
+    constructor(private apollo: Apollo, private userService: UserService) {
+        this.userService.currentUser.subscribe(user => this.currentUser = user);
+    }
 
   createPost(text: string, pictureUrl?: string) {
     this.apollo.mutate({
@@ -38,9 +38,9 @@ export class PostService {
 
       update: (proxy, { data: { createPost } }) => {
         const data: any = proxy.readQuery({ query: FEED_QUERY });
-        if (isDuplicateEntry(createPost, data.feed)) {
-          return;
-        }
+        // if (isDuplicateEntry(createPost, data.feed)) {
+        //   return;
+        // }
         data.feed.push(createPost);
         proxy.writeQuery({ query: FEED_QUERY, data });
       }

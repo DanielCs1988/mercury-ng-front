@@ -1,5 +1,20 @@
 <div class="pane">
   <img src="{{ comment.user.pictureUrl }}" width="30" height="30" alt="Profile picture" class="rounded-circle">
-  <span class="ml-1">{{ comment.user.givenName }} {{ comment.user.familyName }}: {{ comment.text }}</span>
+
+  <span class="ml-1" *ngIf="!editing">
+      {{ comment.user.givenName }} {{ comment.user.familyName }}: {{ comment.text }}
+  </span>
+    <form *ngIf="editing" #commentForm="ngForm" (ngSubmit)="onUpdateComment()" class="d-inline-block">
+        <div class="form-group">
+            <input type="text" class="form-control w-75 ml-3" name="text" required minlength="1" ngModel>
+        </div>
+    </form>
+
+    <button type="button" class="btn btn-sm btn-outline-danger" (click)="onDeleteComment()">
+        Delete
+    </button>
+    <button type="button" class="btn btn-sm btn-outline-info" (click)="onStartEditing()">
+        Update
+    </button>
   <div>At: {{ comment.createdAt | date:'mediumTime' }} | Likes: {{ comment.likes.length }}</div>
 </div>

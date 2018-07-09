@@ -14,30 +14,33 @@
 
   <div *ngIf="editing">
     <form #postForm="ngForm" (ngSubmit)="onUpdate()">
-
       <div class="editor">
         <div class="form-group">
           <textarea name="post" id="post" rows="5" class="form-control"
                     required minlength="1" ngModel></textarea>
         </div>
-
         <div class="form-group">
           <input type="text" id="picture" class="form-control" name="picture"
                  ngModel #pictureUrl>
         </div>
-
         <button class="btn btn-success btn-block mt-2" type="submit" [disabled]="!postForm.valid">Update</button>
       </div>
-
       <div class="preview">
         <img [src]="pictureUrl.value" class="rounded preview-image" alt="preview">
       </div>
-
     </form>
   </div>
 
   <div class="w-75 m-2 p-1">
-    <app-comment *ngFor="let comment of post.comments" [comment]="comment"></app-comment>
+    <app-comment *ngFor="let comment of post.comments" [comment]="comment" [postId]="post.id"></app-comment>
   </div>
+
+    <form #commentForm="ngForm" (ngSubmit)="onNewComment()">
+        <div class="form-group">
+            <img src="{{ post.user.pictureUrl }}" width="30" height="30" alt="Profile picture" class="rounded-circle">
+            <input type="text" name="comment" class="form-control w-75 d-inline-block ml-3"
+                   required minlength="1" ngModel placeholder="Write a comment...">
+        </div>
+    </form>
 
 </div>
