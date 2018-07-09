@@ -29,7 +29,7 @@ export class FeedComponent implements OnInit, OnDestroy {
         this.loading = loading;
         this.posts = data.feed;
       });
-    // this.subscribeToPosts();
+    this.subscribeToPosts();
   }
 
   subscribeToPosts() {

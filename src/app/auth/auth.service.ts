@@ -38,7 +38,9 @@ export class AuthService {
                 console.error(err);
                 alert(`Error: ${err.error}. Check the console for further details.`);
             } else {
-                this.userService.getUserProfile();
+                if (this.isAuthenticated()) {
+                    this.userService.getUserProfile();
+                }
             }
         })
     }
@@ -60,10 +62,6 @@ export class AuthService {
 
     isAuthenticated(): boolean {
         const expiresAt = JSON.parse(localStorage.getItem("expires_at") || '{}');
-        return new Date().getTime() < expiresAt;
-    }
-
-    static getToken() {
-        return localStorage.getItem('access_token');
+        return expiresAt !== {} && new Date().getTime() < expiresAt;
     }
 }

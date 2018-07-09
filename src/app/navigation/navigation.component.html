@@ -1,5 +1,5 @@
-<nav class="navbar navbar-light bg-primary" *ngIf="user">
-  <a href="#" class="navbar-brand">
+<nav class="navbar navbar-light bg-primary">
+  <a href="#" class="navbar-brand" *ngIf="user">
     <img [src]="user.pictureUrl" width="30" height="30" alt="Profile picture" class="rounded-circle">
     {{ user.givenName }}
   </a>
