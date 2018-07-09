@@ -95,6 +95,9 @@ export const COMMENT_LIKE_SUBSCRIPTION = gql`
                 }
                 comment {
                     id
+                    post {
+                        id
+                    }
                 }
             }
             previousValues {
