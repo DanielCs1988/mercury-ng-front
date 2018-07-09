@@ -1,5 +1,5 @@
 import gql from 'graphql-tag';
-import {COMMENT_LIKE_PARTS, POST_LIKE_PARTS} from './likes';
+import {COMMENT_LIKE_PARTS} from './likes';
 
 export const COMMENT_FRAGMENT = gql`
     fragment CommentParts on Comment {

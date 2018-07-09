@@ -9,7 +9,15 @@
       <button class="btn btn-outline-danger ml-3" type="button" (click)="onDelete()">Delete</button>
     </div>
     <p>{{ post.text }}</p>
-    <div>{{ post.likes.length }} likes</div>
+    <div>
+        <button class="btn btn-outline-success my-3" type="button" (click)="onLike()" [disabled]="liked">
+            Like
+        </button>
+        {{ post.likes.length }} likes
+        <button class="btn btn-outline-danger my-3" type="button" (click)="onDislike()" [disabled]="!liked">
+            Dislike
+        </button>
+    </div>
   </div>
 
   <div *ngIf="editing">

@@ -25,7 +25,7 @@ export const COMMENT_LIKE_PARTS = gql`
 `;
 
 export const LIKE_POST = gql`
-    mutation likePost($postId: String!) {
+    mutation likePost($postId: ID!) {
         likePost(postId: $postId) {
             ...PostLikeParts
         }
@@ -34,7 +34,7 @@ export const LIKE_POST = gql`
 `;
 
 export const DISLIKE_POST = gql`
-    mutation dislikePost($id: String!) {
+    mutation dislikePost($id: ID!) {
         dislikePost(id: $id) {
             id
             __typename
@@ -43,7 +43,7 @@ export const DISLIKE_POST = gql`
 `;
 
 export const LIKE_COMMENT = gql`
-    mutation likeComment($commentId: String!) {
+    mutation likeComment($commentId: ID!) {
         likeComment(commentId: $commentId) {
             ...CommentLikeParts
         }
@@ -52,7 +52,7 @@ export const LIKE_COMMENT = gql`
 `;
 
 export const DISLIKE_COMMENT = gql`
-    mutation dislikeComment($id: String!) {
+    mutation dislikeComment($id: ID!) {
         dislikeComment(id: $id) {
             id
             __typename

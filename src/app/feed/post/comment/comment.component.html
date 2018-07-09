@@ -16,5 +16,14 @@
     <button type="button" class="btn btn-sm btn-outline-info" (click)="onStartEditing()">
         Update
     </button>
-  <div>At: {{ comment.createdAt | date:'mediumTime' }} | Likes: {{ comment.likes.length }}</div>
+  <div>
+      <span class="text-muted">At: {{ comment.createdAt | date:'mediumTime' }}</span>
+      <button class="btn btn-outline-success btn-sm my-3" type="button" (click)="onLike()" [disabled]="liked">
+          Like
+      </button>
+      Likes: {{ comment.likes.length }}
+      <button class="btn btn-outline-danger btn-sm my-3" type="button" (click)="onDislike()" [disabled]="!liked">
+          Dislike
+      </button>
+  </div>
 </div>

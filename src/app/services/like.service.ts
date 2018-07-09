@@ -20,7 +20,7 @@ export class LikeService implements OnDestroy {
     }
 
     likePost(postId: string) {
-        this.apollo.mutate({
+        return this.apollo.mutate({
             mutation: LIKE_POST,
             variables: { postId },
             optimisticResponse: {
@@ -28,10 +28,10 @@ export class LikeService implements OnDestroy {
                 likePost: {
                     __typename: 'PostLike',
                     id: '',
-                    user: this.currentUser
+                    user: this.currentUser,
                 }
             },
-            update: (proxy, { data: likePost }) => {
+            update: (proxy, { data: { likePost } }) => {
                 const data: any = proxy.readFragment({
                     id: `Post:${postId}`,
                     fragment: POST_LIKES,
@@ -59,7 +59,7 @@ export class LikeService implements OnDestroy {
                     id: id
                 }
             },
-            update: (proxy, { data: dislikePost }) => {
+            update: (proxy, { data: { dislikePost } }) => {
                 const data: any = proxy.readFragment({
                     id: `Post:${postId}`,
                     fragment: POST_LIKES,
@@ -73,22 +73,22 @@ export class LikeService implements OnDestroy {
                     data: data
                 });
             }
-        })
+        }).subscribe();
     }
 
     likeComment(commentId: string) {
-        this.apollo.mutate({
+        return this.apollo.mutate({
             mutation: LIKE_COMMENT,
             variables: { commentId },
             optimisticResponse: {
                 __typename: 'Mutation',
-                likePost: {
+                likeComment: {
                     __typename: 'CommentLike',
                     id: '',
                     user: this.currentUser
                 }
             },
-            update: (proxy, { data: likeComment }) => {
+            update: (proxy, { data: { likeComment } }) => {
                 const data: any = proxy.readFragment({
                     id: `Comment:${commentId}`,
                     fragment: COMMENT_LIKES,
@@ -111,12 +111,12 @@ export class LikeService implements OnDestroy {
             variables: { id },
             optimisticResponse: {
                 __typename: 'Mutation',
-                dislikePost: {
+                dislikeComment: {
                     __typename: 'CommentLike',
                     id: id
                 }
             },
-            update: (proxy, { data: likeComment }) => {
+            update: (proxy, { data: { likeComment } }) => {
                 const data: any = proxy.readFragment({
                     id: `Comment:${commentId}`,
                     fragment: COMMENT_LIKES,
@@ -130,7 +130,7 @@ export class LikeService implements OnDestroy {
                     data: data
                 });
             }
-        })
+        }).subscribe();
     }
 
     ngOnDestroy(): void {
