@@ -29,6 +29,7 @@ export class FeedComponent implements OnInit, OnDestroy {
             });
         this.subService.subscribeToPosts(this.feedQuery);
         this.subService.subscribeToComments(this.feedQuery);
+        this.subService.subscribeToPostLikes(this.feedQuery);
     }
 
   ngOnDestroy(): void {

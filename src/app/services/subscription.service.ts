@@ -3,6 +3,7 @@ import {POST_SUBSCRIPTION} from '../queries/post';
 import {isDuplicateEntry} from './utils';
 import {QueryRef} from 'apollo-angular';
 import {COMMENT_SUBSCRIPTION} from '../queries/comment';
+import {POST_LIKE_SUBSCRIPTION} from '../queries/likes';
 
 @Injectable({
   providedIn: 'root'
@@ -56,6 +57,36 @@ export class SubscriptionService {
                     post = {...post, comments: [...post.comments, newComment]};
                 } else {
                     post = {...post, comments: post.comments.filter(comment => comment.id !== newComment.id)};
+                }
+                const filteredFeed = prev.feed.filter(pst => pst.id !== post.id);
+                return {...prev, feed: [post, ...filteredFeed]};
+            }
+        })
+    }
+
+    subscribeToPostLikes(feedQuery: QueryRef<any>) {
+        feedQuery.subscribeToMore({
+            document: POST_LIKE_SUBSCRIPTION,
+
+            updateQuery: (prev, { subscriptionData }) => {
+                if (!subscriptionData.data.postLikeSub) {
+                    return;
+                }
+                const isNewValue = subscriptionData.data.postLikeSub.node != null;
+                const newLike = isNewValue ? subscriptionData.data.postLikeSub.node : subscriptionData.data.postLikeSub.previousValues;
+                let post = isNewValue ?
+                    prev.feed.find(post => post.id === newLike.post.id) :
+                    prev.feed.find(post => post.likes.filter(like => like.id === newLike.id).length > 0);
+                if (!post) {
+                    return;
+                }
+                if (isNewValue) {
+                    if (isDuplicateEntry(newLike, post.likes)) {
+                        return prev;
+                    }
+                    post = {...post, likes: [...post.likes, newLike]};
+                } else {
+                    post = {...post, likes: post.likes.filter(like => like.id !== newLike.id)};
                 }
                 const filteredFeed = prev.feed.filter(pst => pst.id !== post.id);
                 return {...prev, feed: [post, ...filteredFeed]};

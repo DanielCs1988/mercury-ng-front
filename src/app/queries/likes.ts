@@ -71,6 +71,9 @@ export const POST_LIKE_SUBSCRIPTION = gql`
                     givenName
                     familyName
                 }
+                post {
+                    id
+                }
             }
             previousValues {
                 id
@@ -89,6 +92,9 @@ export const COMMENT_LIKE_SUBSCRIPTION = gql`
                     id
                     givenName
                     familyName
+                }
+                comment {
+                    id
                 }
             }
             previousValues {
