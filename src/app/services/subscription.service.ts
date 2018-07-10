@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
 import {POST_SUBSCRIPTION} from '../queries/post';
 import {isDuplicateEntry} from './utils';
-import {QueryRef} from 'apollo-angular';
+import {Apollo, QueryRef} from 'apollo-angular';
 import {COMMENT_SUBSCRIPTION} from '../queries/comment';
-import {COMMENT_LIKE_SUBSCRIPTION, POST_LIKE_SUBSCRIPTION} from '../queries/likes';
+import {COMMENT_LIKE_SUBSCRIPTION, GET_COMMENT_AND_POST_ID, POST_LIKE_SUBSCRIPTION} from '../queries/likes';
+import gql from 'graphql-tag';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SubscriptionService {
 
-    constructor() { }
+    constructor(private apollo: Apollo) { }
 
     subscribeToPosts(feedQuery: QueryRef<any>) {
         feedQuery.subscribeToMore({
@@ -102,37 +103,33 @@ export class SubscriptionService {
                 if (!subscriptionData.data.commentLikeSub) {
                     return;
                 }
-                const isNewValue = subscriptionData.data.commentLikeSub.node != null;
-                const newLike = isNewValue ? subscriptionData.data.commentLikeSub.node : subscriptionData.data.commentLikeSub.previousValues;
-                let post;
-                let comment;
-                if (isNewValue) {
-                    post = prev.feed.find(post => post.id === newLike.comment.post.id);
-                    comment = post.comments.find(comment => comment.id === newLike.comment.id);
-                } else {
-                    for (let pst of prev.feed) {
-                        for (let cmt of pst.comments) {
-                            if (cmt.likes.find(like => like.id === newLike.id)) {
-                                post = pst;
-                                comment = cmt;
-                            }
-                        }
-                    }
-                }
-                if (!comment) {
-                    return;
-                }
-                if (isNewValue) {
-                    if (isDuplicateEntry(newLike, comment.likes)) {
+                const newLike = subscriptionData.data.commentLikeSub.node;
+                const isNewLike = newLike != null;
+                const likeId = isNewLike ? newLike.id : subscriptionData.data.commentLikeSub.previousValues.id;
+
+                const parentIds: any = this.apollo.getClient().readFragment({
+                    id: `CommentLike:${likeId}`,
+                    fragment: GET_COMMENT_AND_POST_ID
+                });
+                const postIndex = prev.feed.findIndex(post => post.id === parentIds.comment.post.id);
+                const commentIndex = prev.feed[postIndex].comments.findIndex(comment => comment.id === parentIds.comment.id);
+                const newFeed = prev.feed.slice();
+                const newComments = newFeed[postIndex].comments.slice();
+
+                let comment = newFeed[postIndex].comments[commentIndex];
+                if (isNewLike) {
+                    if (isDuplicateEntry(newLike, prev.feed[postIndex].comments[commentIndex].likes)) {
                         return prev;
                     }
-                    comment = {...comment, likes: [...comment.likes, newLike]};
+                    comment = {...comment, likes: [...comment.likes, subscriptionData.data.commentLikeSub.node]};
                 } else {
-                    comment = {...comment, likes: comment.likes.filter(like => like.id !== newLike.id)};
+                    comment = {...comment, likes: comment.likes.filter(like => like.id !== likeId)};
                 }
-                post = {...post, comments: [...post.comments.filter(cm => cm.id !== comment.id), comment]};
-                const filteredFeed = prev.feed.filter(pst => pst.id !== post.id);
-                return {...prev, feed: [post, ...filteredFeed]};
+
+                newComments[commentIndex] = comment;
+                newFeed[postIndex] = {...newFeed[postIndex], comments: newComments};
+
+                return {...prev, feed: newFeed};
             }
         })
     }

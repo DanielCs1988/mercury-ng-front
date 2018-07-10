@@ -29,6 +29,10 @@ export class LikeService implements OnDestroy {
                     __typename: 'PostLike',
                     id: '',
                     user: this.currentUser,
+                    post: {
+                        __typename: 'Post',
+                        id: postId
+                    }
                 }
             },
             update: (proxy, { data: { likePost } }) => {
@@ -85,7 +89,11 @@ export class LikeService implements OnDestroy {
                 likeComment: {
                     __typename: 'CommentLike',
                     id: '',
-                    user: this.currentUser
+                    user: this.currentUser,
+                    comment: {
+                        __typename: 'Comment',
+                        id: commentId
+                    }
                 }
             },
             update: (proxy, { data: { likeComment } }) => {

@@ -9,6 +9,9 @@ export const POST_LIKE_PARTS = gql`
             givenName
             familyName
         }
+        post {
+            id
+        }
     }
 `;
 
@@ -20,6 +23,9 @@ export const COMMENT_LIKE_PARTS = gql`
             id
             givenName
             familyName
+        }
+        comment {
+            id
         }
     }
 `;
@@ -95,12 +101,20 @@ export const COMMENT_LIKE_SUBSCRIPTION = gql`
                 }
                 comment {
                     id
-                    post {
-                        id
-                    }
                 }
             }
             previousValues {
+                id
+            }
+        }
+    }
+`;
+
+export const GET_COMMENT_AND_POST_ID = gql`
+    fragment getCommentAndPostId on CommentLike {
+        comment {
+            id
+            post {
                 id
             }
         }

@@ -31,7 +31,11 @@ export class CommentService implements OnDestroy {
                     text: text,
                     createdAt: new Date(),
                     user: this.currentUser,
-                    likes: []
+                    likes: [],
+                    post: {
+                        __typename: 'Post',
+                        id: postId
+                    }
                 }
             },
 
