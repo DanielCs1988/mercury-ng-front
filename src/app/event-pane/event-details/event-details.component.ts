@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute, Params} from '@angular/router';
+import {EventService} from '../../services/event.service';
+import {Event} from '../../models';
 
 @Component({
   selector: 'app-event-details',
@@ -7,9 +10,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class EventDetailsComponent implements OnInit {
 
-  constructor() { }
+    event: Event;
 
-  ngOnInit() {
-  }
+    constructor(private route: ActivatedRoute, private eventService: EventService) { }
+
+    ngOnInit() {
+        this.route.params.subscribe((params: Params) => {
+            this.eventService.getEvent(params['id'])
+                .then(event => {this.event = event; console.log(event);})
+                .catch(err => console.log(err));
+        });
+    }
 
 }

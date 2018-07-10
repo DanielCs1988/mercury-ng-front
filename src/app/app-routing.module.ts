@@ -8,13 +8,14 @@ import {NewsPaneComponent} from './news-pane/news-pane.component';
 import {EventListComponent} from './event-pane/event-list/event-list.component';
 import {EventDetailsComponent} from './event-pane/event-details/event-details.component';
 import {AuthGuard} from './auth/auth-guard';
+import {UsersGuard} from './utils/users.guard';
 
 const routes: Routes = [
   {path: 'feed', component: FeedComponent, canActivate: [AuthGuard]},
-  {path: 'chat', component: ChatPaneComponent, canActivate: [AuthGuard]},
-  {path: 'events', component: EventPaneComponent, canActivate: [AuthGuard], children: [
+  {path: 'chat/:id', component: ChatPaneComponent, canActivate: [AuthGuard, UsersGuard]},
+  {path: 'events', component: EventPaneComponent, canActivate: [AuthGuard, UsersGuard], children: [
       {path: '', pathMatch: 'full', component: EventListComponent},
-      {path: ':event', component: EventDetailsComponent}
+      {path: ':id', component: EventDetailsComponent}
     ]},
   {path: 'news', component: NewsPaneComponent},
   {path: '**', redirectTo: 'feed'}

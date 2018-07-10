@@ -10,20 +10,20 @@ import {User} from '../models';
 export class UserService implements OnDestroy {
 
     private querySubscription: Subscription;
-    users = new BehaviorSubject<User[]>([]);
+    users = new BehaviorSubject<Map<string, User>>(new Map<string, User>());
     currentUser = new BehaviorSubject<User>(null);
+    usersLoaded = false;
 
     constructor(private apollo: Apollo) {
         this.querySubscription = this.apollo
             .watchQuery<any>({ query: USERS_QUERY })
                 .valueChanges
                 .subscribe(({data}) => {
-                    this.users.next(data.users);
+                    const users = new Map<string, User>();
+                    data.users.forEach((user: User) => users.set(user.googleId, user));
+                    this.users.next(users);
+                    this.usersLoaded = true;
                 });
-    }
-
-    ngOnDestroy(): void {
-        this.querySubscription.unsubscribe();
     }
 
     async getUserProfile() {
@@ -33,5 +33,9 @@ export class UserService implements OnDestroy {
 
     removeUserProfile() {
         this.currentUser.next(null);
+    }
+
+    ngOnDestroy(): void {
+        this.querySubscription.unsubscribe();
     }
 }

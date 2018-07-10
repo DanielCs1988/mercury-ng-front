@@ -27,58 +27,58 @@ import { split } from 'apollo-link';
 import {getMainDefinition} from 'apollo-utilities';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    NavigationComponent,
-    FeedComponent,
-    ChatPaneComponent,
-    EventPaneComponent,
-    NewsPaneComponent,
-    FooterComponent,
-    PostComponent,
-    CommentComponent,
-    LikeComponent,
-    EventListComponent,
-    EventDetailsComponent,
-    EditorComponent,
-    UserListComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    HttpClientModule,
-    FormsModule,
-    ApolloModule,
-    HttpLinkModule
-  ],
-  providers: [
-    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
-  ],
-  bootstrap: [AppComponent]
+    declarations: [
+        AppComponent,
+        NavigationComponent,
+        FeedComponent,
+        ChatPaneComponent,
+        EventPaneComponent,
+        NewsPaneComponent,
+        FooterComponent,
+        PostComponent,
+        CommentComponent,
+        LikeComponent,
+        EventListComponent,
+        EventDetailsComponent,
+        EditorComponent,
+        UserListComponent
+    ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        HttpClientModule,
+        FormsModule,
+        ApolloModule,
+        HttpLinkModule
+    ],
+    providers: [
+        {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
+    ],
+    bootstrap: [AppComponent]
 })
 export class AppModule {
 
-  private MERCURY_FEED_API = 'https://protected-island-21893.herokuapp.com/';
-  private MERCURY_FEED_WS = 'wss://protected-island-21893.herokuapp.com/';
+    private MERCURY_FEED_API = 'https://protected-island-21893.herokuapp.com/';
+    private MERCURY_FEED_WS = 'wss://protected-island-21893.herokuapp.com/';
 
-  constructor(apollo: Apollo, httpLink: HttpLink) {
-    const http = httpLink.create({uri: this.MERCURY_FEED_API});
-    const ws = new WebSocketLink({
-      uri: this.MERCURY_FEED_WS,
-      options: {
-        reconnect: true
-      }
-    });
+    constructor(apollo: Apollo, httpLink: HttpLink) {
+        const http = httpLink.create({uri: this.MERCURY_FEED_API});
+        const ws = new WebSocketLink({
+            uri: this.MERCURY_FEED_WS,
+            options: {
+                reconnect: true
+            }
+        });
 
-    const link = split(({ query }) => {
-      const definition = getMainDefinition(query);
-      return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
-    }, ws, http);
+        const link = split(({ query }) => {
+            const definition = getMainDefinition(query);
+            return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
+        }, ws, http);
 
-    apollo.create({
-      link: link,
-      cache: new InMemoryCache()
-    });
-  }
+        apollo.create({
+            link: link,
+            cache: new InMemoryCache()
+        });
+    }
 
 }

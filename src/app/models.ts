@@ -29,3 +29,14 @@ export interface Like {
   id: string;
   user: User;
 }
+
+export interface Event {
+    _id: string;
+    name: string;
+    description: string;
+    pictureUrl: string;
+    startDate: Date;
+    endDate: Date;
+    organizer: User;
+    participants: User[];
+}
