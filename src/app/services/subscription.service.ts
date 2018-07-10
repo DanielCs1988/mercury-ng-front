@@ -112,9 +112,10 @@ export class SubscriptionService {
                 });
                 const postIndex = prev.feed.findIndex(post => post.id === parentIds.comment.post.id);
                 const commentIndex = prev.feed[postIndex].comments.findIndex(comment => comment.id === parentIds.comment.id);
+                const newFeed = prev.feed.slice();
 
-                let post = prev.feed[postIndex];
-                let comment = prev.feed[postIndex].comments[commentIndex];
+                let post = newFeed[postIndex];
+                let comment =newFeed[postIndex].comments[commentIndex];
                 if (!comment) {
                     return;
                 }
