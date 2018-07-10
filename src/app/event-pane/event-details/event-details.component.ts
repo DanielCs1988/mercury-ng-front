@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Params} from '@angular/router';
+import {ActivatedRoute, Params, Router} from '@angular/router';
 import {EventService} from '../../services/event.service';
 import {Event} from '../../models';
 
@@ -12,14 +12,22 @@ export class EventDetailsComponent implements OnInit {
 
     event: Event;
 
-    constructor(private route: ActivatedRoute, private eventService: EventService) { }
+    constructor(private route: ActivatedRoute, private router: Router, private eventService: EventService) { }
 
     ngOnInit() {
         this.route.params.subscribe((params: Params) => {
             this.eventService.getEvent(params['id'])
-                .then(event => {this.event = event; console.log(event);})
+                .then(event => this.event = event)
                 .catch(err => console.log(err));
         });
     }
 
+    async onDelete() {
+        await this.eventService.deleteEvent(this.event._id);
+        this.navigateBack();
+    }
+
+    navigateBack() {
+        this.router.navigate(['../'], {relativeTo: this.route});
+    }
 }

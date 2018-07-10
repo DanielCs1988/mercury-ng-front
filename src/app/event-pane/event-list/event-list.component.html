@@ -1,3 +1,4 @@
+<a class="btn btn-outline-success btn-lg" routerLink="new">Create New Event</a>
 <div class="row">
     <div class="col-md-4" *ngFor="let event of events | async">
         <div class="pane event">
@@ -6,7 +7,7 @@
             <div>To: {{ event.endDate | date:'short' }}</div>
             <img *ngFor="let participant of event.participants" src="{{ participant.pictureUrl }}"
                  width="30" height="30" alt="Profile picture" class="rounded-circle m-3" >
-            <a routerLink="{{ event._id }}" class="btn btn-block btn-outline-info">Check it out</a>
+            <a routerLink="{{ event._id }}" class="btn btn-outline-info">Check it out</a>
         </div>
     </div>
 </div>

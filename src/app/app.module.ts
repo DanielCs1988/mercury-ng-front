@@ -17,7 +17,7 @@ import { EditorComponent } from './feed/editor/editor.component';
 import { UserListComponent } from './user-list/user-list.component';
 import {AppRoutingModule} from './app-routing.module';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Apollo, ApolloModule} from 'apollo-angular';
 import {HttpLink, HttpLinkModule} from 'apollo-angular-link-http';
 import {InMemoryCache} from 'apollo-cache-inmemory';
@@ -25,6 +25,7 @@ import {AuthInterceptor} from './auth/auth.interceptor';
 import {WebSocketLink} from 'apollo-link-ws';
 import { split } from 'apollo-link';
 import {getMainDefinition} from 'apollo-utilities';
+import { EventEditComponent } from './event-pane/event-edit/event-edit.component';
 
 @NgModule({
     declarations: [
@@ -41,13 +42,15 @@ import {getMainDefinition} from 'apollo-utilities';
         EventListComponent,
         EventDetailsComponent,
         EditorComponent,
-        UserListComponent
+        UserListComponent,
+        EventEditComponent
     ],
     imports: [
         BrowserModule,
         AppRoutingModule,
         HttpClientModule,
         FormsModule,
+        ReactiveFormsModule,
         ApolloModule,
         HttpLinkModule
     ],

@@ -44,6 +44,26 @@ export class EventService implements OnDestroy {
         return event;
     }
 
+    createEvent(event: Event): Promise<any> {
+        return this.http.post<any>(this.EVENTS_ENDPOINT, event).pipe(
+            map(event => {return {...event, organizer: this.users.get(event.organizer)}}),
+            tap((event: Event) => this.events.set(event._id, event))
+        ).toPromise();
+    }
+
+    updateEvent(event: Event): Promise<any> {
+        return this.http.put<any>(`${this.EVENTS_ENDPOINT}/${event._id}`, event).pipe(
+            map(event => {return {...event, organizer: this.users.get(event.organizer)}}),
+            tap((event: Event) => this.events.set(event._id, event))
+        ).toPromise();
+    }
+
+    deleteEvent(id: string): Promise<any> {
+        return this.http.delete<any>(`${this.EVENTS_ENDPOINT}/${id}`).pipe(
+            tap(() => this.events.delete(id))
+        ).toPromise();
+    }
+
     ngOnDestroy(): void {
         this.userSub.unsubscribe();
     }
