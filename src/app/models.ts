@@ -40,3 +40,11 @@ export interface Event {
     organizer: User;
     participants: User[];
 }
+
+export interface Message {
+    id?: number;
+    content: string;
+    from: string;
+    to: string;
+    createdAt?: number;
+}
