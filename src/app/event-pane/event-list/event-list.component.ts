@@ -6,7 +6,7 @@ import {Event} from '../../models';
 @Component({
   selector: 'app-event-list',
   templateUrl: './event-list.component.html',
-  styles: []
+  styleUrls: ['./event-list.component.css']
 })
 export class EventListComponent implements OnInit {
 

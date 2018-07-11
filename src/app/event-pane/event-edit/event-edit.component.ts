@@ -3,6 +3,7 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {EventService} from '../../services/event.service';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {Event} from '../../models';
+import {getCurrentDate, validateDatetimes} from '../../utils/time';
 
 @Component({
   selector: 'app-event-edit',
@@ -36,16 +37,16 @@ export class EventEditComponent implements OnInit {
         let name = '';
         let description = '';
         let pictureUrl = '';
-        let startDate = null;
-        let endDate = null;
+        let startDate = getCurrentDate();
+        let endDate = getCurrentDate();
 
         if (this.editing) {
             id = event._id;
             name = event.name;
             description = event.description;
             pictureUrl = event.pictureUrl;
-            startDate = event.startDate;
-            endDate = event.endDate;
+            startDate = getCurrentDate(event.startDate);
+            endDate = getCurrentDate(event.endDate);
         }
 
         this.eventForm = new FormGroup({
@@ -59,7 +60,7 @@ export class EventEditComponent implements OnInit {
     }
 
     async onSubmit() {
-        if (!this.eventForm.valid) {
+        if (!(this.eventForm.valid && validateDatetimes(this.eventForm.value.startDate, this.eventForm.value.endDate))) {
             return;
         }
         const formValue: any = this.eventForm.value;
