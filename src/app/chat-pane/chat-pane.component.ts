@@ -16,6 +16,7 @@ export class ChatPaneComponent implements OnInit, OnDestroy {
     private routeSub: Subscription;
     private userSub: Subscription;
     private messageSub: Subscription;
+    private $chatWindow;
 
     @ViewChild('chatForm') chatForm: NgForm;
 
@@ -30,6 +31,7 @@ export class ChatPaneComponent implements OnInit, OnDestroy {
     ) { }
 
     ngOnInit() {
+        this.$chatWindow = document.querySelector('.chat-window');
         this.userSub = this.userService.currentUser.subscribe(user => this.currentUser = user);
         this.routeSub = this.route.params.subscribe((params: Params) => {
             const id = params['id'];
@@ -41,14 +43,21 @@ export class ChatPaneComponent implements OnInit, OnDestroy {
 
     private async initMessages() {
         this.messages = await this.chatService.getChatHistory(this.currentTarget.googleId);
+        this.scrollToBottom();
         // TODO: Check if the subscription is actually destroyed here when switching between different chat panes
         this.messageSub = this.chatService.subscribeToMessages(this.currentTarget.googleId)
             .subscribe(message => this.messages.push(message));
     }
 
+    private scrollToBottom() {
+        setTimeout(() => this.$chatWindow.scrollTop = this.$chatWindow.scrollHeight, 0);
+    }
+
     async onSendMessage() {
         if (!this.chatForm.valid) return;
         const content = this.chatForm.value.content.trim();
+        this.chatForm.reset();
+        this.scrollToBottom();
         const optimisticResponse: Message = {
             content,
             id: -1,
@@ -59,6 +68,10 @@ export class ChatPaneComponent implements OnInit, OnDestroy {
         this.messages.push(optimisticResponse);
         const swapIndex = this.messages.length;
         this.messages[swapIndex] = await this.chatService.sendMessage(content);
+    }
+
+    owner(message: Message): User {
+        return message.from === this.currentUser.googleId ? this.currentUser : this.currentTarget;
     }
 
     ngOnDestroy(): void {
