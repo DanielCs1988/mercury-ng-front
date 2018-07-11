@@ -15,7 +15,7 @@ export class ChatService implements OnDestroy {
     private userSub: Subscription;
     private msgSub: Subscription;
     private cache = new Map<string, Message[]>();
-    private messageBroker: Subject;
+    private messageBroker: Subject<Message>;
     private messageEmitter = new Subject<Message>();
     private currentUser: User;
     private currentTarget: string;
@@ -35,8 +35,9 @@ export class ChatService implements OnDestroy {
         let history = this.cache.get(targetId);
 
         if (!history) {
+            this.cache.set(targetId, []);
             history = await this.socket.sendAnd('private/history', { targetId });
-            this.cache.set(targetId, history);
+            this.cache.set(targetId, [...history, ...this.cache.get(targetId)]);
         }
         return history;
     }
@@ -50,7 +51,7 @@ export class ChatService implements OnDestroy {
         if (this.currentTarget === null) {
             throw new Error('Cannot send messages when no target is selected!');
         }
-        const message: Message = { content, to: this.currentTarget, from: this.currentUser.googleId };
+        let message: Message = { content, to: this.currentTarget, from: this.currentUser.googleId };
         message = await this.socket.sendAnd('private/send', message);
         this.cache.get(this.currentTarget).push(message);
         return message;
@@ -64,14 +65,14 @@ export class ChatService implements OnDestroy {
     private initMessageSubscription() {
         if (this.messageBroker !== undefined) return;
         this.messageBroker = this.socket.on('private/receive');
-        this.messageBroker.subscribe((message: Message) => {
+        this.messageBroker.subscribe(message => {
             if (this.cache.has(message.from)) {
                 this.cache.get(message.from).push(message);
             }
             if (message.from === this.currentTarget) {
                 this.messageEmitter.next(message);
             } else {
-                // TODO: NOTIFICATION
+                this.userService.markUnreadMessages(message.from);
             }
         });
     }

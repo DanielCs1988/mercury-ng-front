@@ -1,6 +1,6 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {Apollo} from 'apollo-angular';
-import {CURRENT_USER_QUERY, USERS_QUERY} from '../queries/users';
+import {CURRENT_USER_QUERY, USER_FRAGMENT, USERS_QUERY} from '../queries/users';
 import {BehaviorSubject, Subscription} from 'rxjs';
 import {User} from '../models';
 
@@ -29,13 +29,26 @@ export class UserService implements OnDestroy {
     async getUserProfile() {
         const {data} = await this.apollo.query<any>({ query: CURRENT_USER_QUERY }).toPromise();
         this.currentUser.next(data.currentUser);
+        console.log(this.getUserById(data.currentUser.id));
     }
 
     removeUserProfile() {
         this.currentUser.next(null);
     }
 
+    getUserById(id: string): User {
+        return this.apollo.getClient().readFragment({
+            id: `User:${id}`,
+            fragment: USER_FRAGMENT
+        });
+    }
+
     ngOnDestroy(): void {
         this.querySubscription.unsubscribe();
+    }
+
+    // NOTE: We receive the googleId as a param, not the Prisma Id!
+    markUnreadMessages(from: string) {
+
     }
 }

@@ -1,4 +1,6 @@
 <div *ngFor="let user of users" class="pane m-2 p-1">
-  <img src="{{ user.pictureUrl }}" width="30" height="30" alt="Profile picture" class="rounded-circle">
-  <span>{{ user.givenName }} {{ user.familyName }}</span>
+  <img src="{{ user.pictureUrl }}" width="30" height="30" alt="Profile picture" class="rounded-circle mr-2">
+  <a routerLink="/chat/{{ user.id }}" routerLinkActive="active">
+      {{ user.givenName }} {{ user.familyName }}
+  </a>
 </div>
