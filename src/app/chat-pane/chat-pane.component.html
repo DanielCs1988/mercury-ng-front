@@ -1,6 +1,6 @@
 <form #chatForm="ngForm" (ngSubmit)="onSendMessage()" class="pane">
     <div class="form-group">
-        <input type="text" class="form-control" name="chat" placeholder="Write your message here..."
+        <input type="text" class="form-control" name="content" placeholder="Write your message here..."
                ngModel required minlength="1">
         <button type="submit" class="btn btn-primary btn-block my-3" [disabled]="!chatForm.valid">
             Send

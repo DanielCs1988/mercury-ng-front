@@ -29,7 +29,6 @@ export class UserService implements OnDestroy {
     async getUserProfile() {
         const {data} = await this.apollo.query<any>({ query: CURRENT_USER_QUERY }).toPromise();
         this.currentUser.next(data.currentUser);
-        console.log(this.getUserById(data.currentUser.id));
     }
 
     removeUserProfile() {

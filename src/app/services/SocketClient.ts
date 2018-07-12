@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Subject} from 'rxjs';
+import {take} from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
@@ -59,13 +60,14 @@ export class SocketClient {
         const handler = this.handlers.get(route);
         if (!handler) {
             this.handlers.set(route, new Subject<any>());
+            console.log('New handler registered:', this.handlers);
             return this.on(route);
         }
         return handler;
     }
 
     fetchOnce(route: string): Promise<any> {
-        return this.on(route).toPromise();
+        return this.on(route).pipe(take(1)).toPromise();
     }
 
     send(route: string, payload: any) {
@@ -79,8 +81,9 @@ export class SocketClient {
     }
 
     sendAnd(route: string, payload: any): Promise<any> {
+        const promise = this.fetchOnce(route);
         this.send(route, payload);
-        return this.fetchOnce(route);
+        return promise;
     }
 
     private cacheMessage(route: string, payload: any) {
@@ -97,6 +100,7 @@ export class SocketClient {
         const handler = this.handlers.get(route);
         if (handler) {
             const object = JSON.parse(payload);
+            console.log('Payload arrived:', object, 'on route:', route);
             handler.next(object);
         } else {
             console.info(`Received message with no corresponding handler:\nRoute: ${route}\nPayload: ${payload}`);

@@ -36,17 +36,22 @@ export class ChatPaneComponent implements OnInit, OnDestroy {
         this.routeSub = this.route.params.subscribe((params: Params) => {
             const id = params['id'];
             this.currentTarget = this.userService.getUserById(id);
-            console.log(this.currentTarget);
             this.initMessages();
         });
     }
 
     private async initMessages() {
+        if (this.messageSub) {
+            this.messageSub.unsubscribe();
+        }
+        this.messages = [];
         this.messages = await this.chatService.getChatHistory(this.currentTarget.googleId);
+        this.messageSub = this.chatService.subscribeToMessages()
+            .subscribe(message => {
+                this.messages.push(message);
+                console.log('New message added to view layer:', this.messages);
+            });
         this.scrollToBottom();
-        // TODO: Check if the subscription is actually destroyed here when switching between different chat panes
-        this.messageSub = this.chatService.subscribeToMessages(this.currentTarget.googleId)
-            .subscribe(message => this.messages.push(message));
     }
 
     private scrollToBottom() {

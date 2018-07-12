@@ -44,7 +44,7 @@ export interface Event {
 export interface Message {
     id?: number;
     content: string;
-    from: string;
+    from?: string;
     to: string;
     createdAt?: number;
 }
