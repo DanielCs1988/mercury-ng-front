@@ -3,33 +3,29 @@ import {Message, User} from '../models';
 import {Subject, Subscription} from 'rxjs';
 import {SocketClient} from './SocketClient';
 import {UserService} from './user.service';
-import {headersToString} from 'selenium-webdriver/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatService implements OnDestroy {
 
-    private SOCKET_URL = 'localhost';
-    private SOCKET_PORT = 8080;
-
     private userSub: Subscription;
     private msgSub: Subscription;
+
     private cache = new Map<string, Message[]>();
-    private messageBroker: Subject<Message>;
     private messageEmitter = new Subject<Message>();
     private currentUser: User;
     private currentTarget: string;
 
-    constructor(private socket: SocketClient, private userService: UserService) {
-        this.userSub = userService.currentUser.subscribe(user => {
+    constructor(private socket: SocketClient, private userService: UserService) { }
+
+    init() {
+        this.userSub = this.userService.currentUser.subscribe(user => {
             this.currentUser = user;
             if (user) {
-                const token = localStorage.getItem('access_token');
-                socket.connect(this.SOCKET_URL, this.SOCKET_PORT, token);
-                socket.onOpen(() => this.initMessageSubscription());
+                this.initMessageSubscription();
             }
-        })
+        });
     }
 
     async getChatHistory(targetId: string): Promise<Message[]> {
@@ -63,9 +59,10 @@ export class ChatService implements OnDestroy {
     }
 
     private initMessageSubscription() {
-        if (this.messageBroker !== undefined) return;
-        this.messageBroker = this.socket.on('private/receive');
-        this.messageBroker.subscribe(message => {
+        if (this.msgSub) {
+            return this.cleanupPreviousSession();
+        }
+        this.msgSub = this.socket.on('private/receive').subscribe(message => {
             if (this.cache.has(message.from)) {
                 this.cache.get(message.from).push(message);
             }
@@ -75,6 +72,11 @@ export class ChatService implements OnDestroy {
                 this.userService.markUnreadMessages(message.from);
             }
         });
+    }
+
+    private cleanupPreviousSession() {
+        console.log('Cleanup called after logging in with a different user.');
+        this.cache.clear();
     }
 
     ngOnDestroy(): void {

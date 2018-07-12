@@ -36,6 +36,7 @@ export class ChatPaneComponent implements OnInit, OnDestroy {
         this.routeSub = this.route.params.subscribe((params: Params) => {
             const id = params['id'];
             this.currentTarget = this.userService.getUserById(id);
+            this.userService.markMessagesRead(this.currentTarget.googleId);
             this.initMessages();
         });
     }

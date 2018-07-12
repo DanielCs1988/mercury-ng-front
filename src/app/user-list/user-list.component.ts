@@ -10,16 +10,25 @@ import {Subscription} from 'rxjs';
 })
 export class UserListComponent implements OnInit, OnDestroy {
 
-  private usersSubscription: Subscription;
-  users: User[] = [];
+    private onlineUsersSub: Subscription;
+    private usersSubscription: Subscription;
+    private unreadMsgSub: Subscription;
 
-  constructor(private userService: UserService) { }
+    unreadMessages = new Map<string, number>();
+    onlineUsers: Set<string>;
+    users: User[] = [];
 
-  ngOnInit() {
-    this.usersSubscription = this.userService.users.subscribe(users => this.users = Array.from(users.values()));
-  }
+    constructor(private userService: UserService) { }
 
-  ngOnDestroy(): void {
-    this.usersSubscription.unsubscribe();
-  }
+    ngOnInit() {
+        this.onlineUsersSub = this.userService.onlineUsers.subscribe(users => this.onlineUsers = users);
+        this.usersSubscription = this.userService.users.subscribe(users => this.users = Array.from(users.values()));
+        this.unreadMsgSub = this.userService.onUnreadMessagesChange.subscribe(unread => this.unreadMessages = unread);
+    }
+
+    ngOnDestroy(): void {
+        this.usersSubscription.unsubscribe();
+        this.unreadMsgSub.unsubscribe();
+        this.onlineUsersSub.unsubscribe();
+    }
 }
