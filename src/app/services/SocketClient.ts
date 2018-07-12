@@ -60,7 +60,6 @@ export class SocketClient {
         const handler = this.handlers.get(route);
         if (!handler) {
             this.handlers.set(route, new Subject<any>());
-            console.log('New handler registered:', this.handlers);
             return this.on(route);
         }
         return handler;
@@ -100,7 +99,6 @@ export class SocketClient {
         const handler = this.handlers.get(route);
         if (handler) {
             const object = JSON.parse(payload);
-            console.log('Payload arrived:', object, 'on route:', route);
             handler.next(object);
         } else {
             console.info(`Received message with no corresponding handler:\nRoute: ${route}\nPayload: ${payload}`);

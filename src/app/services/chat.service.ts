@@ -34,19 +34,17 @@ export class ChatService implements OnDestroy {
 
     async getChatHistory(targetId: string): Promise<Message[]> {
         this.currentTarget = targetId;
-        let history = this.cache.get(targetId);
-        console.log('Getting history:', history);
 
-        if (!history) {
+        if (!this.cache.get(targetId)) {
             this.cache.set(targetId, []);
-            history = await this.socket.sendAnd('private/history', targetId);
-            console.log('After awaiting socket aswer...', history);
+            const history = await this.socket.sendAnd('private/history', targetId);
             this.cache.set(targetId, [...history, ...this.cache.get(targetId)]);
+            return history;
         }
-        return history;
+        return this.cache.get(targetId).slice();
     }
 
-    subscribeToMessages(): Subject<Message> {
+    getMessageSubscription(): Subject<Message> {
         return this.messageEmitter;
     }
 
@@ -55,7 +53,6 @@ export class ChatService implements OnDestroy {
             throw new Error('Cannot send messages when no target is selected!');
         }
         let message: Message = { content, to: this.currentTarget };
-        console.log('Message being sent', message);
         message = await this.socket.sendAnd('private/send', message);
         this.cache.get(this.currentTarget).push(message);
         return message;
@@ -69,12 +66,10 @@ export class ChatService implements OnDestroy {
         if (this.messageBroker !== undefined) return;
         this.messageBroker = this.socket.on('private/receive');
         this.messageBroker.subscribe(message => {
-            console.log('Received single message in service:', message);
             if (this.cache.has(message.from)) {
                 this.cache.get(message.from).push(message);
             }
             if (message.from === this.currentTarget) {
-                console.log('Message emitted');
                 this.messageEmitter.next(message);
             } else {
                 this.userService.markUnreadMessages(message.from);

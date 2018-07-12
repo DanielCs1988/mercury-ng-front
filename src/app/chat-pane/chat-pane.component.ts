@@ -41,16 +41,13 @@ export class ChatPaneComponent implements OnInit, OnDestroy {
     }
 
     private async initMessages() {
-        if (this.messageSub) {
-            this.messageSub.unsubscribe();
+        if (!this.messageSub) {
+            this.messageSub = this.chatService.getMessageSubscription()
+                .subscribe(message => {
+                    this.messages.push(message);
+                });
         }
-        this.messages = [];
         this.messages = await this.chatService.getChatHistory(this.currentTarget.googleId);
-        this.messageSub = this.chatService.subscribeToMessages()
-            .subscribe(message => {
-                this.messages.push(message);
-                console.log('New message added to view layer:', this.messages);
-            });
         this.scrollToBottom();
     }
 
@@ -71,7 +68,7 @@ export class ChatPaneComponent implements OnInit, OnDestroy {
             createdAt: new Date().getTime()
         };
         this.messages.push(optimisticResponse);
-        const swapIndex = this.messages.length;
+        const swapIndex = this.messages.length - 1;
         this.messages[swapIndex] = await this.chatService.sendMessage(content);
     }
 
