@@ -5,6 +5,7 @@ import {NgForm} from '@angular/forms';
 import {UserService} from '../../../services/user.service';
 import {LikeService} from '../../../services/like.service';
 import {Subscription} from 'rxjs';
+import {faEdit, faThumbsDown, faThumbsUp, faTrashAlt} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-comment',
@@ -22,6 +23,10 @@ export class CommentComponent implements OnInit, OnDestroy {
 
     liked: boolean;
     editing = false;
+    editIcon = faEdit;
+    deleteIcon = faTrashAlt;
+    likeIcon = faThumbsUp;
+    dislikeIcon = faThumbsDown;
 
     constructor(
         private commentService: CommentService,

@@ -10,20 +10,13 @@
         </div>
     </form>
 
-    <button type="button" class="btn btn-sm btn-outline-danger" (click)="onDeleteComment()">
-        Delete
-    </button>
-    <button type="button" class="btn btn-sm btn-outline-info" (click)="onStartEditing()">
-        Update
-    </button>
+    <fa-icon [icon]="editIcon" class="green-icon" (click)="onStartEditing()"></fa-icon>
+    <fa-icon [icon]="deleteIcon" class="red-icon" (click)="onDeleteComment()"></fa-icon>
+
   <div>
       <span class="text-muted">At: {{ comment.createdAt | date:'mediumTime' }}</span>
-      <button class="btn btn-outline-success btn-sm my-3" type="button" (click)="onLike()" [disabled]="liked">
-          Like
-      </button>
-      Likes: {{ comment.likes.length }}
-      <button class="btn btn-outline-danger btn-sm my-3" type="button" (click)="onDislike()" [disabled]="!liked">
-          Dislike
-      </button>
+      <fa-icon [icon]="likeIcon" (click)="onLike()" class="green-icon" [ngClass]="{'disabled': liked}"></fa-icon>
+      {{ comment.likes.length }} likes
+      <fa-icon [icon]="dislikeIcon" (click)="onDislike()" class="red-icon" [ngClass]="{'disabled': !liked}"></fa-icon>
   </div>
 </div>

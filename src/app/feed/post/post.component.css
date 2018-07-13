@@ -1,3 +1,6 @@
+p {
+    font-size: 1rem;
+}
 .prediction {
   animation: flashingBorder 1s infinite;
 }

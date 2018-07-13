@@ -50,7 +50,7 @@ export class AuthService {
         localStorage.removeItem("id_token");
         localStorage.removeItem("expires_at");
         this.userService.removeUserProfile();
-        this.router.navigate(['/news']);
+        this.router.navigate(['/lobby']);
     }
 
     private setSession(authResult: Auth0DecodedHash) {

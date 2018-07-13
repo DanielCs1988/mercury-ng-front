@@ -1,4 +1,6 @@
 .online-marker {
-    color: lawngreen;
-    font-weight: bold;
+    color: limegreen;
+}
+.unread {
+    color: red;
 }

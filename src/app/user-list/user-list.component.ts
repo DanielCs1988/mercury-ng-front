@@ -2,6 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {User} from '../models';
 import {UserService} from '../services/user.service';
 import {Subscription} from 'rxjs';
+import {faComments, faSignal} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-user-list',
@@ -17,6 +18,8 @@ export class UserListComponent implements OnInit, OnDestroy {
     unreadMessages = new Map<string, number>();
     onlineUsers: Set<string>;
     users: User[] = [];
+    onlineIcon = faSignal;
+    unreadIcon = faComments;
 
     constructor(private userService: UserService) { }
 

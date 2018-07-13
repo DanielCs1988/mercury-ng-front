@@ -8,6 +8,39 @@ textarea {
   resize: none;
   width: 100%; }
 
+.green-icon {
+  padding: 0.5rem;
+  margin: 0.2rem 0 0.2rem 0.2rem;
+  color: #4CAF50;
+  border-radius: 50%; }
+  .green-icon:hover {
+    animation: hover-up 1s infinite; }
+  .green-icon.disabled {
+    color: #222;
+    animation: none; }
+
+.red-icon {
+  padding: 0.5rem;
+  margin: 0.2rem 0 0.2rem 0.2rem;
+  color: #e51c23;
+  border-radius: 50%; }
+  .red-icon:hover {
+    animation: hover-up 1s infinite; }
+  .red-icon.disabled {
+    color: #222;
+    animation: none; }
+
+.blue-icon {
+  padding: 0.5rem;
+  margin: 0.2rem 0 0.2rem 0.2rem;
+  color: #2196F3;
+  border-radius: 50%; }
+  .blue-icon:hover {
+    animation: hover-up 1s infinite; }
+  .blue-icon.disabled {
+    color: #222;
+    animation: none; }
+
 .post-form {
   max-height: 20rem;
   position: relative; }
@@ -69,5 +102,15 @@ input + .helper-text {
     box-shadow: 1px 1px 5px 3px purple; }
   100% {
     box-shadow: none; } }
+@keyframes hover-up {
+  0% {
+    box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.6);
+    transform: translateY(0px); }
+  50% {
+    box-shadow: 0 6px 6px 0 rgba(0, 0, 0, 0.2);
+    transform: translateY(-10px); }
+  100% {
+    box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.6);
+    transform: translateY(0px); } }
 
 /*# sourceMappingURL=styles.css.map */

@@ -1,4 +1,4 @@
-<nav class="navbar navbar-light bg-primary">
+<nav class="navbar navbar-light bg-light">
     <a href="#" class="navbar-brand" *ngIf="user">
         <img [src]="user.pictureUrl" width="30" height="30" alt="Profile picture" class="rounded-circle">
         {{ user.givenName }}
@@ -6,12 +6,12 @@
 
     <ul *ngIf="isLoggedIn()" class="navbar-nav navbar-expand">
         <li class="nav-item mx-3">
-            <a routerLink="/feed" class="nav-link">
+            <a routerLink="/feed" class="nav-link" routerLinkActive="active">
                 Feed
             </a>
         </li>
         <li class="nav-item mx-3">
-            <a routerLink="/events" class="nav-link">
+            <a routerLink="/events" class="nav-link" routerLinkActive="active">
                 Events
             </a>
         </li>
@@ -19,12 +19,14 @@
 
     <form action="#" class="form-inline my-2 my-lg-0">
         <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        <button class="btn btn-outline-info my-2 my-sm-0" type="submit">
+            <fa-icon [icon]="searchIcon"></fa-icon>
+        </button>
     </form>
     <a *ngIf="isLoggedIn()" class="btn btn-outline-danger" (click)="logout()">
-        Logout
+        <fa-icon [icon]="logoutIcon"></fa-icon>
     </a>
-    <a *ngIf="!isLoggedIn()" class="nav-link" (click)="login()">
-        Login
+    <a *ngIf="!isLoggedIn()" class="btn btn-outline-success" (click)="login()">
+        <fa-icon [icon]="loginIcon"></fa-icon>
     </a>
 </nav>

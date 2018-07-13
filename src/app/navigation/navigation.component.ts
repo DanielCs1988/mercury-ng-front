@@ -3,6 +3,7 @@ import {AuthService} from '../auth/auth.service';
 import {UserService} from '../services/user.service';
 import {Subscription} from 'rxjs';
 import {User} from '../models';
+import {faSignOutAlt, faSignInAlt, faSearch} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-navigation',
@@ -13,6 +14,9 @@ export class NavigationComponent implements OnInit, OnDestroy {
 
     private userSub: Subscription;
     user: User;
+    logoutIcon = faSignOutAlt;
+    loginIcon = faSignInAlt;
+    searchIcon = faSearch;
 
     constructor(private authService: AuthService, private userService: UserService) { }
 

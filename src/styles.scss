@@ -1,7 +1,25 @@
 $fancy-shadow: 0 3px 1px -2px rgba(0, 0, 0, .2), 0 2px 2px 0 rgba(0, 0, 0, .14), 0 1px 5px 0 rgba(0, 0, 0, .12);
+$green: #4CAF50;
+$red: #e51c23;
+$dark: #222;
+$blue: #2196F3;
 
 @mixin colored-shadow($color) {
   box-shadow: 1px 1px 5px 2px rgba($color, 0.6);
+}
+
+@mixin button-icon($color) {
+    padding: 0.5rem;
+    margin: 0.2rem 0 0.2rem 0.2rem;
+    color: $color;
+    border-radius: 50%;
+    &:hover {
+        animation: hover-up 1s infinite;
+    }
+    &.disabled {
+        color: $dark;
+        animation: none;
+    }
 }
 
 div {
@@ -15,6 +33,16 @@ a:hover {
 textarea {
   resize: none;
   width: 100%;
+}
+
+.green-icon {
+    @include button-icon($green);
+}
+.red-icon {
+    @include button-icon($red);
+}
+.blue-icon {
+    @include button-icon($blue);
 }
 
 .post-form {
@@ -97,5 +125,19 @@ input + .helper-text {
   100% {
     box-shadow: none;
   }
+}
+@keyframes hover-up {
+    0% {
+        box-shadow: 0 2px 3px 0 rgba(0,0,0,0.6);
+        transform: translateY(0px);
+    }
+    50% {
+        box-shadow: 0 6px 6px 0 rgba(0,0,0,0.2);
+        transform: translateY(-10px);
+    }
+    100% {
+        box-shadow: 0 2px 3px 0 rgba(0,0,0,0.6);
+        transform: translateY(0px);
+    }
 }
 

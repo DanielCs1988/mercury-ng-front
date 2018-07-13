@@ -29,6 +29,8 @@ import { EventEditComponent } from './event-pane/event-edit/event-edit.component
 import { ArticleComponent } from './news-pane/article/article.component';
 import { NewsFilterComponent } from './news-pane/news-filter/news-filter.component';
 import { WeatherComponent } from './news-pane/weather/weather.component';
+import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+import { LobbyComponent } from './lobby/lobby.component';
 
 @NgModule({
     declarations: [
@@ -49,7 +51,8 @@ import { WeatherComponent } from './news-pane/weather/weather.component';
         EventEditComponent,
         ArticleComponent,
         NewsFilterComponent,
-        WeatherComponent
+        WeatherComponent,
+        LobbyComponent
     ],
     imports: [
         BrowserModule,
@@ -58,7 +61,8 @@ import { WeatherComponent } from './news-pane/weather/weather.component';
         FormsModule,
         ReactiveFormsModule,
         ApolloModule,
-        HttpLinkModule
+        HttpLinkModule,
+        FontAwesomeModule
     ],
     providers: [
         {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}

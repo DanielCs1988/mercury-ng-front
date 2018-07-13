@@ -1,47 +1,44 @@
 <div class="pane" [class]="post.id === '' ? 'prediction' : ''">
 
-  <div *ngIf="!editing">
-    <div *ngIf="post.user">
-      <img src="{{ post.user.pictureUrl }}" width="30" height="30" alt="Profile picture" class="rounded-circle">
-      <span class="ml-1">{{ post.user.givenName }} {{ post.user.familyName }}</span>
-      <span class="ml-3">{{ post.createdAt | date:'mediumTime' }}</span>
-      <button class="btn btn-outline-info ml-3" type="button" (click)="onStartEditing()">Update</button>
-      <button class="btn btn-outline-danger ml-3" type="button" (click)="onDelete()">Delete</button>
+    <div *ngIf="!editing">
+        <div *ngIf="post.user">
+            <img src="{{ post.user.pictureUrl }}" width="30" height="30" alt="Profile picture" class="rounded-circle">
+            <span class="ml-1">{{ post.user.givenName }} {{ post.user.familyName }}</span>
+            <span class="ml-3">{{ post.createdAt | date:'mediumTime' }}</span>
+            <fa-icon [icon]="editIcon" class="green-icon" (click)="onStartEditing()"></fa-icon>
+            <fa-icon [icon]="deleteIcon" class="red-icon" (click)="onDelete()"></fa-icon>
+        </div>
+        <p class="text-justify my-3">{{ post.text }}</p>
+        <img src="{{ post.pictureUrl }}" alt="{{ post.pictureUrl }}" class="img-fluid rounded">
+        <div>
+            <fa-icon [icon]="likeIcon" (click)="onLike()" class="green-icon" [ngClass]="{'disabled': liked}"></fa-icon>
+            {{ post.likes.length }} likes
+            <fa-icon [icon]="dislikeIcon" (click)="onDislike()" class="red-icon" [ngClass]="{'disabled': !liked}"></fa-icon>
+        </div>
     </div>
-    <p>{{ post.text }}</p>
-    <div>
-        <button class="btn btn-outline-success my-3" type="button" (click)="onLike()" [disabled]="liked">
-            Like
-        </button>
-        {{ post.likes.length }} likes
-        <button class="btn btn-outline-danger my-3" type="button" (click)="onDislike()" [disabled]="!liked">
-            Dislike
-        </button>
-    </div>
-  </div>
 
-  <div *ngIf="editing">
-    <form #postForm="ngForm" (ngSubmit)="onUpdate()">
-      <div class="editor">
-        <div class="form-group">
+    <div *ngIf="editing">
+        <form #postForm="ngForm" (ngSubmit)="onUpdate()">
+            <div class="editor">
+                <div class="form-group">
           <textarea name="post" id="post" rows="5" class="form-control"
                     required minlength="1" ngModel></textarea>
-        </div>
-        <div class="form-group">
-          <input type="text" id="picture" class="form-control" name="picture"
-                 ngModel #pictureUrl>
-        </div>
-        <button class="btn btn-success btn-block mt-2" type="submit" [disabled]="!postForm.valid">Update</button>
-      </div>
-      <div class="preview">
-        <img [src]="pictureUrl.value" class="rounded preview-image" alt="preview">
-      </div>
-    </form>
-  </div>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="picture" class="form-control" name="picture"
+                           ngModel #pictureUrl>
+                </div>
+                <button class="btn btn-success btn-block mt-2" type="submit" [disabled]="!postForm.valid">Update</button>
+            </div>
+            <div class="preview">
+                <img [src]="pictureUrl.value" class="rounded preview-image" alt="preview">
+            </div>
+        </form>
+    </div>
 
-  <div class="w-75 m-2 p-1">
-    <app-comment *ngFor="let comment of post.comments" [comment]="comment" [postId]="post.id"></app-comment>
-  </div>
+    <div class="w-75 m-2 p-1">
+        <app-comment *ngFor="let comment of post.comments" [comment]="comment" [postId]="post.id"></app-comment>
+    </div>
 
     <form #commentForm="ngForm" (ngSubmit)="onNewComment()">
         <div class="form-group">

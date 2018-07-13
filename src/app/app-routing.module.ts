@@ -10,25 +10,27 @@ import {EventDetailsComponent} from './event-pane/event-details/event-details.co
 import {AuthGuard} from './auth/auth-guard';
 import {UsersGuard} from './utils/users.guard';
 import {EventEditComponent} from './event-pane/event-edit/event-edit.component';
+import {LobbyComponent} from './lobby/lobby.component';
 
 const routes: Routes = [
-  {path: 'feed', component: FeedComponent, canActivate: [AuthGuard]},
-  {path: 'chat/:id', component: ChatPaneComponent, canActivate: [AuthGuard, UsersGuard]},
-  {path: 'events', component: EventPaneComponent, canActivate: [AuthGuard, UsersGuard], children: [
-      {path: '', pathMatch: 'full', component: EventListComponent},
-      {path: 'new', component: EventEditComponent},
-      {path: ':id', component: EventDetailsComponent},
-      {path: ':id/edit', component: EventEditComponent}
+    {path: 'lobby', component: LobbyComponent},
+    {path: 'feed', component: FeedComponent, canActivate: [AuthGuard]},
+    {path: 'news', component: NewsPaneComponent, canActivate: [AuthGuard]},
+    {path: 'chat/:id', component: ChatPaneComponent, canActivate: [AuthGuard, UsersGuard]},
+    {path: 'events', component: EventPaneComponent, canActivate: [AuthGuard, UsersGuard], children: [
+            {path: '', pathMatch: 'full', component: EventListComponent},
+            {path: 'new', component: EventEditComponent},
+            {path: ':id', component: EventDetailsComponent},
+            {path: ':id/edit', component: EventEditComponent}
     ]},
-  {path: 'news', component: NewsPaneComponent},
-  {path: '**', redirectTo: 'feed'}
+    {path: '**', redirectTo: 'lobby'}
 ];
 
 @NgModule({
-  imports: [
-    CommonModule,
-    RouterModule.forRoot(routes)
-  ],
-  exports: [RouterModule]
+    imports: [
+        CommonModule,
+        RouterModule.forRoot(routes)
+    ],
+    exports: [RouterModule]
 })
 export class AppRoutingModule { }

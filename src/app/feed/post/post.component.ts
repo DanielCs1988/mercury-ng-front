@@ -6,6 +6,7 @@ import {CommentService} from '../../services/comment.service';
 import {LikeService} from '../../services/like.service';
 import {UserService} from '../../services/user.service';
 import {Subscription} from 'rxjs';
+import {faEdit, faThumbsDown, faThumbsUp, faTrashAlt} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-post',
@@ -23,6 +24,10 @@ export class PostComponent implements OnInit, OnDestroy {
 
     liked: boolean;
     editing = false;
+    editIcon = faEdit;
+    deleteIcon = faTrashAlt;
+    likeIcon = faThumbsUp;
+    dislikeIcon = faThumbsDown;
 
     constructor(
         private postService: PostService,
