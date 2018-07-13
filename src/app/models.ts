@@ -48,3 +48,20 @@ export interface Message {
     to: string;
     createdAt?: number;
 }
+
+export interface Article {
+    author: string;
+    title: string;
+    description: string;
+    url: string;
+    urlToImage: string;
+    publishedAt: string;
+    source: string;
+}
+
+export interface Weather {
+    location: string;
+    summary: string;
+    icon: string;
+    temperature: number;
+}

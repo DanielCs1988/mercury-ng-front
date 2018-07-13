@@ -1,0 +1,23 @@
+<a href="{{ article.url }}">
+    <h2 class="text-center">{{ article.title }}</h2>
+</a>
+<hr>
+<div class="row">
+    <div *ngIf="article.urlToImage" class="col">
+        <img src="{{ article.urlToImage }}" alt="{{ article.urlToImage }}" class="img-fluid rounded">
+    </div>
+    <div class="col">
+        <span>
+            {{ article.author || 'Anonymous' }}: {{ article.source || 'Anonymous' }}
+        </span>
+        <hr>
+        <p class="text-justify">{{ article.description }}</p>
+    </div>
+</div>
+<hr>
+<span>
+    {{ article.publishedAt | date:'medium' }}
+</span>
+<span class="float-right text-muted">
+    Powered by <a href="https://newsapi.org/">NewsFeed API</a>
+</span>

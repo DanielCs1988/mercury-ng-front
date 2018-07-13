@@ -1,0 +1,59 @@
+<form *ngIf="newsFilter" [formGroup]="newsFilter" (ngSubmit)="onFilter()">
+    <div class="row">
+        <div class="col-4">
+
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link btn btn-primary mt-4"
+                       [ngClass]="{'active': !sourcesSelected}"
+                       (click)="sourcesSelected = false">
+                        Country and Category
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link btn btn-primary mt-3"
+                       [ngClass]="{'active': sourcesSelected}"
+                       (click)="sourcesSelected = true">
+                        Sources
+                    </a>
+                </li>
+            </ul>
+
+        </div>
+        <div class="col-4">
+
+            <div *ngIf="!sourcesSelected">
+                <div class="form-group">
+                    <label for="country">Country Code</label>
+                    <input type="text" id="country" class="form-control" formControlName="country">
+                </div>
+                <div class="form-group">
+                    <label for="category">Category</label>
+                    <select id="category" class="form-control" formControlName="category">
+                        <option *ngFor="let category of categories" value="{{ category }}">
+                            {{ category }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div *ngIf="sourcesSelected">
+                <div class="form-group">
+                    <label for="source">Sources</label>
+                    <input type="text" id="source" class="form-control" formControlName="sources">
+                </div>
+            </div>
+
+        </div>
+        <div class="col-4">
+
+            <div class="form-group">
+                <label for="keyword">Keyword</label>
+                <input type="text" id="keyword" class="form-control" formControlName="keyword">
+            </div>
+            <button type="submit" class="btn btn-outline-success btn-block m-3">
+                Filter
+            </button>
+
+        </div>
+    </div>
+</form>

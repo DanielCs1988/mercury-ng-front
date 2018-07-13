@@ -42,7 +42,7 @@ export class PostService implements OnDestroy {
                 // if (isDuplicateEntry(createPost, data.feed)) {
                 //   return;
                 // }
-                data.feed.push(createPost);
+                data.feed = [createPost, ...data.feed];
                 proxy.writeQuery({ query: FEED_QUERY, data });
             }
         }).subscribe();

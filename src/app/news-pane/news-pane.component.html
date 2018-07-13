@@ -1,3 +1,14 @@
-<p>
-  news-pane works!
-</p>
+<div class="row">
+    <div class="col-md-9">
+        <app-news-filter></app-news-filter>
+    </div>
+    <div class="col-md-3">
+        <app-weather></app-weather>
+    </div>
+</div>
+<hr>
+<div *ngFor="let article of articles" class="pane">
+    <app-article [article]="article"></app-article>
+</div>
+
+

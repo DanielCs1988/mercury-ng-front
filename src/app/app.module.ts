@@ -26,6 +26,9 @@ import {WebSocketLink} from 'apollo-link-ws';
 import { split } from 'apollo-link';
 import {getMainDefinition} from 'apollo-utilities';
 import { EventEditComponent } from './event-pane/event-edit/event-edit.component';
+import { ArticleComponent } from './news-pane/article/article.component';
+import { NewsFilterComponent } from './news-pane/news-filter/news-filter.component';
+import { WeatherComponent } from './news-pane/weather/weather.component';
 
 @NgModule({
     declarations: [
@@ -43,7 +46,10 @@ import { EventEditComponent } from './event-pane/event-edit/event-edit.component
         EventDetailsComponent,
         EditorComponent,
         UserListComponent,
-        EventEditComponent
+        EventEditComponent,
+        ArticleComponent,
+        NewsFilterComponent,
+        WeatherComponent
     ],
     imports: [
         BrowserModule,

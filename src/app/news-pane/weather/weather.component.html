@@ -1,0 +1,9 @@
+<div *ngIf="weather" >
+    <h3 class="text-center">{{ weather.temperature | number:'1.0-0' }}°C</h3>
+    <p class="text-center text-muted small">
+        Weather is <strong>{{ weather.summary }}</strong> at {{ weather.location }}.
+    </p>
+    <div class="text-muted text-right small">
+        Powered by <a href="https://darksky.net/dev">Dark Sky API</a>
+    </div>
+</div>
