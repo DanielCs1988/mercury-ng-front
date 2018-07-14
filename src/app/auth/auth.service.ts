@@ -1,9 +1,9 @@
 import * as auth0 from 'auth0-js';
-import {AUTH_CONFIG} from './auth0-variables';
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import {Auth0DecodedHash} from 'auth0-js';
 import {UserService} from '../services/user.service';
+import {AUTH_CONFIG} from './auth0-variables';
 
 (window as any).global = window;
 
@@ -15,10 +15,10 @@ export class AuthService {
     private auth0 = new auth0.WebAuth({
         clientID: AUTH_CONFIG.clientID,
         domain: AUTH_CONFIG.domain,
-        responseType: AUTH_CONFIG.responseType,
+        responseType: 'token id_token',
         audience: AUTH_CONFIG.audience,
-        redirectUri: AUTH_CONFIG.callbackURL,
-        scope: AUTH_CONFIG.scope
+        redirectUri: 'http://localhost:4200/callback',
+        scope: 'openid profile'
     });
 
     constructor(private router: Router, private userService: UserService) { }
