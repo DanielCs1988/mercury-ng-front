@@ -37,6 +37,7 @@ export interface Event {
     pictureUrl?: string;
     startDate: number;
     endDate: number;
+    location: string;
     organizer: User;
     participants: User[];
 }

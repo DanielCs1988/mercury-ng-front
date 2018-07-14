@@ -15,10 +15,12 @@ $blue: #2196F3;
     border-radius: 50%;
     &:hover {
         animation: hover-up 1s infinite;
+        cursor: pointer;
     }
     &.disabled {
         color: $dark;
         animation: none;
+        cursor: auto;
     }
 }
 

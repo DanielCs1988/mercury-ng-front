@@ -37,6 +37,7 @@ export class EventEditComponent implements OnInit {
         let name = '';
         let description = '';
         let pictureUrl = '';
+        let location = '';
         let startDate = getCurrentDate();
         let endDate = getCurrentDate();
 
@@ -47,15 +48,17 @@ export class EventEditComponent implements OnInit {
             pictureUrl = event.pictureUrl;
             startDate = getCurrentDate(event.startDate);
             endDate = getCurrentDate(event.endDate);
+            location = event.location;
         }
 
         this.eventForm = new FormGroup({
             '_id': new FormControl(id),
-            'name': new FormControl(name, Validators.required),
-            'description': new FormControl(description, Validators.required),
+            'name': new FormControl(name, [Validators.required, Validators.minLength(1)]),
+            'description': new FormControl(description, [Validators.required, Validators.minLength(1)]),
             'pictureUrl': new FormControl(pictureUrl),
             'startDate': new FormControl(startDate, Validators.required),
-            'endDate': new FormControl(endDate, Validators.required)
+            'endDate': new FormControl(endDate, Validators.required),
+            'location': new FormControl(location, [Validators.required, Validators.minLength(1)])
         });
     }
 
@@ -74,6 +77,6 @@ export class EventEditComponent implements OnInit {
     }
 
     closeEditor() {
-        this.router.navigate(['/events']);
+        this.router.navigate(['../'], {relativeTo: this.route});
     }
 }

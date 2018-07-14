@@ -1,29 +1,64 @@
 <div class="pane" *ngIf="event">
-    <img [src]="event.pictureUrl" alt="Event image" class="img-fluid rounded">
-    <span>
-        {{ event.startDate | date:'MMM' }}
-    </span>
-    <span>
-        {{ event.startDate | date:'d' }}
-    </span>
-    <h2>{{ event.name }}</h2>
-    <div class="pane">
-        <div>
-            Organized by:
-            <img src="{{ event.organizer.pictureUrl }}" width="45" height="45" alt="Profile picture"
-                 class="rounded-circle m-3">
-            {{ event.organizer.givenName }} {{ event.organizer.familyName }}
-            <a class="btn btn-outline-primary mx-3" routerLink="edit">Edit</a>
-            <button class="btn btn-outline-danger mx-3" (click)="onDelete()">Delete</button>
-            <button class="btn btn-outline-info mx-3" (click)="navigateBack()">Back</button>
+
+    <div class="row">
+        <div class="col-md-6">
+            <img [src]="event.pictureUrl" alt="Event image" class="rounded img-fluid">
         </div>
-        <span>{{ event.startDate | date:'medium' }} - {{ event.endDate | date:'medium' }}</span>
-        <hr>Participants:
-        <span *ngFor="let participant of event.participants">
+        <div class="col-md-6">
+            <h2>{{ event.name }}</h2>
+            <hr>
+            <span>
+                {{ event.startDate | date:'MMM' }}
+            </span>
+            <span class="float-right">
+                <fa-icon [icon]="locationIcon" class="green-icon"></fa-icon>
+                {{ event.location }}
+            </span>
+            <h3>
+                {{ event.startDate | date:'d' }}
+            </h3>
+            <p class="text-justify mt-2">{{ event.description }}</p>
+        </div>
+    </div>
+
+    <div class="pane mt-3">
+
+        <div style="position: relative">
+            <div>
+                Organized by:
+                <img src="{{ event.organizer.pictureUrl }}" width="45" height="45" alt="Profile picture"
+                     class="rounded-circle m-3">
+                {{ event.organizer.givenName }} {{ event.organizer.familyName }}
+
+                <div class="float-right">
+                    <a routerLink="edit">
+                        <fa-icon [icon]="editIcon" class="green-icon"></fa-icon>
+                    </a>
+                    <fa-icon [icon]="deleteIcon" class="red-icon" (click)="onDelete()"></fa-icon>
+                    <fa-icon [icon]="backIcon" class="blue-icon" (click)="navigateBack()"></fa-icon>
+                </div>
+
+            </div>
+
+            <span>{{ event.startDate | date:'medium' }} - {{ event.endDate | date:'medium' }}</span>
+            <button *ngIf="!joinedEvent()" class="btn btn-primary join-btn" (click)="onChangeParticipation()">
+                <fa-icon [icon]="joinIcon"></fa-icon>
+                I will be there
+            </button>
+            <button *ngIf="joinedEvent()" class="btn btn-danger join-btn" (click)="onChangeParticipation()">
+                <fa-icon [icon]="leaveIcon"></fa-icon>
+                I won't be there
+            </button>
+        </div>
+
+        <hr>
+        <div *ngIf="event.participants.length > 0">
+            Participants:
+            <span *ngFor="let participant of event.participants">
             <img *ngFor="let participant of event.participants" src="{{ participant.pictureUrl }}"
                  width="30" height="30" alt="Profile picture" class="rounded-circle m-3" >
             {{ participant.givenName }} {{ participant.familyName }}
         </span>
-        <p class="text-justify">{{ event.description }}</p>
+        </div>
     </div>
 </div>

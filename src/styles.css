@@ -14,10 +14,12 @@ textarea {
   color: #4CAF50;
   border-radius: 50%; }
   .green-icon:hover {
-    animation: hover-up 1s infinite; }
+    animation: hover-up 1s infinite;
+    cursor: pointer; }
   .green-icon.disabled {
     color: #222;
-    animation: none; }
+    animation: none;
+    cursor: auto; }
 
 .red-icon {
   padding: 0.5rem;
@@ -25,10 +27,12 @@ textarea {
   color: #e51c23;
   border-radius: 50%; }
   .red-icon:hover {
-    animation: hover-up 1s infinite; }
+    animation: hover-up 1s infinite;
+    cursor: pointer; }
   .red-icon.disabled {
     color: #222;
-    animation: none; }
+    animation: none;
+    cursor: auto; }
 
 .blue-icon {
   padding: 0.5rem;
@@ -36,10 +40,12 @@ textarea {
   color: #2196F3;
   border-radius: 50%; }
   .blue-icon:hover {
-    animation: hover-up 1s infinite; }
+    animation: hover-up 1s infinite;
+    cursor: pointer; }
   .blue-icon.disabled {
     color: #222;
-    animation: none; }
+    animation: none;
+    cursor: auto; }
 
 .post-form {
   max-height: 20rem;

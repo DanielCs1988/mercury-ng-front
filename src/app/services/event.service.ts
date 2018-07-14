@@ -53,7 +53,11 @@ export class EventService implements OnDestroy {
 
     updateEvent(event: Event): Promise<any> {
         return this.http.put<any>(`${this.EVENTS_ENDPOINT}/${event._id}`, event).pipe(
-            map(event => {return {...event, organizer: this.users.get(event.organizer)}}),
+            map(event => {
+                return {...event, organizer: this.users.get(event.organizer), participants: event.participants.map(
+                    participant => this.users.get(participant)
+                    )}
+            }),
             tap((event: Event) => this.events.set(event._id, event))
         ).toPromise();
     }
@@ -61,6 +65,17 @@ export class EventService implements OnDestroy {
     deleteEvent(id: string): Promise<any> {
         return this.http.delete<any>(`${this.EVENTS_ENDPOINT}/${id}`).pipe(
             tap(() => this.events.delete(id))
+        ).toPromise();
+    }
+
+    changeParticipation(id: string): Promise<any> {
+        return this.http.post<any>(`${this.EVENTS_ENDPOINT}/${id}`, {}).pipe(
+            map(event => {
+                return {...event, organizer: this.users.get(event.organizer), participants: event.participants.map(
+                        participant => this.users.get(participant)
+                    )}
+            }),
+            tap((event: Event) => this.events.set(event._id, event))
         ).toPromise();
     }
 
