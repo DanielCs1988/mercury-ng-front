@@ -12,10 +12,10 @@ import {UserService} from '../services/user.service';
 export class AuthService {
 
     private auth0 = new auth0.WebAuth({
-        clientID: process.env.CLIENT_ID,
-        domain: process.env.DOMAIN,
+        clientID: 'hf9N-twx_HdoCwvbTjfXuEEh0AW2lHPi',
+        domain: 'danielcs88.eu.auth0.com',
         responseType: 'token id_token',
-        audience: process.env.AUDIENCE,
+        audience: 'Mercury-App',
         redirectUri: 'http://localhost:4200/callback',
         scope: 'openid profile'
     });
