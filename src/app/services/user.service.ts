@@ -1,6 +1,6 @@
 import {Injectable, OnDestroy} from '@angular/core';
-import {Apollo} from 'apollo-angular';
-import {CURRENT_USER_QUERY, USER_FRAGMENT, USERS_QUERY} from '../queries/users';
+import {Apollo, QueryRef} from 'apollo-angular';
+import {CURRENT_USER_QUERY, NEW_USER_SUBSCRIPTION, USER_FRAGMENT, USERS_QUERY} from '../queries/users';
 import {BehaviorSubject, Subject, Subscription} from 'rxjs';
 import {User} from '../models';
 import {SocketClient} from './SocketClient';
@@ -13,6 +13,7 @@ export class UserService implements OnDestroy {
     private SOCKET_URL = 'localhost';
     private SOCKET_PORT = 8080;
 
+    private userQuery: QueryRef<any>;
     private querySubscription: Subscription;
     private onlineUsersSub: Subscription;
 
@@ -25,15 +26,30 @@ export class UserService implements OnDestroy {
     onUnreadMessagesChange = new Subject<Map<string, number>>();
 
     constructor(private apollo: Apollo, private socket: SocketClient) {
-        this.querySubscription = this.apollo
-            .watchQuery<any>({ query: USERS_QUERY })
-                .valueChanges
-                .subscribe(({data}) => {
-                    const users = new Map<string, User>();
-                    data.users.forEach((user: User) => users.set(user.googleId, user));
-                    this.users.next(users);
-                    this.usersLoaded = true;
-                });
+        this.userQuery = this.apollo.watchQuery<any>({ query: USERS_QUERY });
+        this.querySubscription = this.userQuery
+            .valueChanges
+            .subscribe(({data}) => {
+                const users = new Map<string, User>();
+                data.users.forEach((user: User) => users.set(user.googleId, user));
+                this.users.next(users);
+                this.usersLoaded = true;
+            });
+        this.initNewUserSubscription();
+    }
+
+    private initNewUserSubscription() {
+        this.userQuery.subscribeToMore({
+            document: NEW_USER_SUBSCRIPTION,
+            updateQuery: (prev, { subscriptionData }) => {
+                console.log(prev);
+                console.log(subscriptionData);
+                if (!subscriptionData.data.newUser) {
+                    return;
+                }
+                return {...prev, users: [...prev.users, subscriptionData.data.newUser.node]};
+            }
+        });
     }
 
     /**

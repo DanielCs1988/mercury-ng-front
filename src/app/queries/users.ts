@@ -28,3 +28,19 @@ export const CURRENT_USER_QUERY = gql`
     }
     ${USER_FRAGMENT}
 `;
+
+export const NEW_USER_SUBSCRIPTION = gql`
+    subscription newUser {
+        newUser {
+            node {
+                id
+                googleId
+                givenName
+                familyName
+                pictureUrl
+                createdAt
+                __typename
+            }
+        }
+    }
+`;
