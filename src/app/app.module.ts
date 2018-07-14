@@ -7,7 +7,6 @@ import { FeedComponent } from './feed/feed.component';
 import { ChatPaneComponent } from './chat-pane/chat-pane.component';
 import { EventPaneComponent } from './event-pane/event-pane.component';
 import { NewsPaneComponent } from './news-pane/news-pane.component';
-import { FooterComponent } from './footer/footer.component';
 import { PostComponent } from './feed/post/post.component';
 import { CommentComponent } from './feed/post/comment/comment.component';
 import { LikeComponent } from './feed/like/like.component';
@@ -40,7 +39,6 @@ import { LobbyComponent } from './lobby/lobby.component';
         ChatPaneComponent,
         EventPaneComponent,
         NewsPaneComponent,
-        FooterComponent,
         PostComponent,
         CommentComponent,
         LikeComponent,

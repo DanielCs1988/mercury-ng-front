@@ -15,6 +15,11 @@
                 Events
             </a>
         </li>
+        <li class="nav-item mx-3">
+            <a routerLink="/news" class="nav-link" routerLinkActive="active">
+                News
+            </a>
+        </li>
     </ul>
 
     <a *ngIf="isLoggedIn()" class="btn btn-outline-danger" (click)="logout()">

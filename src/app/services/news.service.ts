@@ -19,7 +19,6 @@ export class NewsService {
     async applyFilter(filters: any) {
         const url = filters.sources ? this.ARTICLES_ENDPOINT + 'by-source/' : this.ARTICLES_ENDPOINT;
         const params = this.constructQueryParams(filters);
-        console.log(params);
         const articles =  await this.http.get<Article[]>(url, {params: params}).toPromise();
         this.onNewArticles.next(articles);
     }
