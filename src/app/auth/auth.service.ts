@@ -3,7 +3,6 @@ import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import {Auth0DecodedHash} from 'auth0-js';
 import {UserService} from '../services/user.service';
-import {AUTH_CONFIG} from './auth0-variables';
 
 (window as any).global = window;
 
@@ -13,10 +12,10 @@ import {AUTH_CONFIG} from './auth0-variables';
 export class AuthService {
 
     private auth0 = new auth0.WebAuth({
-        clientID: AUTH_CONFIG.clientID,
-        domain: AUTH_CONFIG.domain,
+        clientID: process.env.CLIENT_ID,
+        domain: process.env.DOMAIN,
         responseType: 'token id_token',
-        audience: AUTH_CONFIG.audience,
+        audience: process.env.AUDIENCE,
         redirectUri: 'http://localhost:4200/callback',
         scope: 'openid profile'
     });
