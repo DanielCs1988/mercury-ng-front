@@ -24,6 +24,10 @@ $blue: #2196F3;
     }
 }
 
+.bouncy {
+    animation: bounce-in 0.5s ease-out;
+}
+
 div {
   box-sizing: border-box;
 }
@@ -50,6 +54,7 @@ textarea {
 .post-form {
   max-height: 20rem;
   position: relative;
+  margin-bottom: 1.5rem;
 }
 
 .editor {
@@ -140,6 +145,25 @@ input + .helper-text {
     100% {
         box-shadow: 0 2px 3px 0 rgba(0,0,0,0.6);
         transform: translateY(0px);
+    }
+}
+
+@keyframes bounce-in {
+    0%{
+        opacity: 0;
+        transform: scale(0.3) translate3d(0,0,0);
+    }
+    50%{
+        opacity: 0.9;
+        transform: scale(1.1);
+    }
+    80%{
+        opacity: 1;
+        transform: scale(0.89);
+    }
+    100%{
+        opacity: 1;
+        transform: scale(1) translate3d(0,0,0);
     }
 }
 

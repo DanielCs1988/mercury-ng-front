@@ -1,5 +1,5 @@
 import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {Like, Post} from '../../models';
+import {Like, Post, User} from '../../models';
 import {NgForm} from '@angular/forms';
 import {PostService} from '../../services/post.service';
 import {CommentService} from '../../services/comment.service';
@@ -22,8 +22,10 @@ export class PostComponent implements OnInit, OnDestroy {
     private userSubscription: Subscription;
     private like: Like;
 
+    user: User;
     liked: boolean;
     editing = false;
+
     editIcon = faEdit;
     deleteIcon = faTrashAlt;
     likeIcon = faThumbsUp;
@@ -38,6 +40,7 @@ export class PostComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.userSubscription = this.userService.currentUser.subscribe(user => {
+            this.user = user;
             if (user) {
                 this.like = this.post.likes.find(like => like.user.id === user.id);
                 this.liked = this.like !== undefined;

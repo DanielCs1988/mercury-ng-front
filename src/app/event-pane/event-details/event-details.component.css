@@ -12,3 +12,7 @@ img {
 p {
     white-space: pre-wrap;
 }
+
+.participant {
+    display: inline-block;
+}

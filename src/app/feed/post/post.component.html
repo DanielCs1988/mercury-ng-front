@@ -1,13 +1,15 @@
-<div class="pane" [class]="post.id === '' ? 'prediction' : ''">
+<div *ngIf="user" class="pane" [ngClass]="{'prediction': post.id === ''}">
 
     <div *ngIf="!editing">
-        <div *ngIf="post.user">
-            <img src="{{ post.user.pictureUrl }}" width="30" height="30" alt="Profile picture" class="rounded-circle">
-            <span class="ml-1">{{ post.user.givenName }} {{ post.user.familyName }}</span>
-            <span class="ml-3">{{ post.createdAt | date:'mediumTime' }}</span>
+        <img src="{{ post.user.pictureUrl }}" width="30" height="30" alt="Profile picture" class="rounded-circle">
+        <span class="ml-1">{{ post.user.givenName }} {{ post.user.familyName }}</span>
+        <span class="ml-3">{{ post.createdAt | date:'mediumTime' }}</span>
+
+        <span *ngIf="post.user.id === user.id" class="controls">
             <fa-icon [icon]="editIcon" class="green-icon" (click)="onStartEditing()"></fa-icon>
             <fa-icon [icon]="deleteIcon" class="red-icon" (click)="onDelete()"></fa-icon>
-        </div>
+        </span>
+
         <p class="text-justify my-3">{{ post.text }}</p>
         <img src="{{ post.pictureUrl }}" alt="{{ post.pictureUrl }}" class="img-fluid rounded">
         <div>

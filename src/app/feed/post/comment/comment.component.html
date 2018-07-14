@@ -1,4 +1,4 @@
-<div class="pane">
+<div *ngIf="user" class="pane">
   <img src="{{ comment.user.pictureUrl }}" width="30" height="30" alt="Profile picture" class="rounded-circle">
 
   <span class="ml-1" *ngIf="!editing">
@@ -10,8 +10,10 @@
         </div>
     </form>
 
-    <fa-icon [icon]="editIcon" class="green-icon" (click)="onStartEditing()"></fa-icon>
-    <fa-icon [icon]="deleteIcon" class="red-icon" (click)="onDeleteComment()"></fa-icon>
+    <span *ngIf="comment.user.id === user.id" class="controls">
+        <fa-icon [icon]="editIcon" class="green-icon" (click)="onStartEditing()"></fa-icon>
+        <fa-icon [icon]="deleteIcon" class="red-icon" (click)="onDeleteComment()"></fa-icon>
+    </span>
 
   <div>
       <span class="text-muted">At: {{ comment.createdAt | date:'mediumTime' }}</span>

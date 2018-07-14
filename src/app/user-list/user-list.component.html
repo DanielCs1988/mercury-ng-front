@@ -1,15 +1,17 @@
-<div *ngFor="let user of users" class="pane m-2 p-1">
+<div id="users-pane">
+    <div *ngFor="let user of users" class="pane m-2 p-1">
 
     <span *ngIf="unreadMessages.get(user.googleId)" >
         <strong>{{ unreadMessages.get(user.googleId) }}</strong>
         <fa-icon [icon]="unreadIcon" class="unread mr-2"></fa-icon>
     </span>
 
-    <img src="{{ user.pictureUrl }}" width="30" height="30" alt="Profile picture" class="rounded-circle mr-2">
-    <a routerLink="/chat/{{ user.id }}" routerLinkActive="active">
-        {{ user.givenName }} {{ user.familyName }}
-    </a>
+        <img src="{{ user.pictureUrl }}" width="30" height="30" alt="Profile picture" class="rounded-circle mr-2">
+        <a routerLink="/chat/{{ user.id }}" routerLinkActive="active">
+            {{ user.givenName }} {{ user.familyName }}
+        </a>
 
-    <fa-icon *ngIf="onlineUsers.has(user.googleId)" [icon]="onlineIcon" class="online-marker ml-2"></fa-icon>
+        <fa-icon *ngIf="onlineUsers.has(user.googleId)" [icon]="onlineIcon" class="online-marker ml-2"></fa-icon>
 
+    </div>
 </div>

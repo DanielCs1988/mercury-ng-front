@@ -1,6 +1,6 @@
 import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {CommentService} from '../../../services/comment.service';
-import {Comment, Like} from '../../../models';
+import {Comment, Like, User} from '../../../models';
 import {NgForm} from '@angular/forms';
 import {UserService} from '../../../services/user.service';
 import {LikeService} from '../../../services/like.service';
@@ -10,7 +10,7 @@ import {faEdit, faThumbsDown, faThumbsUp, faTrashAlt} from '@fortawesome/free-so
 @Component({
   selector: 'app-comment',
   templateUrl: './comment.component.html',
-  styles: []
+  styleUrls: ['./comment.component.css']
 })
 export class CommentComponent implements OnInit, OnDestroy {
 
@@ -21,8 +21,10 @@ export class CommentComponent implements OnInit, OnDestroy {
     private userSubscription: Subscription;
     private like: Like;
 
+    user: User;
     liked: boolean;
     editing = false;
+
     editIcon = faEdit;
     deleteIcon = faTrashAlt;
     likeIcon = faThumbsUp;
@@ -36,6 +38,7 @@ export class CommentComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.userSubscription = this.userService.currentUser.subscribe(user => {
+            this.user = user;
             if (user) {
                 this.like = this.comment.likes.find(like => like.user.id === user.id);
                 this.liked = this.like !== undefined;

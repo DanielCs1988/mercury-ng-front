@@ -4,3 +4,9 @@
 .unread {
     color: red;
 }
+
+#users-pane {
+    position: fixed;
+    width: 22%;
+    margin-top: 0.5rem;
+}

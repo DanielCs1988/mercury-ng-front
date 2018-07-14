@@ -1,4 +1,8 @@
-<form #postForm="ngForm" (ngSubmit)="onPost()" class="post-form">
+<div *ngIf="!formClicked" (click)="toggleEditor()" class="mt-2 mb-3">
+    <input type="text" class="form-control" placeholder="I want to express myself...">
+</div>
+
+<form *ngIf="formClicked" #postForm="ngForm" (ngSubmit)="onPost()" class="post-form">
 
   <div class="editor">
     <div class="form-group">
@@ -11,7 +15,7 @@
              placeholder="Picture url here..." ngModel #pictureUrl>
     </div>
 
-    <button class="btn btn-success btn-block mt-2" type="submit" [disabled]="!postForm.valid">Post</button>
+    <button class="btn btn-success btn-block mt-2 bouncy" type="submit" [disabled]="!postForm.valid">Post</button>
   </div>
 
   <div class="preview">

@@ -1,3 +1,10 @@
+.controls {
+    display: none;
+}
+.pane:hover .controls {
+    display: inline-block;
+}
+
 p {
     font-size: 1rem;
 }

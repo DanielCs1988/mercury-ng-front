@@ -9,17 +9,23 @@ import {PostService} from '../../services/post.service';
 })
 export class EditorComponent implements OnInit {
 
-  @ViewChild('postForm') postForm: NgForm;
+    @ViewChild('postForm') postForm: NgForm;
+    formClicked = false;
 
-  constructor(private postService: PostService) { }
+    constructor(private postService: PostService) { }
 
-  ngOnInit() {
-  }
+    ngOnInit() {
+    }
 
-  onPost() {
-    const text = this.postForm.value.post;
-    const pictureUrl = this.postForm.value.picture;
-    this.postForm.reset();
-    this.postService.createPost(text, pictureUrl);
-  }
+    onPost() {
+        const text = this.postForm.value.post;
+        const pictureUrl = this.postForm.value.picture;
+        this.postForm.reset();
+        this.toggleEditor();
+        this.postService.createPost(text, pictureUrl);
+    }
+
+    toggleEditor() {
+        this.formClicked = !this.formClicked;
+    }
 }

@@ -31,10 +31,12 @@
                 {{ event.organizer.givenName }} {{ event.organizer.familyName }}
 
                 <div class="float-right">
-                    <a routerLink="edit">
-                        <fa-icon [icon]="editIcon" class="green-icon"></fa-icon>
-                    </a>
-                    <fa-icon [icon]="deleteIcon" class="red-icon" (click)="onDelete()"></fa-icon>
+                    <span *ngIf="event.organizer.id === currentUser.id">
+                        <a routerLink="edit">
+                            <fa-icon [icon]="editIcon" class="green-icon"></fa-icon>
+                        </a>
+                        <fa-icon [icon]="deleteIcon" class="red-icon" (click)="onDelete()"></fa-icon>
+                    </span>
                     <fa-icon [icon]="backIcon" class="blue-icon" (click)="navigateBack()"></fa-icon>
                 </div>
 
@@ -54,11 +56,11 @@
         <hr>
         <div *ngIf="event.participants.length > 0">
             Participants:
-            <span *ngFor="let participant of event.participants">
-            <img *ngFor="let participant of event.participants" src="{{ participant.pictureUrl }}"
-                 width="30" height="30" alt="Profile picture" class="rounded-circle m-3" >
-            {{ participant.givenName }} {{ participant.familyName }}
-        </span>
+            <span *ngFor="let participant of event.participants" class="participant">
+                <img src="{{ participant.pictureUrl }}"
+                     width="30" height="30" alt="Profile picture" class="rounded-circle ml-2" >
+                {{ participant.givenName }} {{ participant.familyName }}
+            </span>
         </div>
     </div>
 </div>
