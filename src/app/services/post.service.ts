@@ -11,8 +11,13 @@ import {Subscription} from 'rxjs';
 })
 export class PostService implements OnDestroy {
 
+    readonly POSTS_PER_PAGE = 10;
     private userSubscription: Subscription;
     private currentUser: User;
+    private readonly QUERY_VARIABLES = {
+        first: this.POSTS_PER_PAGE,
+        skip: 0
+    };
 
     constructor(private apollo: Apollo, private userService: UserService) {
         this.userSubscription = this.userService.currentUser.subscribe(user => this.currentUser = user);
@@ -38,12 +43,12 @@ export class PostService implements OnDestroy {
             },
 
             update: (proxy, { data: { createPost } }) => {
-                const data: any = proxy.readQuery({ query: FEED_QUERY });
+                const data: any = proxy.readQuery({ query: FEED_QUERY, variables: this.QUERY_VARIABLES });
                 // if (isDuplicateEntry(createPost, data.feed)) {
                 //   return;
                 // }
                 data.feed = [createPost, ...data.feed];
-                proxy.writeQuery({ query: FEED_QUERY, data });
+                proxy.writeQuery({ query: FEED_QUERY, variables: this.QUERY_VARIABLES, data });
             }
         }).subscribe();
     }
@@ -79,9 +84,9 @@ export class PostService implements OnDestroy {
             },
 
             update: (proxy, { data: deletePost }) => {
-                const data: any = proxy.readQuery({ query: FEED_QUERY });
+                const data: any = proxy.readQuery({ query: FEED_QUERY, variables: this.QUERY_VARIABLES });
                 data.feed = data.feed.filter(post => post.id !== id);
-                proxy.writeQuery({ query: FEED_QUERY, data });
+                proxy.writeQuery({ query: FEED_QUERY, variables: this.QUERY_VARIABLES, data });
             }
         }).subscribe();
     }

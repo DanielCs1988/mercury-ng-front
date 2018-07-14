@@ -16,7 +16,6 @@ export class NavigationComponent implements OnInit, OnDestroy {
     user: User;
     logoutIcon = faSignOutAlt;
     loginIcon = faSignInAlt;
-    searchIcon = faSearch;
 
     constructor(private authService: AuthService, private userService: UserService) { }
 

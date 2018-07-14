@@ -16,16 +16,10 @@ export const COMMENT_FRAGMENT = gql`
         likes {
             id
         }
-    }
-`;
-
-export const COMMENTS_QUERY = gql`
-    query comments($postId: ID!) {
-        comments(postId: $postId) {
-            ...CommentParts
+        post {
+            id
         }
     }
-    ${COMMENT_FRAGMENT}
 `;
 
 export const CREATE_COMMENT_MUTATION = gql`

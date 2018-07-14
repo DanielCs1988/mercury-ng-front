@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export const FEED_QUERY = gql`
-    query SocialFeed {
-        feed {
+    query SocialFeed($first: Int, $skip: Int) {
+        feed(orderBy: createdAt_DESC, first: $first, skip: $skip) {
             id
             text
             pictureUrl
