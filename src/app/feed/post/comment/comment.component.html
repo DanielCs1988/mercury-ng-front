@@ -1,16 +1,19 @@
 <div *ngIf="user" class="pane">
-  <img src="{{ comment.user.pictureUrl }}" width="30" height="30" alt="Profile picture" class="rounded-circle">
+  <img *ngIf="!editing" src="{{ comment.user.pictureUrl }}" width="30" height="30"
+       alt="Profile picture" class="rounded-circle">
 
   <span class="ml-1" *ngIf="!editing">
       {{ comment.user.givenName }} {{ comment.user.familyName }}: {{ comment.text }}
   </span>
-    <form *ngIf="editing" #commentForm="ngForm" (ngSubmit)="onUpdateComment()" class="d-inline-block">
+    <form *ngIf="editing" #commentForm="ngForm" (ngSubmit)="onUpdateComment()">
         <div class="form-group">
-            <input type="text" class="form-control w-75 ml-3" name="text" required minlength="1" ngModel>
+            <img src="{{ comment.user.pictureUrl }}" width="30" height="30"
+                 alt="Profile picture" class="rounded-circle">
+            <input type="text" class="form-control ml-3 d-inline-block w-75" name="text" required minlength="1" ngModel>
         </div>
     </form>
 
-    <span *ngIf="comment.user.id === user.id" class="controls">
+    <span *ngIf="comment.user.id === user.id && !editing" class="controls">
         <fa-icon [icon]="editIcon" class="green-icon" (click)="onStartEditing()"></fa-icon>
         <fa-icon [icon]="deleteIcon" class="red-icon" (click)="onDeleteComment()"></fa-icon>
     </span>
