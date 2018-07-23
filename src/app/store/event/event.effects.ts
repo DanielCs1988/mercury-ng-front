@@ -3,12 +3,13 @@ import {Store} from '@ngrx/store';
 import {AppState} from '../app.reducers';
 import {Actions, Effect} from '@ngrx/effects';
 import * as actions from './event.actions';
-import {map, switchMap} from 'rxjs/operators';
+import {map, switchMap, tap} from 'rxjs/operators';
 import {HttpClient} from '@angular/common/http';
 import {UserService} from '../../services/user.service';
 import {EVENTS_ENDPOINT} from '../../utils/endpoints';
 import {Subscription} from 'rxjs';
 import {User} from '../../models';
+import {Router} from '@angular/router';
 
 @Injectable()
 export class EventEffects implements OnDestroy {
@@ -64,6 +65,7 @@ export class EventEffects implements OnDestroy {
             const id = action.payload;
             return this.http.delete<any>(`${EVENTS_ENDPOINT}/${id}`);
         }),
+        tap(() => this.router.navigate(['/events'])),
         map(event => ({
             type: actions.EVENT_DELETED,
             payload: event._id
@@ -94,7 +96,8 @@ export class EventEffects implements OnDestroy {
         private store: Store<AppState>,
         private actions$: Actions,
         private http: HttpClient,
-        private userService: UserService
+        private userService: UserService,
+        private router: Router
     ) {
         this.userSub = userService.users.subscribe(users => this.users = users);
     }

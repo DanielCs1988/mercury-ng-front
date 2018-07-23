@@ -1,6 +1,6 @@
 <a class="btn btn-outline-success btn-lg mb-2" routerLink="new">Create New Event</a>
 <div class="grid">
-    <div *ngFor="let event of events | async" class="pane event" routerLink="{{ event._id }}">
+    <div *ngFor="let event of events" class="pane event" routerLink="{{ event._id }}">
         <h3>{{ event.name }}</h3>
         <div>From: {{ event.startDate | date:'short' }}</div>
         <div>To: {{ event.endDate | date:'short' }}</div>

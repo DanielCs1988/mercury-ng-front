@@ -1,9 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {EventService} from '../../services/event.service';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {Event} from '../../models';
 import {getCurrentDate, validateDatetimes} from '../../utils/time';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../store/app.reducers';
+import {take} from 'rxjs/operators';
+import {EventState} from '../../store/event/event.reducers';
+import {CreateEvent, UpdateEvent} from '../../store/event/event.actions';
 
 @Component({
   selector: 'app-event-edit',
@@ -15,20 +19,24 @@ export class EventEditComponent implements OnInit {
     eventForm: FormGroup;
     editing: boolean;
 
-    constructor(private eventService: EventService, private route: ActivatedRoute, private router: Router) { }
+    constructor(private store: Store<AppState>, private route: ActivatedRoute, private router: Router) { }
 
     ngOnInit() {
-        this.route.params.subscribe(async (param: Params) => {
+        this.route.params.subscribe((param: Params) => {
             const id = param['id'];
             this.editing = id !== undefined;
             if (this.editing) {
-                const event = await this.eventService.getEvent(id);
-                if (event === undefined) {
-                    return this.router.navigate(['../'], {relativeTo: this.route});
-                }
-                return this.initForm(event);
+                this.store.select('events').pipe(take(1)).subscribe((eventState: EventState) => {
+                    const event = eventState.events.find(event => event._id === id);
+                    if (event === undefined) {
+                        this.router.navigate(['../'], {relativeTo: this.route});
+                    } else {
+                        this.initForm(event);
+                    }
+                });
+            } else {
+                this.initForm();
             }
-            this.initForm();
         });
     }
 
@@ -69,9 +77,9 @@ export class EventEditComponent implements OnInit {
         const formValue: any = this.eventForm.value;
         const event = {...formValue, startDate: new Date(formValue.startDate).getTime(), endDate: new Date(formValue.endDate).getTime()};
         if (this.editing) {
-            await this.eventService.updateEvent(event);
+            this.store.dispatch(new UpdateEvent(event));
         } else {
-            await this.eventService.createEvent(event);
+            this.store.dispatch(new CreateEvent(event));
         }
         this.closeEditor();
     }

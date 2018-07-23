@@ -1,10 +1,13 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
-import {EventService} from '../../services/event.service';
 import {Event, User} from '../../models';
 import {faBackward, faCheck, faEdit, faMapMarkerAlt, faTimes, faTrashAlt} from '@fortawesome/free-solid-svg-icons';
 import {UserService} from '../../services/user.service';
 import {Subscription} from 'rxjs';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../store/app.reducers';
+import {EventState} from '../../store/event/event.reducers';
+import {ChangeParticipation, DeleteEvent} from '../../store/event/event.actions';
 
 @Component({
   selector: 'app-event-details',
@@ -15,6 +18,7 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
 
     event: Event;
     currentUser: User;
+
     locationIcon = faMapMarkerAlt;
     editIcon = faEdit;
     deleteIcon = faTrashAlt;
@@ -23,20 +27,22 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
     leaveIcon = faTimes;
 
     private userSub: Subscription;
+    private eventSub: Subscription;
 
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        private eventService: EventService,
+        private store: Store<AppState>,
         private userService: UserService
     ) { }
 
     ngOnInit() {
         this.userSub = this.userService.currentUser.subscribe(user => this.currentUser = user);
         this.route.params.subscribe((params: Params) => {
-            this.eventService.getEvent(params['id'])
-                .then(event => this.event = event)
-                .catch(err => console.log(err));
+            this.eventSub = this.store.select('events').subscribe((eventState: EventState) => {
+                const id = params['id'];
+                this.event = eventState.events.find(event => event._id === id);
+            })
         });
     }
 
@@ -45,22 +51,20 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
         return this.event.participants.find(user => user.id === this.currentUser.id) !== undefined;
     }
 
-    async onDelete() {
-        await this.eventService.deleteEvent(this.event._id);
-        this.navigateBack();
+    onDelete() {
+        this.store.dispatch(new DeleteEvent(this.event._id));
+    }
+
+    onChangeParticipation() {
+        this.store.dispatch(new ChangeParticipation(this.event._id));
     }
 
     navigateBack() {
         this.router.navigate(['../'], {relativeTo: this.route});
     }
 
-    onChangeParticipation() {
-        this.eventService.changeParticipation(this.event._id)
-            .then(event => this.event = event)
-            .catch(err => console.error(err));
-    }
-
     ngOnDestroy(): void {
         this.userSub.unsubscribe();
+        this.eventSub.unsubscribe();
     }
 }

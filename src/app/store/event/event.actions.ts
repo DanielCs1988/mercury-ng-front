@@ -14,9 +14,6 @@ export const EVENT_UPDATED = 'EVENT_UPDATED';
 export const DELETE_EVENT = 'DELETE_EVENT';
 export const EVENT_DELETED = 'EVENT_DELETED';
 
-export const START_EDITING = 'START_EDITING';
-export const CANCEL_EDITING = 'CANCEL_EDITING';
-
 export class FetchEvents implements Action {
     readonly type = FETCH_EVENTS;
 }
@@ -56,19 +53,10 @@ export class EventDeleted implements Action {
     constructor(public payload: string) {}
 }
 
-export class StartEditing implements Action {
-    readonly type = START_EDITING;
-    constructor(public payload: string) {}
-}
-
-export class CancelEditing implements Action {
-    readonly type = CANCEL_EDITING;
-}
-
 export class ChangeParticipation implements Action {
     readonly type = CHANGE_PARTICIPATION;
     constructor(public payload: string) {}
 }
 
 export type EventActions = FetchEvents | EventsFetched | CreateEvent | EventCreated | UpdateEvent | EventUpdated |
-                           DeleteEvent | EventDeleted | StartEditing | CancelEditing | ChangeParticipation;
+                           DeleteEvent | EventDeleted | ChangeParticipation;
