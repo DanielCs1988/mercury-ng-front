@@ -30,6 +30,13 @@ import { NewsFilterComponent } from './news-pane/news-filter/news-filter.compone
 import { WeatherComponent } from './news-pane/weather/weather.component';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import { LobbyComponent } from './lobby/lobby.component';
+import {StoreModule} from '@ngrx/store';
+import {reducers} from './store/app.reducers';
+import {EffectsModule} from '@ngrx/effects';
+import {EventEffects} from './store/event/event.effects';
+import {StoreRouterConnectingModule} from '@ngrx/router-store';
+import {environment} from '../environments/environment';
+import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 
 @NgModule({
     declarations: [
@@ -60,7 +67,11 @@ import { LobbyComponent } from './lobby/lobby.component';
         ReactiveFormsModule,
         ApolloModule,
         HttpLinkModule,
-        FontAwesomeModule
+        FontAwesomeModule,
+        StoreModule.forRoot(reducers),
+        EffectsModule.forRoot([EventEffects]),
+        StoreRouterConnectingModule,
+        !environment.production ? StoreDevtoolsModule : []
     ],
     providers: [
         {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
