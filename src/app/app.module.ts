@@ -32,6 +32,7 @@ import {StoreRouterConnectingModule} from '@ngrx/router-store';
 import {environment} from '../environments/environment';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {AppApolloModule} from './app-apollo.module';
+import {ChatEffects} from './store/message/chat.effects';
 
 @NgModule({
     declarations: [
@@ -62,7 +63,7 @@ import {AppApolloModule} from './app-apollo.module';
         AppApolloModule,
         FontAwesomeModule,
         StoreModule.forRoot(reducers),
-        EffectsModule.forRoot([EventEffects]),
+        EffectsModule.forRoot([EventEffects, ChatEffects]),
         StoreRouterConnectingModule,
         !environment.production ? StoreDevtoolsModule : []
     ],
