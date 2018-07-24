@@ -10,6 +10,7 @@ export const HISTORY_FETCHED = 'HISTORY_FETCHED';
 
 export const CHANGE_TARGET = 'CHANGE_TARGET';
 export const CLOSE_CHAT = 'CLOSE_CHAT';
+export const RESET_CHAT = 'RESET_CHAT';
 
 export class HistoryFetched implements Action {
     readonly type = HISTORY_FETCHED;
@@ -47,4 +48,10 @@ export class ChangeTarget implements Action {
     constructor(public payload: string) {}
 }
 
-export type ChatActions = HistoryFetched | SendMessage | MessageSent | ReceiveMessage | FetchHistory | ChangeTarget | CloseChat;
+// Store needs a full clear when someone logs out. We wouldn't want any else to see their private message now, wouldn't we? ;)
+export class ResetChat implements Action {
+    readonly type = RESET_CHAT;
+}
+
+export type ChatActions = HistoryFetched | SendMessage | MessageSent | ReceiveMessage |
+                          FetchHistory | ChangeTarget | CloseChat | ResetChat;

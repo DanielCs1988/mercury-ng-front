@@ -56,6 +56,8 @@ export function chatReducer(state = defaultState, action: chatActions.ChatAction
                 ...state,
                 target: null
             };
+        case chatActions.RESET_CHAT:
+            return defaultState;
         default:
             return state;
     }

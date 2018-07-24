@@ -138,4 +138,22 @@ describe('ChatReducer', () => {
             expect(state.target).toEqual(null);
         });
     });
+
+    describe('RESET_CHAT action', () => {
+        it('should purge the entire chat store ', () => {
+            const { defaultState } = fromChat;
+            const populatedState = {
+                ...defaultState,
+                target: 'someone',
+                openChannels: ['someone', 'else', 'is here too'],
+                history: {
+                    'target': [sent, received]
+                }
+            };
+            const action = new fromActions.ResetChat();
+            const state = fromChat.chatReducer(populatedState, action);
+
+            expect(state).toEqual(defaultState);
+        });
+    });
 });

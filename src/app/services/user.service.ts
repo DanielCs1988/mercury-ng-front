@@ -4,6 +4,9 @@ import {CURRENT_USER_QUERY, NEW_USER_SUBSCRIPTION, USER_FRAGMENT, USERS_QUERY} f
 import {BehaviorSubject, Subject, Subscription} from 'rxjs';
 import {User} from '../models';
 import {SocketClient} from './SocketClient';
+import {Store} from '@ngrx/store';
+import {AppState} from '../store/app.reducers';
+import {ResetChat} from '../store/message/chat.actions';
 
 @Injectable({
     providedIn: 'root'
@@ -25,7 +28,7 @@ export class UserService implements OnDestroy {
     private unreadMessages = new Map<string, number>();
     onUnreadMessagesChange = new Subject<Map<string, number>>();
 
-    constructor(private apollo: Apollo, private socket: SocketClient) {
+    constructor(private apollo: Apollo, private socket: SocketClient, private store: Store<AppState>) {
         this.userQuery = this.apollo.watchQuery<any>({ query: USERS_QUERY });
         this.querySubscription = this.userQuery
             .valueChanges
@@ -68,6 +71,7 @@ export class UserService implements OnDestroy {
     removeUserProfile() {
         this.currentUser.next(null);
         this.socket.disconnect();
+        this.store.dispatch(new ResetChat());
     }
 
     getUserById(id: string): User {
