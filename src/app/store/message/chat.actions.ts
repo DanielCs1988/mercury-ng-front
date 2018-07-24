@@ -5,9 +5,10 @@ export const SEND_MESSAGE = 'SEND_MESSAGE';
 export const MESSAGE_SENT = 'MESSAGE_SENT';
 export const RECEIVE_MESSAGE = 'RECEIVE_MESSAGE';
 
-export const CHANGE_TARGET = 'CHANGE_TARGET';
-export const TARGET_CHANGED = 'TARGET_CHANGED';
+export const FETCH_HISTORY = 'FETCH_HISTORY';
 export const HISTORY_FETCHED = 'HISTORY_FETCHED';
+
+export const CHANGE_TARGET = 'CHANGE_TARGET';
 export const CLOSE_CHAT = 'CLOSE_CHAT';
 
 export class HistoryFetched implements Action {
@@ -32,8 +33,8 @@ export class ReceiveMessage implements Action {
     constructor(public payload: Message) {}
 }
 
-export class ChangeTarget implements Action {
-    readonly type = CHANGE_TARGET;
+export class FetchHistory implements Action {
+    readonly type = FETCH_HISTORY;
     constructor(public payload: string) {}
 }
 
@@ -41,9 +42,9 @@ export class CloseChat implements Action {
     readonly type = CLOSE_CHAT;
 }
 
-export class TargetChanged implements Action {
-    readonly type = TARGET_CHANGED;
+export class ChangeTarget implements Action {
+    readonly type = CHANGE_TARGET;
     constructor(public payload: string) {}
 }
 
-export type ChatActions = HistoryFetched | SendMessage | MessageSent | ReceiveMessage | ChangeTarget | TargetChanged | CloseChat;
+export type ChatActions = HistoryFetched | SendMessage | MessageSent | ReceiveMessage | FetchHistory | ChangeTarget | CloseChat;

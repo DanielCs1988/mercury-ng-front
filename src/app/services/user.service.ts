@@ -98,7 +98,7 @@ export class UserService implements OnDestroy {
         const token = localStorage.getItem('access_token');
         this.socket.connect(this.SOCKET_URL, this.SOCKET_PORT, token);
         if (!this.onlineUsersSub) {
-            this.onlineUsersSub = this.socket.on('users').subscribe(users => {
+            this.onlineUsersSub = this.socket.on<string[]>('users').subscribe(users => {
                 this.onlineUsers.next(new Set<string>(users));
             });
         }

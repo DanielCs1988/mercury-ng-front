@@ -39,7 +39,11 @@ export function chatReducer(state = defaultState, action: chatActions.ChatAction
                 }
             };
         case chatActions.CHANGE_TARGET:
-            return {
+            // This is an O(n) check, stores should support Set structure
+            console.log(state.openChannels);
+            return state.openChannels.includes(action.payload) ? {
+                ...state, target: action.payload
+            } : {
                 ...state,
                 openChannels: [...state.openChannels, action.payload],
                 target: action.payload

@@ -58,7 +58,7 @@ describe('ChatReducer', () => {
         });
     });
 
-    describe('MESSAGE_RECEIVED action', () => {
+    describe('RECEIVE_MESSAGE action', () => {
         it('should add received messages to the sending user\'s history ', () => {
             const defaultState = {
                 ...fromChat.defaultState,
@@ -81,12 +81,30 @@ describe('ChatReducer', () => {
 
     describe('CHANGE_TARGET action', () => {
         it('should change current target when called upon ', () => {
-            const newTarget = 'target';
+            const target = 'target';
             const { defaultState } = fromChat;
-            const action = new fromActions.ChangeTarget(newTarget);
+            const expected = {
+                ...defaultState,
+                target: target,
+                openChannels: [target]
+            };
+            const action = new fromActions.ChangeTarget(target);
             const state = fromChat.chatReducer(defaultState, action);
+            expect(state).toEqual(expected);
+        });
 
-            expect(state.target).toEqual(newTarget);
+        it('should not add the same target to the openChannels more than once ', () => {
+            const target = 'target';
+            const { defaultState } = fromChat;
+            const expected = {
+                ...defaultState,
+                target: target,
+                openChannels: [target]
+            };
+            const action = new fromActions.ChangeTarget(target);
+            let state = fromChat.chatReducer(defaultState, action);
+            state = fromChat.chatReducer(state, action);
+            expect(state).toEqual(expected);
         });
     });
 

@@ -1,10 +1,13 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {ChatService} from '../services/chat.service';
 import {UserService} from '../services/user.service';
 import {ActivatedRoute, Params} from '@angular/router';
 import {Subscription} from 'rxjs';
 import {Message, User} from '../models';
 import {NgForm} from '@angular/forms';
+import {Store} from '@ngrx/store';
+import {AppState} from '../store/app.reducers';
+import {ChangeTarget, CloseChat, FetchHistory, SendMessage} from '../store/message/chat.actions';
+import {ChatState} from '../store/message/chat.reducers';
 
 @Component({
   selector: 'app-chat-pane',
@@ -25,7 +28,7 @@ export class ChatPaneComponent implements OnInit, OnDestroy {
     currentUser: User;
 
     constructor(
-        private chatService: ChatService,
+        private store: Store<AppState>,
         private userService: UserService,
         private route: ActivatedRoute
     ) { }
@@ -37,19 +40,22 @@ export class ChatPaneComponent implements OnInit, OnDestroy {
             const id = params['id'];
             this.currentTarget = this.userService.getUserById(id);
             this.userService.markMessagesRead(this.currentTarget.googleId);
-            this.initMessages();
+            this.initMessages(this.currentTarget.googleId);
         });
     }
 
-    private async initMessages() {
-        if (!this.messageSub) {
-            this.messageSub = this.chatService.getMessageSubscription()
-                .subscribe(message => {
-                    this.messages.push(message);
-                });
+    private async initMessages(target: string) {
+        if (this.messageSub) {
+            this.messageSub.unsubscribe();
         }
-        this.messages = await this.chatService.getChatHistory(this.currentTarget.googleId);
-        this.scrollToBottom();
+        this.store.dispatch(new ChangeTarget(target));
+        this.messageSub = this.store.select('chat').subscribe((chatState: ChatState) => {
+            this.messages = chatState.history[target];
+            if (!this.messages) {
+                this.store.dispatch(new FetchHistory(target));
+            }
+            this.scrollToBottom();
+        });
     }
 
     private scrollToBottom() {
@@ -59,18 +65,16 @@ export class ChatPaneComponent implements OnInit, OnDestroy {
     async onSendMessage() {
         if (!this.chatForm.valid) return;
         const content = this.chatForm.value.content.trim();
+        const message = { content, to: this.currentTarget.googleId };
         this.chatForm.reset();
-        this.scrollToBottom();
-        const optimisticResponse: Message = {
-            content,
-            id: -1,
-            from: this.currentUser.googleId,
-            to: this.currentTarget.googleId,
-            createdAt: new Date().getTime()
-        };
-        this.messages.push(optimisticResponse);
-        const swapIndex = this.messages.length - 1;
-        this.messages[swapIndex] = await this.chatService.sendMessage(content);
+        this.store.dispatch(new SendMessage(message));
+        // const optimisticResponse: Message = {
+        //     content,
+        //     id: -1,
+        //     from: this.currentUser.googleId,
+        //     to: this.currentTarget.googleId,
+        //     createdAt: new Date().getTime()
+        // };
     }
 
     owner(message: Message): User {
@@ -81,6 +85,6 @@ export class ChatPaneComponent implements OnInit, OnDestroy {
         this.routeSub.unsubscribe();
         this.userSub.unsubscribe();
         this.messageSub.unsubscribe();
-        this.chatService.closeChat();
+        this.store.dispatch(new CloseChat());
     }
 }

@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import {AuthService} from './auth/auth.service';
-import {ChatService} from './services/chat.service';
 
 @Component({
   selector: 'app-root',
@@ -9,9 +8,8 @@ import {ChatService} from './services/chat.service';
 })
 export class AppComponent {
 
-  constructor(private authService: AuthService, private chatService: ChatService) {
+  constructor(private authService: AuthService) {
     authService.handleAuthentication();
-    chatService.init();
   }
 
 }

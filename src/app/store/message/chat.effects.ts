@@ -4,8 +4,8 @@ import {Store} from '@ngrx/store';
 import {AppState} from '../app.reducers';
 import * as actions from './chat.actions';
 import {SocketClient} from '../../services/SocketClient';
-import {map, switchMap, tap} from 'rxjs/operators';
-import {Message} from '../../models';
+import {map, switchMap, takeWhile, tap} from 'rxjs/operators';
+import {Message, User} from '../../models';
 import {Subscription} from 'rxjs';
 import {ChatState} from './chat.reducers';
 import {UserService} from '../../services/user.service';
@@ -25,9 +25,8 @@ export class ChatEffects implements OnDestroy {
     );
 
     @Effect()
-    changeTarget = this.actions$.ofType(actions.CHANGE_TARGET).pipe(
-        tap((action: actions.ChangeTarget) => this.store.dispatch(new actions.TargetChanged(action.payload))),
-        switchMap((action: actions.ChangeTarget) => {
+    fetchHistory = this.actions$.ofType(actions.FETCH_HISTORY).pipe(
+        switchMap((action: actions.FetchHistory) => {
             return this.socket.sendAnd<Message[]>('private/history', action.payload);
         }),
         map(messages => ({
@@ -38,8 +37,11 @@ export class ChatEffects implements OnDestroy {
 
     private chatSub: Subscription;
     private storeSub: Subscription;
+    private userSub: Subscription;
+
     private openChannels = new Set<string>();
     private currentTarget: string;
+    private currentUser: User;
 
     constructor(
         private actions$: Actions,
@@ -47,16 +49,17 @@ export class ChatEffects implements OnDestroy {
         private socket: SocketClient,
         private userService: UserService
     ) {
-        this.initMessageListener();
+        this.userSub = this.userService.currentUser.subscribe(user => this.currentUser = user);
         this.storeSub = this.store.select('chat').subscribe((chatState: ChatState) => {
             this.openChannels = new Set<string>(chatState.openChannels);
             this.currentTarget = chatState.target;
         });
+        this.initMessageListener();
     }
 
     private initMessageListener() {
         this.chatSub = this.socket.on<Message>('private/receive').subscribe(message => {
-            if (this.openChannels.has(message.from)) {
+            if (this.openChannels.has(message.from) && message.from !== this.currentUser.googleId) {
                 this.store.dispatch(new actions.ReceiveMessage(message));
             }
             if (message.from !== this.currentTarget) {
@@ -68,5 +71,6 @@ export class ChatEffects implements OnDestroy {
     ngOnDestroy(): void {
         this.chatSub.unsubscribe();
         this.storeSub.unsubscribe();
+        this.userSub.unsubscribe();
     }
 }
