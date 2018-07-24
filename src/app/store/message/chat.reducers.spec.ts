@@ -38,11 +38,12 @@ describe('ChatReducer', () => {
     });
 
     describe('MESSAGE_SENT action', () => {
-        it('should add own messages to the target user\'s history ', () => {
+        it('should add own messages to the target user\'s history, clearing optimistic responses ', () => {
+            const optimisticResponse = {...sent, id: -1};
             const defaultState = {
                 ...fromChat.defaultState,
                 history: {
-                    'target': [received]
+                    'target': [received, optimisticResponse]
                 }
             };
             const expected = {
@@ -52,6 +53,26 @@ describe('ChatReducer', () => {
                 }
             };
             const action = new fromActions.MessageSent(sent);
+            const state = fromChat.chatReducer(defaultState, action);
+
+            expect(state).toEqual(expected);
+        });
+
+        it('should add the optimistic response to the history without running the clearing algorithm ', () => {
+            const optimisticResponse = {...sent, id: -1};
+            const defaultState = {
+                ...fromChat.defaultState,
+                history: {
+                    'target': [received, optimisticResponse]
+                }
+            };
+            const expected = {
+                ...defaultState,
+                history: {
+                    'target': [received, optimisticResponse, optimisticResponse]
+                }
+            };
+            const action = new fromActions.MessageSent(optimisticResponse);
             const state = fromChat.chatReducer(defaultState, action);
 
             expect(state).toEqual(expected);

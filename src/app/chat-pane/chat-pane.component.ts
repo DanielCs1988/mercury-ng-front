@@ -68,13 +68,6 @@ export class ChatPaneComponent implements OnInit, OnDestroy {
         const message = { content, to: this.currentTarget.googleId };
         this.chatForm.reset();
         this.store.dispatch(new SendMessage(message));
-        // const optimisticResponse: Message = {
-        //     content,
-        //     id: -1,
-        //     from: this.currentUser.googleId,
-        //     to: this.currentTarget.googleId,
-        //     createdAt: new Date().getTime()
-        // };
     }
 
     owner(message: Message): User {

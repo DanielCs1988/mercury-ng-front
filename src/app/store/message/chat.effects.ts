@@ -15,6 +15,15 @@ export class ChatEffects implements OnDestroy {
 
     @Effect()
     sendMessage = this.actions$.ofType(actions.SEND_MESSAGE).pipe(
+        tap((action: actions.SendMessage) => {
+            const optimisticResponse = {
+                ...action.payload,
+                id: -1,
+                from: this.currentUser.googleId,
+                createdAt: new Date().getTime()
+            };
+            this.store.dispatch(new actions.MessageSent(optimisticResponse));
+        }),
         switchMap((action: actions.SendMessage) => {
             return this.socket.sendAnd<Message>('private/send', action.payload);
         }),
