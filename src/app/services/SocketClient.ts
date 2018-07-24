@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Subject} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import {take} from 'rxjs/operators';
 
 @Injectable({
@@ -56,17 +56,17 @@ export class SocketClient {
         this.onCloseHandler = callback;
     }
 
-    on(route: string): Subject<any> {
+    on<T>(route: string): Subject<T> {
         const handler = this.handlers.get(route);
         if (!handler) {
-            this.handlers.set(route, new Subject<any>());
+            this.handlers.set(route, new Subject<T>());
             return this.on(route);
         }
         return handler;
     }
 
-    fetchOnce(route: string): Promise<any> {
-        return this.on(route).pipe(take(1)).toPromise();
+    fetchOnce<T>(route: string): Observable<T> {
+        return this.on<T>(route).pipe(take(1));
     }
 
     send(route: string, payload: any) {
@@ -79,10 +79,10 @@ export class SocketClient {
         this.socket.send(message);
     }
 
-    sendAnd(route: string, payload: any): Promise<any> {
-        const promise = this.fetchOnce(route);
+    sendAnd<T>(route: string, payload: any): Observable<T> {
+        const response = this.fetchOnce<T>(route);
         this.send(route, payload);
-        return promise;
+        return response;
     }
 
     private cacheMessage(route: string, payload: any) {

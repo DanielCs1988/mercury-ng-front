@@ -1,26 +1,23 @@
 import {Action} from '@ngrx/store';
 import {Message} from '../../models';
 
-export const FETCH_HISTORY = 'FETCH_HISTORY';
-export const HISTORY_FETCHED = 'HISTORY_FETCHED';
-
 export const SEND_MESSAGE = 'SEND_MESSAGE';
 export const MESSAGE_SENT = 'MESSAGE_SENT';
 export const RECEIVE_MESSAGE = 'RECEIVE_MESSAGE';
 
-export class FetchHistory implements Action {
-    readonly type = FETCH_HISTORY;
-    constructor(public payload: string) {}
-}
+export const CHANGE_TARGET = 'CHANGE_TARGET';
+export const TARGET_CHANGED = 'TARGET_CHANGED';
+export const HISTORY_FETCHED = 'HISTORY_FETCHED';
+export const CLOSE_CHAT = 'CLOSE_CHAT';
 
 export class HistoryFetched implements Action {
     readonly type = HISTORY_FETCHED;
-    constructor(public payload: {id: string, messages: Message[]}) {}
+    constructor(public payload: Message[]) {}
 }
 
 export class SendMessage implements Action {
     readonly type = SEND_MESSAGE;
-    constructor(public payload: string) {}
+    constructor(public payload: Message) {}
 }
 
 // This is for own messages, they are registered with a key equal to 'to' field
@@ -35,4 +32,18 @@ export class ReceiveMessage implements Action {
     constructor(public payload: Message) {}
 }
 
-export type ChatActions = FetchHistory | HistoryFetched | SendMessage | MessageSent | ReceiveMessage;
+export class ChangeTarget implements Action {
+    readonly type = CHANGE_TARGET;
+    constructor(public payload: string) {}
+}
+
+export class CloseChat implements Action {
+    readonly type = CLOSE_CHAT;
+}
+
+export class TargetChanged implements Action {
+    readonly type = TARGET_CHANGED;
+    constructor(public payload: string) {}
+}
+
+export type ChatActions = HistoryFetched | SendMessage | MessageSent | ReceiveMessage | ChangeTarget | TargetChanged | CloseChat;

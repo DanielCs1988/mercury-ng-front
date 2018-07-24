@@ -19,19 +19,21 @@ describe('ChatReducer', () => {
 
     describe('HISTORY_FETCHED action', () => {
         it('should add the message history to the correct target key', () => {
-            const fetchedData: { id: string, messages: Message[] } = {
-                id: 'target',
-                messages: [received, sent]
+            const messages = [received, sent];
+            const defaultState = {
+                ...fromChat.defaultState,
+                target: 'target'
             };
-            const history: { [id: string]: Message[] } = {
-                'target': fetchedData.messages
+            const expected = {
+                ...defaultState,
+                history: {
+                    'target': messages
+                }
             };
-            const { defaultState } = fromChat;
-            const action = new fromActions.HistoryFetched(fetchedData);
+            const action = new fromActions.HistoryFetched(messages);
             const state = fromChat.chatReducer(defaultState, action);
 
-            expect(state.target).toBeNull();
-            expect(state.history).toEqual(history);
+            expect(state).toEqual(expected);
         });
     });
 
@@ -77,4 +79,24 @@ describe('ChatReducer', () => {
         });
     });
 
-}
+    describe('CHANGE_TARGET action', () => {
+        it('should change current target when called upon ', () => {
+            const newTarget = 'target';
+            const { defaultState } = fromChat;
+            const action = new fromActions.ChangeTarget(newTarget);
+            const state = fromChat.chatReducer(defaultState, action);
+
+            expect(state.target).toEqual(newTarget);
+        });
+    });
+
+    describe('CLOSE_CHAT action', () => {
+        it('should null current target if chat is closed ', () => {
+            const { defaultState } = fromChat;
+            const action = new fromActions.CloseChat();
+            const state = fromChat.chatReducer(defaultState, action);
+
+            expect(state.target).toEqual(null);
+        });
+    });
+});
