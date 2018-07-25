@@ -1,23 +1,23 @@
 import {Event} from '../../models';
-import * as eventActions from './event.actions';
+import {ActionTypes, EventActions} from './event.actions';
 
 export interface EventState {
     events: Event[];
     fetchedEvents: boolean;
 }
 
-const defaultState: EventState = {
+export const defaultState: EventState = {
     events: [],
     fetchedEvents: false
 };
 
-export function eventReducer(state = defaultState, action: eventActions.EventActions) {
+export function eventReducer(state = defaultState, action: EventActions) {
     switch (action.type) {
-        case eventActions.EVENTS_FETCHED:
+        case ActionTypes.EVENTS_FETCHED:
             return {
                 ...state, events: [...state.events, ...action.payload], fetchedEvents: true
             };
-        case eventActions.EVENT_CREATED:
+        case ActionTypes.EVENT_CREATED:
             const newEvent = action.payload;
             const events = newEvent._id !== '' ?
                 [...state.events].filter(event => event._id !== '') :
@@ -25,14 +25,14 @@ export function eventReducer(state = defaultState, action: eventActions.EventAct
             return {
                 ...state, events: [...events, {...newEvent}]
             };
-        case eventActions.EVENT_UPDATED:
+        case ActionTypes.EVENT_UPDATED:
             const updatedEvents = [...state.events];
             const indexOfEvent = updatedEvents.findIndex(event => event._id === action.payload._id);
             updatedEvents[indexOfEvent] = {...action.payload};
             return {
                 ...state, events: updatedEvents
             };
-        case eventActions.EVENT_DELETED:
+        case ActionTypes.EVENT_DELETED:
             return {
                 ...state, events: state.events.filter(event => event._id !== action.payload)
             };

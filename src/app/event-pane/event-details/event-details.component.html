@@ -29,7 +29,7 @@
                 <img src="{{ event.organizer.pictureUrl }}" width="45" height="45" alt="Profile picture"
                      class="rounded-circle m-3">
                 {{ event.organizer.givenName }} {{ event.organizer.familyName }}
-                <span class="text-muted small">Created at: {{ event.createdAt | date:'medium' }}</span>
+                <span class="ml-2 text-muted small">Created at: {{ event.createdAt | date:'medium' }}</span>
 
                 <div class="float-right">
                     <span *ngIf="event.organizer.id === currentUser.id">

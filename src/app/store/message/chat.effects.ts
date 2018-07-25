@@ -2,44 +2,44 @@ import {Injectable, OnDestroy} from '@angular/core';
 import {Actions, Effect} from '@ngrx/effects';
 import {Store} from '@ngrx/store';
 import {AppState} from '../app.reducers';
-import * as actions from './chat.actions';
 import {SocketClient} from '../../services/SocketClient';
-import {map, switchMap, takeWhile, tap} from 'rxjs/operators';
+import {map, switchMap, tap} from 'rxjs/operators';
 import {Message, User} from '../../models';
 import {Subscription} from 'rxjs';
 import {ChatState} from './chat.reducers';
 import {UserService} from '../../services/user.service';
+import {ActionTypes, MessageSent, SendMessage, FetchHistory, ReceiveMessage} from './chat.actions';
 
 @Injectable()
 export class ChatEffects implements OnDestroy {
 
     @Effect()
-    sendMessage = this.actions$.ofType(actions.SEND_MESSAGE).pipe(
-        tap((action: actions.SendMessage) => {
+    sendMessage = this.actions$.ofType(ActionTypes.SEND_MESSAGE).pipe(
+        tap((action: SendMessage) => {
             const optimisticResponse = {
                 ...action.payload,
                 id: -1,
                 from: this.currentUser.googleId,
                 createdAt: new Date().getTime()
             };
-            this.store.dispatch(new actions.MessageSent(optimisticResponse));
+            this.store.dispatch(new MessageSent(optimisticResponse));
         }),
-        switchMap((action: actions.SendMessage) => {
+        switchMap((action: SendMessage) => {
             return this.socket.sendAnd<Message>('private/send', action.payload);
         }),
         map(message => ({
-            type: actions.MESSAGE_SENT,
+            type: ActionTypes.MESSAGE_SENT,
             payload: message
         }))
     );
 
     @Effect()
-    fetchHistory = this.actions$.ofType(actions.FETCH_HISTORY).pipe(
-        switchMap((action: actions.FetchHistory) => {
+    fetchHistory = this.actions$.ofType(ActionTypes.FETCH_HISTORY).pipe(
+        switchMap((action: FetchHistory) => {
             return this.socket.sendAnd<Message[]>('private/history', action.payload);
         }),
         map(messages => ({
-            type: actions.HISTORY_FETCHED,
+            type: ActionTypes.HISTORY_FETCHED,
             payload: messages
         }))
     );
@@ -69,7 +69,7 @@ export class ChatEffects implements OnDestroy {
     private initMessageListener() {
         this.chatSub = this.socket.on<Message>('private/receive').subscribe(message => {
             if (this.openChannels.has(message.from) && message.from !== this.currentUser.googleId) {
-                this.store.dispatch(new actions.ReceiveMessage(message));
+                this.store.dispatch(new ReceiveMessage(message));
             }
             if (message.from !== this.currentTarget) {
                 this.userService.markUnreadMessages(message.from);

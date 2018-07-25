@@ -1,5 +1,5 @@
 import {Message} from '../../models';
-import * as chatActions from './chat.actions';
+import {ActionTypes, ChatActions} from './chat.actions';
 
 export interface ChatState {
     history: { [id: string]: Message[] };
@@ -13,14 +13,14 @@ export const defaultState: ChatState = {
     openChannels: []
 };
 
-export function chatReducer(state = defaultState, action: chatActions.ChatActions) {
+export function chatReducer(state = defaultState, action: ChatActions) {
     switch (action.type) {
-        case chatActions.HISTORY_FETCHED:
+        case ActionTypes.HISTORY_FETCHED:
             // Currently bound to the current target. This might change in the future!
             return {
                 ...state, history: {...state.history, ...{[state.target]: action.payload} }
             };
-        case chatActions.MESSAGE_SENT:
+        case ActionTypes.MESSAGE_SENT:
             const ownMessage = action.payload;
             // Getting rid of all the optimistic UI messages if the new message is not one itself.
             const filteredHistory = ownMessage.id !== -1 ?
@@ -33,7 +33,7 @@ export function chatReducer(state = defaultState, action: chatActions.ChatAction
                     [ownMessage.to]: [...filteredHistory, ownMessage]
                 }
             };
-        case chatActions.RECEIVE_MESSAGE:
+        case ActionTypes.RECEIVE_MESSAGE:
             const message = action.payload;
             return {
                 ...state,
@@ -42,7 +42,7 @@ export function chatReducer(state = defaultState, action: chatActions.ChatAction
                     [message.from]: [...state.history[message.from], message]
                 }
             };
-        case chatActions.CHANGE_TARGET:
+        case ActionTypes.CHANGE_TARGET:
             // This is an O(n) check, stores should support Set structure
             return state.openChannels.includes(action.payload) ? {
                 ...state, target: action.payload
@@ -51,12 +51,12 @@ export function chatReducer(state = defaultState, action: chatActions.ChatAction
                 openChannels: [...state.openChannels, action.payload],
                 target: action.payload
             };
-        case chatActions.CLOSE_CHAT:
+        case ActionTypes.CLOSE_CHAT:
             return {
                 ...state,
                 target: null
             };
-        case chatActions.RESET_CHAT:
+        case ActionTypes.RESET_CHAT:
             return defaultState;
         default:
             return state;
