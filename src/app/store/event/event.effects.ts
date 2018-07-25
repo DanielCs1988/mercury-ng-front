@@ -9,7 +9,16 @@ import {Endpoints} from '../../utils/endpoints';
 import {Subscription} from 'rxjs';
 import {User} from '../../models';
 import {Router} from '@angular/router';
-import {ActionTypes, EventCreated, EventUpdated, CreateEvent, UpdateEvent, DeleteEvent, ChangeParticipation} from './event.actions';
+import {
+    ActionTypes,
+    EventCreated,
+    EventUpdated,
+    CreateEvent,
+    UpdateEvent,
+    DeleteEvent,
+    ChangeParticipation,
+    EventDeleted
+} from './event.actions';
 
 @Injectable()
 export class EventEffects implements OnDestroy {
@@ -72,17 +81,16 @@ export class EventEffects implements OnDestroy {
         }))
     );
 
-    @Effect()
+    @Effect({ dispatch: false })
     deleteEvent = this.actions$.ofType(ActionTypes.DELETE_EVENT).pipe(
+        tap((action: DeleteEvent) => {
+            this.store.dispatch(new EventDeleted(action.payload));
+            this.router.navigate(['/events']);
+        }),
         switchMap((action: DeleteEvent) => {
             const id = action.payload;
             return this.http.delete<any>(`${Endpoints.EVENTS}/${id}`);
-        }),
-        tap(() => this.router.navigate(['/events'])),
-        map(event => ({
-            type: ActionTypes.EVENT_DELETED,
-            payload: event._id
-        }))
+        })
     );
 
     @Effect()
