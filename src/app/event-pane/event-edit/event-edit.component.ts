@@ -17,6 +17,7 @@ import {CreateEvent, UpdateEvent} from '../../store/event/event.actions';
 export class EventEditComponent implements OnInit {
 
     eventForm: FormGroup;
+    editedEvent: Event;
     editing: boolean;
 
     constructor(private store: Store<AppState>, private route: ActivatedRoute, private router: Router) { }
@@ -27,11 +28,11 @@ export class EventEditComponent implements OnInit {
             this.editing = id !== undefined;
             if (this.editing) {
                 this.store.select('events').pipe(take(1)).subscribe((eventState: EventState) => {
-                    const event = eventState.events.find(event => event._id === id);
-                    if (event === undefined) {
+                    this.editedEvent = eventState.events.find(event => event._id === id);
+                    if (this.editedEvent === undefined) {
                         this.router.navigate(['../'], {relativeTo: this.route});
                     } else {
-                        this.initForm(event);
+                        this.initForm(this.editedEvent);
                     }
                 });
             } else {
@@ -41,7 +42,6 @@ export class EventEditComponent implements OnInit {
     }
 
     private initForm(event?: Event) {
-        let id = '';
         let name = '';
         let description = '';
         let pictureUrl = '';
@@ -50,7 +50,6 @@ export class EventEditComponent implements OnInit {
         let endDate = getCurrentDate();
 
         if (this.editing) {
-            id = event._id;
             name = event.name;
             description = event.description;
             pictureUrl = event.pictureUrl;
@@ -60,7 +59,6 @@ export class EventEditComponent implements OnInit {
         }
 
         this.eventForm = new FormGroup({
-            '_id': new FormControl(id),
             'name': new FormControl(name, [Validators.required, Validators.minLength(1)]),
             'description': new FormControl(description, [Validators.required, Validators.minLength(1)]),
             'pictureUrl': new FormControl(pictureUrl),
@@ -77,7 +75,8 @@ export class EventEditComponent implements OnInit {
         const formValue: any = this.eventForm.value;
         const event = {...formValue, startDate: new Date(formValue.startDate).getTime(), endDate: new Date(formValue.endDate).getTime()};
         if (this.editing) {
-            this.store.dispatch(new UpdateEvent(event));
+            const updatedEvent = {...this.editedEvent, ...event};
+            this.store.dispatch(new UpdateEvent(updatedEvent));
         } else {
             this.store.dispatch(new CreateEvent(event));
         }

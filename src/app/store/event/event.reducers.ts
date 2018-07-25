@@ -18,8 +18,12 @@ export function eventReducer(state = defaultState, action: eventActions.EventAct
                 ...state, events: [...state.events, ...action.payload], fetchedEvents: true
             };
         case eventActions.EVENT_CREATED:
+            const newEvent = action.payload;
+            const events = newEvent._id !== '' ?
+                [...state.events].filter(event => event._id !== '') :
+                [...state.events];
             return {
-                ...state, events: [...state.events, {...action.payload}]
+                ...state, events: [...events, {...newEvent}]
             };
         case eventActions.EVENT_UPDATED:
             const updatedEvents = [...state.events];

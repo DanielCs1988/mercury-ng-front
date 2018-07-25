@@ -10,6 +10,7 @@ import {EVENTS_ENDPOINT} from '../../utils/endpoints';
 import {Subscription} from 'rxjs';
 import {User} from '../../models';
 import {Router} from '@angular/router';
+import {EventCreated, EventUpdated} from './event.actions';
 
 @Injectable()
 export class EventEffects implements OnDestroy {
@@ -32,6 +33,16 @@ export class EventEffects implements OnDestroy {
 
     @Effect()
     createEvent = this.actions$.ofType(actions.CREATE_EVENT).pipe(
+        tap((action: actions.CreateEvent) => {
+            const optimisticResponse = {
+                ...action.payload,
+                _id: '',
+                createdAt: new Date().getTime(),
+                organizer: this.currentUser,
+                participants: []
+            };
+            this.store.dispatch(new EventCreated(optimisticResponse));
+        }),
         switchMap((action: actions.CreateEvent) => {
             return this.http.post<any>(EVENTS_ENDPOINT, action.payload);
         }),
@@ -44,6 +55,9 @@ export class EventEffects implements OnDestroy {
 
     @Effect()
     updateEvent = this.actions$.ofType(actions.UPDATE_EVENT).pipe(
+        tap((action: actions.UpdateEvent) => {
+            this.store.dispatch(new EventUpdated(action.payload));
+        }),
         switchMap((action: actions.UpdateEvent) => {
             const event = action.payload;
             return this.http.put<any>(`${EVENTS_ENDPOINT}/${event._id}`, event);
@@ -89,8 +103,10 @@ export class EventEffects implements OnDestroy {
         }))
     );
 
+    private usersSub: Subscription;
     private userSub: Subscription;
     private users: Map<string, User>;
+    private currentUser: User;
 
     constructor(
         private store: Store<AppState>,
@@ -99,10 +115,12 @@ export class EventEffects implements OnDestroy {
         private userService: UserService,
         private router: Router
     ) {
-        this.userSub = userService.users.subscribe(users => this.users = users);
+        this.usersSub = userService.users.subscribe(users => this.users = users);
+        this.userSub = userService.currentUser.subscribe(user => this.currentUser = user);
     }
 
     ngOnDestroy(): void {
+        this.usersSub.unsubscribe();
         this.userSub.unsubscribe();
     }
 }
