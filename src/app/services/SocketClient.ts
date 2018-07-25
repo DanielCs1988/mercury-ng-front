@@ -27,12 +27,12 @@ export class SocketClient {
         }, 100);
     }
 
-    connect(domain: string, port: number, token?: string) {
+    connect(url: string, token?: string) {
         if (this.isOpen) return;
-        const url = token ? `ws://${domain}:${port}/${token}` : `ws://${domain}:${port}`;
-        this.socket = new WebSocket(url);
+        const fullUrl = token ? `${url}/${token}` : `${url}`;
+        this.socket = new WebSocket(fullUrl);
         this.socket.addEventListener('open', (ev) => this.onOpenConnection(ev));
-        this.socket.addEventListener('close', (ev) => this.onClosedConnection(ev, domain, port, token));
+        this.socket.addEventListener('close', (ev) => this.onClosedConnection(ev, url, token));
         this.socket.addEventListener('message', event => this.processMessage(event.data));
     }
 
@@ -110,17 +110,17 @@ export class SocketClient {
         if (this.onOpenHandler) this.onOpenHandler.call(null, event);
     }
 
-    private onClosedConnection(event: any, domain: string, port: number, token?: string) {
+    private onClosedConnection(event: any, url: string, token?: string) {
         this.isOpen = false;
         if (this.onCloseHandler) this.onCloseHandler.call(null, event);
         if (this.isClosed) { return; }
         setTimeout(() => {
-            this.connect(domain, port, token);
+            this.connect(url, token);
         }, SocketClient.TIME_BEFORE_RECONNECT_ATTEMPT);
     }
 }
 
 interface Transaction {
-    route: string,
-    payload: any
+    route: string;
+    payload: any;
 }

@@ -7,14 +7,12 @@ import {SocketClient} from './SocketClient';
 import {Store} from '@ngrx/store';
 import {AppState} from '../store/app.reducers';
 import {ResetChat} from '../store/message/chat.actions';
+import {Endpoints} from '../utils/endpoints';
 
 @Injectable({
     providedIn: 'root'
 })
 export class UserService implements OnDestroy {
-
-    private SOCKET_URL = 'localhost';
-    private SOCKET_PORT = 8080;
 
     private userQuery: QueryRef<any>;
     private querySubscription: Subscription;
@@ -100,7 +98,7 @@ export class UserService implements OnDestroy {
 
     private initSocketConnection() {
         const token = localStorage.getItem('access_token');
-        this.socket.connect(this.SOCKET_URL, this.SOCKET_PORT, token);
+        this.socket.connect(Endpoints.CHAT, token);
         if (!this.onlineUsersSub) {
             this.onlineUsersSub = this.socket.on<string[]>('users').subscribe(users => {
                 this.onlineUsers.next(new Set<string>(users));

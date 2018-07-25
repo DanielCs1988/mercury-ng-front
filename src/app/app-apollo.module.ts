@@ -6,14 +6,12 @@ import {getMainDefinition} from 'apollo-utilities';
 import { split } from 'apollo-link';
 import {HttpClientModule} from '@angular/common/http';
 import {APOLLO_OPTIONS, ApolloModule} from 'apollo-angular';
-
-const MERCURY_FEED_API = 'https://protected-island-21893.herokuapp.com/';
-const MERCURY_FEED_WS = 'wss://protected-island-21893.herokuapp.com/';
+import {Endpoints} from './utils/endpoints';
 
 export function createApollo(httpLink: HttpLink) {
-    const http = httpLink.create({uri: MERCURY_FEED_API});
+    const http = httpLink.create({ uri: Endpoints.FEED_HTTP });
     const ws = new WebSocketLink({
-        uri: MERCURY_FEED_WS,
+        uri: Endpoints.FEED_WS,
         options: {
             reconnect: true
         }

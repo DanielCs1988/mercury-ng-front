@@ -5,7 +5,7 @@ import {Actions, Effect} from '@ngrx/effects';
 import {map, switchMap, tap} from 'rxjs/operators';
 import {HttpClient} from '@angular/common/http';
 import {UserService} from '../../services/user.service';
-import {EVENTS_ENDPOINT} from '../../utils/endpoints';
+import {Endpoints} from '../../utils/endpoints';
 import {Subscription} from 'rxjs';
 import {User} from '../../models';
 import {Router} from '@angular/router';
@@ -16,7 +16,7 @@ export class EventEffects implements OnDestroy {
 
     @Effect()
     fetchEvents = this.actions$.ofType(ActionTypes.FETCH_EVENTS).pipe(
-        switchMap(() => this.http.get<any>(EVENTS_ENDPOINT)),
+        switchMap(() => this.http.get<any>(Endpoints.EVENTS)),
         map(events => {
             const mappedEvents = events.map(event => {
                 event.organizer = this.users.get(event.organizer);
@@ -43,7 +43,7 @@ export class EventEffects implements OnDestroy {
             this.store.dispatch(new EventCreated(optimisticResponse));
         }),
         switchMap((action: CreateEvent) => {
-            return this.http.post<any>(EVENTS_ENDPOINT, action.payload);
+            return this.http.post<any>(Endpoints.EVENTS, action.payload);
         }),
         map(event => ({ ...event, organizer: this.users.get(event.organizer) })),
         map(event => ({
@@ -59,7 +59,7 @@ export class EventEffects implements OnDestroy {
         }),
         switchMap((action: UpdateEvent) => {
             const event = action.payload;
-            return this.http.put<any>(`${EVENTS_ENDPOINT}/${event._id}`, event);
+            return this.http.put<any>(`${Endpoints.EVENTS}/${event._id}`, event);
         }),
         map(event => ({
             ...event,
@@ -76,7 +76,7 @@ export class EventEffects implements OnDestroy {
     deleteEvent = this.actions$.ofType(ActionTypes.DELETE_EVENT).pipe(
         switchMap((action: DeleteEvent) => {
             const id = action.payload;
-            return this.http.delete<any>(`${EVENTS_ENDPOINT}/${id}`);
+            return this.http.delete<any>(`${Endpoints.EVENTS}/${id}`);
         }),
         tap(() => this.router.navigate(['/events'])),
         map(event => ({
@@ -89,7 +89,7 @@ export class EventEffects implements OnDestroy {
     changeParticipation = this.actions$.ofType(ActionTypes.CHANGE_PARTICIPATION).pipe(
         switchMap((action: ChangeParticipation) => {
             const id = action.payload;
-            return this.http.post<any>(`${EVENTS_ENDPOINT}/${id}`, {});
+            return this.http.post<any>(`${Endpoints.EVENTS}/${id}`, {});
         }),
         map(event => ({
             ...event,

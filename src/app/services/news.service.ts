@@ -2,22 +2,20 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {BehaviorSubject} from 'rxjs';
 import {Article, Weather} from '../models';
+import {Endpoints} from '../utils/endpoints';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NewsService {
 
-    private readonly ARTICLES_ENDPOINT = 'https://mercury-news.herokuapp.com/articles/';
-    private readonly WEATHER_ENDPOINT = 'https://mercury-news.herokuapp.com/weather';
     readonly DEFAULT_COUNTRY = 'hu';
-
     onNewArticles = new BehaviorSubject<Article[]>([]);
 
     constructor(private http: HttpClient) { }
 
     async applyFilter(filters: any) {
-        const url = filters.sources ? this.ARTICLES_ENDPOINT + 'by-source/' : this.ARTICLES_ENDPOINT;
+        const url = filters.sources ? Endpoints.ARTICLES + 'by-source/' : Endpoints.ARTICLES;
         const params = this.constructQueryParams(filters);
         const articles =  await this.http.get<Article[]>(url, {params: params}).toPromise();
         this.onNewArticles.next(articles);
@@ -30,9 +28,9 @@ export class NewsService {
             });
             const lat = pos.coords.latitude;
             const lng = pos.coords.longitude;
-            return this.http.get<Weather>(`${this.WEATHER_ENDPOINT}?latitude=${lat}&longitude=${lng}`).toPromise();
+            return this.http.get<Weather>(`${Endpoints.WEATHER}?latitude=${lat}&longitude=${lng}`).toPromise();
         }
-        return this.http.get<Weather>(`${this.WEATHER_ENDPOINT}?country=${this.DEFAULT_COUNTRY}`).toPromise();
+        return this.http.get<Weather>(`${Endpoints.WEATHER}?country=${this.DEFAULT_COUNTRY}`).toPromise();
     }
 
     private constructQueryParams(filters: any) {
