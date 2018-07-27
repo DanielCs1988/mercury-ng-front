@@ -1,6 +1,6 @@
 import {Apollo, QueryRef} from 'apollo-angular';
 import {Injectable} from '@angular/core';
-import {POST_LIKE_CORE, POST_LIKE_SUBSCRIPTION} from '../../queries/likes';
+import {POST_LIKE_FRAGMENT, POST_LIKE_SUBSCRIPTION} from '../../queries/likes';
 import {Mutation} from '../../models';
 
 @Injectable({
@@ -13,7 +13,7 @@ export class PostLikeSubscription {
     subscribeToPostLikes(feedQuery: QueryRef<any>) {
         feedQuery.subscribeToMore({
             document: POST_LIKE_SUBSCRIPTION,
-            updateQuery: this.postLikeReducer
+            updateQuery: this.postLikeReducer.bind(this)
         });
     }
 
@@ -27,23 +27,30 @@ export class PostLikeSubscription {
         switch (action.mutation) {
             case Mutation.CREATED:
                 const indexOfPost = updatedFeed.findIndex(post => post.id === action.node.post.id);
-                updatedFeed[indexOfPost] = [...updatedFeed[indexOfPost], {...action.node}];
+                updatedFeed[indexOfPost] = {
+                    ...updatedFeed[indexOfPost],
+                    likes: [...updatedFeed[indexOfPost].likes, {...action.node}]
+                };
                 return { ...state, feed: updatedFeed };
             case Mutation.DELETED:
                 const likeId = action.previousValues.id;
                 const postId = this.fetchPostLikeId(likeId);
                 const postIndex = updatedFeed.findIndex(post => post.id === postId);
-                updatedFeed[postIndex] = updatedFeed[postIndex].filter(like => like.id !== likeId);
+                updatedFeed[postIndex] = {
+                    ...updatedFeed[postIndex],
+                    likes: updatedFeed[postIndex].likes.filter(like => like.id !== likeId)
+                };
                 return { ...state, feed: updatedFeed };
             default:
                 return state;
         }
     }
 
-    private fetchPostLikeId(likeId) {
+    private fetchPostLikeId(likeId: string): string {
         const data: any = this.apollo.getClient().readFragment({
             id: `PostLike:${likeId}`,
-            fragment: POST_LIKE_CORE
+            fragment: POST_LIKE_FRAGMENT,
+            fragmentName: 'PostLikeParts'
         });
         return data.post.id;
     }

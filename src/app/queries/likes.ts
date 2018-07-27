@@ -1,24 +1,17 @@
 import gql from 'graphql-tag';
 import {MIN_USER_FRAGMENT} from './users';
 
-export const POST_LIKE_CORE = gql`
-    fragment PostLikeCore on Postlike {
+export const POST_LIKE_FRAGMENT = gql`
+    fragment PostLikeParts on PostLike {
         __typename
         id
         post {
             id
         }
-    }
-`;
-
-export const POST_LIKE_FRAGMENT = gql`
-    fragment PostLikeParts on PostLike {
-        ...PostLikeCore
         user {
             ...MinUserInfo
         }
     }
-    ${POST_LIKE_CORE}
     ${MIN_USER_FRAGMENT}
 `;
 
