@@ -34,7 +34,7 @@ export class PostLikeSubscription {
                 return { ...state, feed: updatedFeed };
             case Mutation.DELETED:
                 const likeId = action.previousValues.id;
-                const postId = this.fetchPostLikeId(likeId);
+                const postId = this.fetchPostId(likeId);
                 const postIndex = updatedFeed.findIndex(post => post.id === postId);
                 updatedFeed[postIndex] = {
                     ...updatedFeed[postIndex],
@@ -46,7 +46,7 @@ export class PostLikeSubscription {
         }
     }
 
-    private fetchPostLikeId(likeId: string): string {
+    private fetchPostId(likeId: string): string {
         const data: any = this.apollo.getClient().readFragment({
             id: `PostLike:${likeId}`,
             fragment: POST_LIKE_FRAGMENT,

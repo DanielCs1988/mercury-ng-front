@@ -1,5 +1,5 @@
 import gql from 'graphql-tag';
-import {COMMENT_LIKE_PARTS} from './likes';
+import {COMMENT_LIKE_FRAGMENT} from './likes';
 import {MIN_USER_FRAGMENT} from './users';
 
 export const COMMENT_CORE = gql`
@@ -23,7 +23,7 @@ export const COMMENT_FRAGMENT = gql`
     }
     ${COMMENT_CORE}
     ${MIN_USER_FRAGMENT}
-    ${COMMENT_LIKE_PARTS}
+    ${COMMENT_LIKE_FRAGMENT}
 `;
 
 export const FETCH_COMMENTS = gql`
@@ -94,5 +94,5 @@ export const COMMENT_LIKES = gql`
             ...CommentLikeParts
         }
     }
-    ${COMMENT_LIKE_PARTS}
+    ${COMMENT_LIKE_FRAGMENT}
 `;

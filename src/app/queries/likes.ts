@@ -15,7 +15,7 @@ export const POST_LIKE_FRAGMENT = gql`
     ${MIN_USER_FRAGMENT}
 `;
 
-export const COMMENT_LIKE_PARTS = gql`
+export const COMMENT_LIKE_FRAGMENT = gql`
     fragment CommentLikeParts on CommentLike {
         __typename
         id
@@ -53,7 +53,7 @@ export const LIKE_COMMENT = gql`
             ...CommentLikeParts
         }
     }
-    ${COMMENT_LIKE_PARTS}
+    ${COMMENT_LIKE_FRAGMENT}
 `;
 
 export const DISLIKE_COMMENT = gql`

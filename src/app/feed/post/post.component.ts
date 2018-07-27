@@ -9,6 +9,8 @@ import {Observable, Subscription} from 'rxjs';
 import {faEdit, faThumbsDown, faThumbsUp, faTrashAlt} from '@fortawesome/free-solid-svg-icons';
 import {Apollo, QueryRef} from 'apollo-angular';
 import {FETCH_COMMENTS} from '../../queries/comment';
+import {CommentSubscription} from '../../services/subscriptions/comment.subscription';
+import {CommentLikeSubscription} from '../../services/subscriptions/comment-like.subscription';
 
 @Component({
   selector: 'app-post',
@@ -41,7 +43,9 @@ export class PostComponent implements OnInit, OnDestroy {
         private postService: PostService,
         private commentService: CommentService,
         private likeService: LikeService,
-        private userService: UserService
+        private userService: UserService,
+        private commentChanges: CommentSubscription,
+        private commentLikeChanges: CommentLikeSubscription
     ) { }
 
     ngOnInit() {
@@ -67,6 +71,8 @@ export class PostComponent implements OnInit, OnDestroy {
         this.commentsSub = this.commentsQuery.valueChanges.subscribe(({data, loading}) => {
             this.comments = data.comments;
         });
+        this.commentChanges.subscribeToComments(this.post.id, this.commentsQuery);
+        this.commentLikeChanges.subscribeToCommentLikes(this.post.id, this.commentsQuery);
     }
 
     onUpdate() {
