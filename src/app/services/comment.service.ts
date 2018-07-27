@@ -2,7 +2,7 @@ import {Injectable, OnDestroy} from '@angular/core';
 import {User} from '../models';
 import {Apollo} from 'apollo-angular';
 import {UserService} from './user.service';
-import {CREATE_COMMENT_MUTATION, DELETE_COMMENT_MUTATION, UPDATE_COMMENT_MUTATION} from '../queries/comment';
+import {CREATE_COMMENT_MUTATION, DELETE_COMMENT_MUTATION, FETCH_COMMENTS, UPDATE_COMMENT_MUTATION} from '../queries/comment';
 import {MIN_POST_FRAGMENT} from '../queries/post';
 import {Subscription} from 'rxjs';
 
@@ -31,32 +31,19 @@ export class CommentService implements OnDestroy {
                     text: text,
                     createdAt: new Date(),
                     user: this.currentUser,
-                    likes: [],
-                    post: {
-                        __typename: 'Post',
-                        id: postId
-                    }
+                    likes: []
                 }
             },
 
             update: (proxy, { data: { createComment } }) => {
-                const data: any = proxy.readFragment({
-                    id: `Post:${postId}`,
-                    fragment: MIN_POST_FRAGMENT,
-                    fragmentName: 'minPost'
-                });
+                const data: any = proxy.readQuery({ query: FETCH_COMMENTS, variables: { postId } });
                 data.comments.push(createComment);
-                proxy.writeFragment({
-                    id: `Post:${postId}`,
-                    fragment: MIN_POST_FRAGMENT,
-                    fragmentName: 'minPost',
-                    data: data
-                });
+                proxy.writeQuery({ query: FETCH_COMMENTS, variables: { postId }, data });
             }
         }).subscribe();
     }
 
-    updateComment(id: string, text: string) {
+    updateComment(id: string, text: string, createdAt: Date) {
         this.apollo.mutate({
             mutation: UPDATE_COMMENT_MUTATION,
             variables: { id, text },
@@ -66,7 +53,8 @@ export class CommentService implements OnDestroy {
                 updateComment: {
                     __typename: 'Comment',
                     id: id,
-                    text: text
+                    text: text,
+                    createdAt: createdAt
                 }
             }
         }).subscribe();
@@ -86,18 +74,9 @@ export class CommentService implements OnDestroy {
             },
 
             update: (proxy, { data: { deleteComment } }) => {
-                const data: any = proxy.readFragment({
-                    id: `Post:${postId}`,
-                    fragment: MIN_POST_FRAGMENT,
-                    fragmentName: 'minPost'
-                });
-                data.comments = data.comments.filter(comment => comment.id !== id);
-                proxy.writeFragment({
-                    id: `Post:${postId}`,
-                    fragment: MIN_POST_FRAGMENT,
-                    fragmentName: 'minPost',
-                    data: data
-                });
+                const data: any = proxy.readQuery({ query: FETCH_COMMENTS, variables: { postId } });
+                data.comments = data.comments.filter(comment => comment.id !== deleteComment.id);
+                proxy.writeQuery({ query: FETCH_COMMENTS, variables: { postId }, data });
             }
         }).subscribe();
     }

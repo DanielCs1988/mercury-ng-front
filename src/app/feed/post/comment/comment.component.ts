@@ -52,7 +52,7 @@ export class CommentComponent implements OnInit, OnDestroy {
 
     onUpdateComment() {
         const text = this.commentForm.value.text;
-        this.commentService.updateComment(this.comment.id, text);
+        this.commentService.updateComment(this.comment.id, text, this.comment.createdAt);
     }
 
     onStartEditing() {

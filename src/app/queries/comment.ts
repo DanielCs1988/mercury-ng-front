@@ -1,25 +1,38 @@
 import gql from 'graphql-tag';
 import {COMMENT_LIKE_PARTS} from './likes';
+import {MIN_USER_FRAGMENT} from './users';
 
-export const COMMENT_FRAGMENT = gql`
-    fragment CommentParts on Comment {
+export const COMMENT_CORE = gql`
+    fragment CommentCore on Comment {
+        __typename
         id
         text
         createdAt
-        __typename
+    }
+`;
+
+export const COMMENT_FRAGMENT = gql`
+    fragment CommentParts on Comment {
+        ...CommentCore
         user {
-            id
-            givenName
-            familyName
-            pictureUrl
+            ...MinUserInfo
         }
         likes {
-            id
-        }
-        post {
-            id
+            ...CommentLikeParts
         }
     }
+    ${COMMENT_CORE}
+    ${MIN_USER_FRAGMENT}
+    ${COMMENT_LIKE_PARTS}
+`;
+
+export const FETCH_COMMENTS = gql`
+    query fetchComments($postId: ID!) {
+        comments(postId: $postId) {
+            ...CommentParts
+        }
+    }
+    ${COMMENT_FRAGMENT}
 `;
 
 export const CREATE_COMMENT_MUTATION = gql`
@@ -34,30 +47,30 @@ export const CREATE_COMMENT_MUTATION = gql`
 export const UPDATE_COMMENT_MUTATION = gql`
     mutation updateComment($id: ID!, $text: String!) {
         updateComment(id: $id, text: $text) {
-            id
-            text
-            __typename
+            ...CommentCore
         }
     }
+    ${COMMENT_CORE}
 `;
 
 export const DELETE_COMMENT_MUTATION = gql`
     mutation deleteComment($id: ID!) {
         deleteComment(id: $id) {
-            id
             __typename
+            id
         }
     }
 `;
 
 export const COMMENT_SUBSCRIPTION = gql`
-    subscription commentSub {
-        commentSub {
+    subscription commentSub($postId: ID!) {
+        commentSub(postId: $postId) {
+            mutation
             node {
+                __typename
                 id
                 text
                 createdAt
-                __typename
                 user {
                     id
                     givenName
@@ -67,21 +80,16 @@ export const COMMENT_SUBSCRIPTION = gql`
                 likes {
                     id
                 }
-                post {
-                    id
-                }
             }
-            previousValues {
-                id
-            }
+            previousValues { id }
         }
     }
 `;
 
 export const COMMENT_LIKES = gql`
     fragment commentLikes on Comment {
-        id
         __typename
+        id
         likes {
             ...CommentLikeParts
         }

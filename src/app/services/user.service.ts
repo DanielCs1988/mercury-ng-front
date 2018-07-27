@@ -60,7 +60,7 @@ export class UserService implements OnDestroy {
     async getUserProfile() {
         const {data} = await this.apollo.query<any>({ query: CURRENT_USER_QUERY }).toPromise();
         this.currentUser.next(data.currentUser);
-        this.initSocketConnection();
+        // this.initSocketConnection();
     }
 
     /**

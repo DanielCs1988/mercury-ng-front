@@ -3,8 +3,9 @@ import {Post} from '../models';
 import {Apollo, QueryRef} from 'apollo-angular';
 import {FEED_QUERY} from '../queries/feed';
 import {Subscription} from 'rxjs';
-import {SubscriptionService} from '../services/subscription.service';
 import {PostService} from '../services/post.service';
+import {PostSubscription} from '../services/subscriptions/post.subscription';
+import {PostLikeSubscription} from '../services/subscriptions/post-like.subscription';
 
 @Component({
   selector: 'app-feed',
@@ -18,7 +19,12 @@ export class FeedComponent implements OnInit, OnDestroy {
   posts: Post[] = [];
   loading = false;
 
-  constructor(private apollo: Apollo, private subService: SubscriptionService, private postService: PostService) { }
+  constructor(
+      private apollo: Apollo,
+      private postService: PostService,
+      private postSub: PostSubscription,
+      private postLikeSub: PostLikeSubscription
+  ) { }
 
     ngOnInit() {
         this.feedQuery = this.apollo.watchQuery<any>({
@@ -34,10 +40,8 @@ export class FeedComponent implements OnInit, OnDestroy {
                 this.loading = loading;
                 this.posts = data.feed;
             });
-        this.subService.subscribeToPosts(this.feedQuery);
-        this.subService.subscribeToComments(this.feedQuery);
-        this.subService.subscribeToPostLikes(this.feedQuery);
-        this.subService.subscribeToCommentLikes(this.feedQuery);
+        this.postSub.subscribeToPosts(this.feedQuery);
+        this.postLikeSub.subscribeToPostLikes(this.feedQuery);
     }
 
   ngOnDestroy(): void {

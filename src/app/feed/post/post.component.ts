@@ -5,8 +5,10 @@ import {PostService} from '../../services/post.service';
 import {CommentService} from '../../services/comment.service';
 import {LikeService} from '../../services/like.service';
 import {UserService} from '../../services/user.service';
-import {Subscription} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {faEdit, faThumbsDown, faThumbsUp, faTrashAlt} from '@fortawesome/free-solid-svg-icons';
+import {Apollo, QueryRef} from 'apollo-angular';
+import {FETCH_COMMENTS} from '../../queries/comment';
 
 @Component({
   selector: 'app-post',
@@ -19,9 +21,12 @@ export class PostComponent implements OnInit, OnDestroy {
     @ViewChild('postForm') postForm: NgForm;
     @ViewChild('commentForm') commentForm: NgForm;
 
+    private commentsQuery: QueryRef<any>;
+    private commentsSub: Subscription;
     private userSubscription: Subscription;
     private like: Like;
 
+    comments: Comment[] = [];
     user: User;
     liked: boolean;
     editing = false;
@@ -32,6 +37,7 @@ export class PostComponent implements OnInit, OnDestroy {
     dislikeIcon = faThumbsDown;
 
     constructor(
+        private apollo: Apollo,
         private postService: PostService,
         private commentService: CommentService,
         private likeService: LikeService,
@@ -46,13 +52,28 @@ export class PostComponent implements OnInit, OnDestroy {
                 this.liked = this.like !== undefined;
             }
         });
+        if (this.post.id !== '') {
+            this.fetchComments();
+        }
+    }
+
+    private fetchComments() {
+        this.commentsQuery = this.apollo.watchQuery<any>({
+            query: FETCH_COMMENTS,
+            variables: {
+                postId: this.post.id
+            }
+        });
+        this.commentsSub = this.commentsQuery.valueChanges.subscribe(({data, loading}) => {
+            this.comments = data.comments;
+        });
     }
 
     onUpdate() {
         const text = this.postForm.value.post;
         const pictureUrl = this.postForm.value.picture;
         this.editing = false;
-        this.postService.updatePost(this.post.id, text, pictureUrl);
+        this.postService.updatePost(this.post.id, this.post.createdAt, text, pictureUrl);
     }
 
     onStartEditing() {

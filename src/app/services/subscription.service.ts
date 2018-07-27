@@ -3,8 +3,7 @@ import {POST_SUBSCRIPTION} from '../queries/post';
 import {isDuplicateEntry} from './utils';
 import {Apollo, QueryRef} from 'apollo-angular';
 import {COMMENT_SUBSCRIPTION} from '../queries/comment';
-import {COMMENT_LIKE_SUBSCRIPTION, GET_COMMENT_AND_POST_ID, POST_LIKE_SUBSCRIPTION} from '../queries/likes';
-import gql from 'graphql-tag';
+import {COMMENT_LIKE_SUBSCRIPTION, POST_LIKE_SUBSCRIPTION} from '../queries/likes';
 
 @Injectable({
   providedIn: 'root'
@@ -12,28 +11,6 @@ import gql from 'graphql-tag';
 export class SubscriptionService {
 
     constructor(private apollo: Apollo) { }
-
-    subscribeToPosts(feedQuery: QueryRef<any>) {
-        feedQuery.subscribeToMore({
-            document: POST_SUBSCRIPTION,
-            updateQuery: (prev, { subscriptionData }) => {
-                if (!subscriptionData.data.postSub) {
-                    return;
-                }
-                const isNewValue = subscriptionData.data.postSub.node != null;
-                const newPost = isNewValue ? subscriptionData.data.postSub.node : subscriptionData.data.postSub.previousValues;
-                if (isNewValue) {
-                    if (isDuplicateEntry(newPost, prev.feed)) {
-                        return prev;
-                    }
-                    return {...prev, feed: [newPost, ...prev.feed]};
-                } else {
-                    const filteredPosts = prev.feed.filter(post => post.id !== newPost.id);
-                    return {...prev, feed: filteredPosts};
-                }
-            }
-        });
-    }
 
     subscribeToComments(feedQuery: QueryRef<any>) {
         feedQuery.subscribeToMore({
@@ -95,45 +72,45 @@ export class SubscriptionService {
         })
     }
 
-    subscribeToCommentLikes(feedQuery: QueryRef<any>) {
-        feedQuery.subscribeToMore({
-            document: COMMENT_LIKE_SUBSCRIPTION,
-
-            updateQuery: (prev, { subscriptionData }) => {
-                if (!subscriptionData.data.commentLikeSub) {
-                    return;
-                }
-                const isNewLike = subscriptionData.data.commentLikeSub.node != null;
-                const newLike = isNewLike ? subscriptionData.data.commentLikeSub.node : subscriptionData.data.commentLikeSub.previousValues;
-
-                const parentIds: any = this.apollo.getClient().readFragment({
-                    id: `CommentLike:${newLike.id}`,
-                    fragment: GET_COMMENT_AND_POST_ID
-                });
-                const postIndex = prev.feed.findIndex(post => post.id === parentIds.comment.post.id);
-                const commentIndex = prev.feed[postIndex].comments.findIndex(comment => comment.id === parentIds.comment.id);
-                const newFeed = prev.feed.slice();
-
-                let post = newFeed[postIndex];
-                let comment =newFeed[postIndex].comments[commentIndex];
-                if (!comment) {
-                    return;
-                }
-
-                if (isNewLike) {
-                    if (isDuplicateEntry(newLike, comment.likes)) {
-                        return prev;
-                    }
-                    comment = {...comment, likes: [...comment.likes, newLike]};
-                } else {
-                    comment = {...comment, likes: comment.likes.filter(like => like.id !== newLike.id)};
-                }
-
-                post = {...post, comments: [...post.comments.filter(cm => cm.id !== comment.id), comment]};
-
-                const filteredFeed = prev.feed.filter(pst => pst.id !== post.id);
-                return {...prev, feed: [post, ...filteredFeed]};
-            }
-        })
-    }
+    // subscribeToCommentLikes(feedQuery: QueryRef<any>) {
+    //     feedQuery.subscribeToMore({
+    //         document: COMMENT_LIKE_SUBSCRIPTION,
+    //
+    //         updateQuery: (prev, { subscriptionData }) => {
+    //             if (!subscriptionData.data.commentLikeSub) {
+    //                 return;
+    //             }
+    //             const isNewLike = subscriptionData.data.commentLikeSub.node != null;
+    //             const newLike = isNewLike ? subscriptionData.data.commentLikeSub.node : subscriptionData.data.commentLikeSub.previousValues;
+    //
+    //             const parentIds: any = this.apollo.getClient().readFragment({
+    //                 id: `CommentLike:${newLike.id}`,
+    //                 fragment: GET_COMMENT_AND_POST_ID
+    //             });
+    //             const postIndex = prev.feed.findIndex(post => post.id === parentIds.comment.post.id);
+    //             const commentIndex = prev.feed[postIndex].comments.findIndex(comment => comment.id === parentIds.comment.id);
+    //             const newFeed = prev.feed.slice();
+    //
+    //             let post = newFeed[postIndex];
+    //             let comment =newFeed[postIndex].comments[commentIndex];
+    //             if (!comment) {
+    //                 return;
+    //             }
+    //
+    //             if (isNewLike) {
+    //                 if (isDuplicateEntry(newLike, comment.likes)) {
+    //                     return prev;
+    //                 }
+    //                 comment = {...comment, likes: [...comment.likes, newLike]};
+    //             } else {
+    //                 comment = {...comment, likes: comment.likes.filter(like => like.id !== newLike.id)};
+    //             }
+    //
+    //             post = {...post, comments: [...post.comments.filter(cm => cm.id !== comment.id), comment]};
+    //
+    //             const filteredFeed = prev.feed.filter(pst => pst.id !== post.id);
+    //             return {...prev, feed: [post, ...filteredFeed]};
+    //         }
+    //     })
+    // }
 }

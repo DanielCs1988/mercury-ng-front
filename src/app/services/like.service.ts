@@ -69,7 +69,7 @@ export class LikeService implements OnDestroy {
                     fragment: POST_LIKES,
                     fragmentName: 'postLikes'
                 });
-                data.likes = data.likes.filter(like => like.id !== id);
+                data.likes = data.likes.filter(like => like.id !== dislikePost.id);
                 proxy.writeFragment({
                     id: `Post:${postId}`,
                     fragment: POST_LIKES,
@@ -124,13 +124,13 @@ export class LikeService implements OnDestroy {
                     id: id
                 }
             },
-            update: (proxy, { data: { likeComment } }) => {
+            update: (proxy, { data: { dislikeComment } }) => {
                 const data: any = proxy.readFragment({
                     id: `Comment:${commentId}`,
                     fragment: COMMENT_LIKES,
                     fragmentName: 'commentLikes'
                 });
-                data.likes = data.likes.filter(like => like.id !== id);
+                data.likes = data.likes.filter(like => like.id !== dislikeComment.id);
                 proxy.writeFragment({
                     id: `Comment:${commentId}`,
                     fragment: COMMENT_LIKES,

@@ -37,23 +37,19 @@ export class PostService implements OnDestroy {
                     pictureUrl: pictureUrl,
                     createdAt: new Date(),
                     likes: [],
-                    comments: [],
                     user: this.currentUser
                 }
             },
 
             update: (proxy, { data: { createPost } }) => {
                 const data: any = proxy.readQuery({ query: FEED_QUERY, variables: this.QUERY_VARIABLES });
-                // if (isDuplicateEntry(createPost, data.feed)) {
-                //   return;
-                // }
                 data.feed = [createPost, ...data.feed];
                 proxy.writeQuery({ query: FEED_QUERY, variables: this.QUERY_VARIABLES, data });
             }
         }).subscribe();
     }
 
-    updatePost(id: string, text?: string, pictureUrl?: string) {
+    updatePost(id: string, createdAt: Date, text?: string, pictureUrl?: string) {
         this.apollo.mutate({
             mutation: UPDATE_POST_MUTATION,
             variables: { id, text, pictureUrl },
@@ -64,7 +60,8 @@ export class PostService implements OnDestroy {
                     __typename: 'Post',
                     id: id,
                     text: text,
-                    pictureUrl: pictureUrl
+                    pictureUrl: pictureUrl,
+                    createdAt: createdAt
                 }
             }
         }).subscribe();
@@ -83,9 +80,9 @@ export class PostService implements OnDestroy {
                 }
             },
 
-            update: (proxy, { data: deletePost }) => {
+            update: (proxy, { data: { deletePost } }) => {
                 const data: any = proxy.readQuery({ query: FEED_QUERY, variables: this.QUERY_VARIABLES });
-                data.feed = data.feed.filter(post => post.id !== id);
+                data.feed = data.feed.filter(post => post.id !== deletePost.id);
                 proxy.writeQuery({ query: FEED_QUERY, variables: this.QUERY_VARIABLES, data });
             }
         }).subscribe();

@@ -67,3 +67,9 @@ export interface Weather {
     icon: string;
     temperature: number;
 }
+
+export const enum Mutation {
+    CREATED = 'CREATED',
+    UPDATED = 'UPDATED',
+    DELETED = 'DELETED'
+}

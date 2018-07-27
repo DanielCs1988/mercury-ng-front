@@ -13,7 +13,10 @@ export function createApollo(httpLink: HttpLink) {
     const ws = new WebSocketLink({
         uri: Endpoints.FEED_WS,
         options: {
-            reconnect: true
+            reconnect: true,
+            connectionParams: {
+                token: localStorage.getItem('access_token')
+            }
         }
     });
 
