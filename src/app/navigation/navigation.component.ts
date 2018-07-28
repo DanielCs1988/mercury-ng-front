@@ -3,7 +3,7 @@ import {AuthService} from '../auth/auth.service';
 import {UserService} from '../services/user.service';
 import {Subscription} from 'rxjs';
 import {User} from '../models';
-import {faSignOutAlt, faSignInAlt, faSearch} from '@fortawesome/free-solid-svg-icons';
+import {faSignOutAlt, faSignInAlt} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-navigation',

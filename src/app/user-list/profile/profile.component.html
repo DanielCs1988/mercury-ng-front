@@ -1,0 +1,67 @@
+<div *ngIf="profile">
+
+    <div class="row mt-5">
+        <div class="col-md-3">
+            <div class="card">
+                <img class="card-img-top" src="{{ profile.pictureUrl }}" alt="profile picture">
+                <div class="card-body">
+                    <h5 class="card-title text-center">{{ profile.givenName }} {{ profile.familyName }}</h5>
+                    <button class="btn btn-block btn-primary mt-3">BEFRIEND DIS HOOMAN</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <p class="text-justify">
+                {{ (profile.profile && profile.profile.introduction) || "Don't look at me, I have no idea who this guy is!" }}
+            </p>
+            <h6>
+                Been with us since: {{ profile.createdAt | date:'longDate' }}
+            </h6>
+        </div>
+
+        <div class="col-md-3">
+            <div *ngIf="profile.profile" class="pane">
+                <div *ngIf="profile.profile.birthday">
+                    <div>
+                        <span class="icon"><fa-icon [icon]="birthdayIcon"></fa-icon></span>
+                        {{ profile.profile.birthday | date:'longDate' }}
+                    </div>
+                </div>
+                <div *ngIf="profile.profile.address">
+                    <div>
+                        <span class="icon"><fa-icon [icon]="addressIcon"></fa-icon></span>
+                        {{ profile.profile.address }}
+                    </div>
+                </div>
+                <div *ngIf="profile.profile.email">
+                    <div>
+                        <span class="icon"><fa-icon [icon]="emailIcon"></fa-icon></span>
+                        {{ profile.profile.email }}
+                    </div>
+                </div>
+                <div *ngIf="profile.profile.phone">
+                    <div>
+                        <span class="icon"><fa-icon [icon]="phoneIcon"></fa-icon></span>
+                        {{ profile.profile.phone }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-md-9">
+            <app-post *ngFor="let post of profile.posts" [post]="post"></app-post>
+        </div>
+        <div class="col-md-3">
+            <div *ngFor="let friend of profile.friends" class="pane">
+                <a routerLink="/profile/{{ friend.id }}">
+                    <img src="{{ friend.pictureUrl }}" width="30" height="30"
+                         alt="Profile picture" class="rounded-circle mr-2">
+                    {{ friend.givenName }} {{ friend.familyName }}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

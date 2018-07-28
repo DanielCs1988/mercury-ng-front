@@ -26,9 +26,11 @@
         <div style="position: relative">
             <div>
                 Organized by:
-                <img src="{{ event.organizer.pictureUrl }}" width="45" height="45" alt="Profile picture"
-                     class="rounded-circle m-3">
-                {{ event.organizer.givenName }} {{ event.organizer.familyName }}
+                <a routerLink="/profile/{{ event.organizer.id }}">
+                    <img src="{{ event.organizer.pictureUrl }}" width="45" height="45" alt="Profile picture"
+                         class="rounded-circle m-3">
+                    {{ event.organizer.givenName }} {{ event.organizer.familyName }}
+                </a>
                 <span class="ml-2 text-muted small">Created at: {{ event.createdAt | date:'medium' }}</span>
 
                 <div class="float-right">
@@ -58,9 +60,11 @@
         <div *ngIf="event.participants.length > 0">
             Participants:
             <span *ngFor="let participant of event.participants" class="participant">
-                <img src="{{ participant.pictureUrl }}"
-                     width="30" height="30" alt="Profile picture" class="rounded-circle ml-2" >
-                {{ participant.givenName }} {{ participant.familyName }}
+                <a routerLink="/profile/{{ participant.id }}">
+                    <img src="{{ participant.pictureUrl }}"
+                         width="30" height="30" alt="Profile picture" class="rounded-circle ml-2" >
+                    {{ participant.givenName }} {{ participant.familyName }}
+                </a>
             </span>
         </div>
     </div>

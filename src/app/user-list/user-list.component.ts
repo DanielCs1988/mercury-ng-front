@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Friendship, User} from '../models';
 import {UserService} from '../services/user.service';
 import {Subscription} from 'rxjs';
-import {faCheckCircle, faComments, faHandshake, faSignal, faTimesCircle, faUserFriends} from '@fortawesome/free-solid-svg-icons';
+import {faCheckCircle, faComments, faHandshake, faSignal, faTimesCircle, faUserAlt, faUserFriends} from '@fortawesome/free-solid-svg-icons';
 import {Apollo, QueryRef} from 'apollo-angular';
 import {FETCH_FRIENDS, FRIENDSHIP_SUBSCRIPTION} from '../queries/friendship';
 import {FriendService} from '../services/friend.service';
@@ -34,6 +34,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     addFriendIcon = faCheckCircle;
     acceptFriendIcon = faHandshake;
     removeFriendIcon = faTimesCircle;
+    profileIcon = faUserAlt;
 
     constructor(
         private userService: UserService,

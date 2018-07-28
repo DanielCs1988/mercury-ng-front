@@ -3,7 +3,7 @@ export interface Post {
   text: string;
   pictureUrl: string;
   createdAt: Date;
-  user: User;
+  user?: User;
   likes: Like[];
   comments: Comment[];
 }
@@ -72,6 +72,20 @@ export interface Friendship {
     id: string;
     createdAt: Date;
     accepted?: boolean;
+}
+
+export interface Profile {
+    introduction?: string;
+    birthday?: number;
+    address?: string;
+    email?: string;
+    phone?: string;
+}
+
+export interface UserDetails extends User {
+    posts: Post[];
+    friends: User[];
+    profile?: Profile;
 }
 
 export const enum Mutation {

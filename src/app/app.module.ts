@@ -33,6 +33,7 @@ import {environment} from '../environments/environment';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {AppApolloModule} from './app-apollo.module';
 import {ChatEffects} from './store/message/chat.effects';
+import {ProfileComponent} from './user-list/profile/profile.component';
 
 @NgModule({
     declarations: [
@@ -53,7 +54,8 @@ import {ChatEffects} from './store/message/chat.effects';
         ArticleComponent,
         NewsFilterComponent,
         WeatherComponent,
-        LobbyComponent
+        LobbyComponent,
+        ProfileComponent
     ],
     imports: [
         BrowserModule,

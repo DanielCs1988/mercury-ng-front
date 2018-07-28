@@ -1,30 +1,35 @@
 <div id="users-pane">
+
     <div *ngFor="let user of users" class="pane m-2 p-1">
-
-    <span *ngIf="unreadMessages.get(user.googleId)" >
-        <strong>{{ unreadMessages.get(user.googleId) }}</strong>
-        <fa-icon [icon]="unreadIcon" class="unread mr-2"></fa-icon>
-    </span>
-
-    <img src="{{ user.pictureUrl }}" width="30" height="30" alt="Profile picture" class="rounded-circle mr-2">
-    <a routerLink="/chat/{{ user.id }}" routerLinkActive="active">
-        {{ user.givenName }} {{ user.familyName }}
-    </a>
-    <fa-icon *ngIf="onlineUsers.has(user.googleId)" [icon]="onlineIcon" class="online-marker ml-2"></fa-icon>
-
-    <span *ngIf="currentUser && currentUser.id !== user.id">
-        <span *ngIf="!friends.has(user.id) && !friendRequests.has(user.id)" class="float-right">
-            <fa-icon [icon]="addFriendIcon" class="green-icon" (click)="onAddFriend(user)"></fa-icon>
+        <span *ngIf="unreadMessages.get(user.googleId)" >
+            <strong>{{ unreadMessages.get(user.googleId) }}</strong>
+            <fa-icon [icon]="unreadIcon" class="unread mr-2"></fa-icon>
         </span>
-        <span *ngIf="friendRequests.has(user.id)">
-            <fa-icon [icon]="acceptFriendIcon" class="green-icon" (click)="onAcceptFriend(user.id)"></fa-icon>
-        </span>
-        <span *ngIf="friends.has(user.id)" class="float-right">
-            <fa-icon *ngIf="friends.get(user.id).accepted" [icon]="friendIcon" class="green-icon"></fa-icon>
-            <fa-icon *ngIf="!friends.get(user.id).accepted" [icon]="friendIcon"></fa-icon>
-            <fa-icon [icon]="removeFriendIcon" class="red-icon" (click)="onRemoveFriend(user.id)"></fa-icon>
-        </span>
-    </span>
 
+        <a routerLink="/chat/{{ user.id }}" routerLinkActive="active">
+            <img src="{{ user.pictureUrl }}" width="30" height="30" alt="Profile picture" class="rounded-circle mr-2">
+            {{ user.givenName }} {{ user.familyName }}
+        </a>
+        <fa-icon *ngIf="onlineUsers.has(user.googleId)" [icon]="onlineIcon" class="online-marker ml-2"></fa-icon>
+
+        <span *ngIf="currentUser && currentUser.id !== user.id">
+            <span *ngIf="friends.has(user.id) && friends.get(user.id).accepted" class="float-right">
+                <a routerLink="/profile/{{ user.id }}">
+                    <fa-icon [icon]="profileIcon" class="blue-icon"></fa-icon>
+                </a>
+            </span>
+            <span *ngIf="!friends.has(user.id) && !friendRequests.has(user.id)" class="float-right">
+                <fa-icon [icon]="addFriendIcon" class="green-icon" (click)="onAddFriend(user)"></fa-icon>
+            </span>
+            <span *ngIf="friendRequests.has(user.id)">
+                <fa-icon [icon]="acceptFriendIcon" class="green-icon" (click)="onAcceptFriend(user.id)"></fa-icon>
+            </span>
+            <span *ngIf="friends.has(user.id)" class="float-right">
+                <fa-icon *ngIf="friends.get(user.id).accepted" [icon]="friendIcon" class="green-icon"></fa-icon>
+                <fa-icon *ngIf="!friends.get(user.id).accepted" [icon]="friendIcon"></fa-icon>
+                <fa-icon [icon]="removeFriendIcon" class="red-icon" (click)="onRemoveFriend(user.id)"></fa-icon>
+            </span>
+        </span>
     </div>
+
 </div>

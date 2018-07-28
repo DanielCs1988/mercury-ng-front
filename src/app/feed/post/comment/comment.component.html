@@ -1,10 +1,16 @@
 <div *ngIf="user" class="pane">
-  <img *ngIf="!editing" src="{{ comment.user.pictureUrl }}" width="30" height="30"
-       alt="Profile picture" class="rounded-circle">
 
-  <span class="ml-1" *ngIf="!editing">
-      {{ comment.user.givenName }} {{ comment.user.familyName }}: {{ comment.text }}
-  </span>
+    <span *ngIf="!editing">
+        <a routerLink="/profile/{{ comment.user.id }}">
+            <img src="{{ comment.user.pictureUrl }}" width="30" height="30"
+                 alt="Profile picture" class="rounded-circle">
+            <span class="ml-1" *ngIf="!editing">
+                {{ comment.user.givenName }} {{ comment.user.familyName }}
+            </span>
+        </a>
+        <span> {{ comment.text }}</span>
+    </span>
+
     <form *ngIf="editing" #commentForm="ngForm" (ngSubmit)="onUpdateComment()">
         <div class="form-group">
             <img src="{{ comment.user.pictureUrl }}" width="30" height="30"
