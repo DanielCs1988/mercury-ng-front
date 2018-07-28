@@ -5,6 +5,7 @@ import {FEED_QUERY} from '../queries/feed';
 import {UserService} from './user.service';
 import {User} from '../models';
 import {Subscription} from 'rxjs';
+import {Subject} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -14,9 +15,10 @@ export class PostService implements OnDestroy {
     private userSubscription: Subscription;
     private currentUser: User;
 
-    readonly POSTS_PER_PAGE = 10;
+    refetchNeeded = new Subject<void>();
+
     readonly QUERY_VARIABLES = {
-        first: this.POSTS_PER_PAGE,
+        first: 10,
         skip: 0
     };
 

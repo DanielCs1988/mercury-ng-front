@@ -15,7 +15,9 @@ import {PostLikeSubscription} from '../services/subscriptions/post-like.subscrip
 export class FeedComponent implements OnInit, OnDestroy {
 
   private feedQuery: QueryRef<any>;
-  private querySubscription: Subscription;
+  private querySub: Subscription;
+  private refetchSub: Subscription;
+
   posts: Post[] = [];
   loading = false;
 
@@ -29,12 +31,9 @@ export class FeedComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.feedQuery = this.apollo.watchQuery<any>({
             query: FEED_QUERY,
-            variables: {
-                first: this.postService.POSTS_PER_PAGE,
-                skip: 0
-            }
+            variables: this.postService.QUERY_VARIABLES
         });
-        this.querySubscription = this.feedQuery
+        this.querySub = this.feedQuery
             .valueChanges
             .subscribe(({data, loading}) => {
                 this.loading = loading;
@@ -42,9 +41,13 @@ export class FeedComponent implements OnInit, OnDestroy {
             });
         this.postSub.subscribeToPosts(this.feedQuery);
         this.postLikeSub.subscribeToPostLikes(this.feedQuery);
+        this.refetchSub = this.postService.refetchNeeded.subscribe(() => {
+            this.feedQuery.refetch(this.postService.QUERY_VARIABLES);
+        });
     }
 
   ngOnDestroy(): void {
-    this.querySubscription.unsubscribe();
+    this.querySub.unsubscribe();
+    this.refetchSub.unsubscribe();
   }
 }

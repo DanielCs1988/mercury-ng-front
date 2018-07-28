@@ -14,9 +14,9 @@
 
         <p class="text-justify my-3">{{ post.text }}</p>
         <img src="{{ post.pictureUrl }}" alt="{{ post.pictureUrl }}" class="img-fluid rounded">
-        <div>
+        <div class="my-2">
             <fa-icon [icon]="likeIcon" (click)="onLike()" class="green-icon" [ngClass]="{'disabled': liked}"></fa-icon>
-            {{ post.likes.length }} likes
+            {{ post.likes.length }} {{ post.likes.length > 1 ? 'likes' : 'like' }}
             <fa-icon [icon]="dislikeIcon" (click)="onDislike()" class="red-icon" [ngClass]="{'disabled': !liked}"></fa-icon>
         </div>
     </div>

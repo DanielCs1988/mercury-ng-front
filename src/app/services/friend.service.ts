@@ -1,19 +1,22 @@
 import {Injectable, OnDestroy} from '@angular/core';
-import {Apollo} from 'apollo-angular';
+import {Apollo, QueryRef} from 'apollo-angular';
 import {UserService} from './user.service';
 import {Subscription} from 'rxjs';
-import {User} from '../models';
-import {ACCEPT_FRIEND, ADD_FRIEND, DELETE_FRIEND, FETCH_FRIENDS} from '../queries/friendship';
+import {Friendship, User} from '../models';
+import {ACCEPT_FRIEND, ADD_FRIEND, DELETE_FRIEND, FETCH_FRIENDS, FRIENDSHIP_SUBSCRIPTION} from '../queries/friendship';
 import {FEED_QUERY} from '../queries/feed';
+import {FriendshipSubscription} from './subscriptions/friendship.subscription';
+import {BehaviorSubject} from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
 })
 export class FriendService implements OnDestroy {
 
+    private friendsQuery: QueryRef<any>;
     private userSub: Subscription;
     private currentUser: User;
-    private feedQuery = {
+    private readonly feedQuery = {
         query: FEED_QUERY,
         variables: {
             first: 10,
@@ -21,8 +24,51 @@ export class FriendService implements OnDestroy {
         }
     };
 
-    constructor(private apollo: Apollo, private userService: UserService) {
+    friendlist = new BehaviorSubject<Map<string, Friendship>>(new Map<string, Friendship>());
+    friendRequests = new BehaviorSubject<Map<string, Friendship>>(new Map<string, Friendship>());
+
+    constructor(private apollo: Apollo, private userService: UserService, private friendshipReducer: FriendshipSubscription) {
         this.userSub = userService.currentUser.subscribe(user => this.currentUser = user);
+        this.fetchFriendlist();
+    }
+
+    private fetchFriendlist() {
+        this.friendsQuery = this.apollo.watchQuery<any>({ query: FETCH_FRIENDS });
+        this.friendsQuery.valueChanges.subscribe(({ data }) => {
+            this.updateFriendList(data);
+            this.updateFriendRequestList(data);
+        });
+        this.friendsQuery.subscribeToMore({
+            document: FRIENDSHIP_SUBSCRIPTION,
+            updateQuery: this.friendshipReducer.friendshipReducer
+        });
+    }
+
+    private updateFriendList(data: any) {
+        const friends = new Map<string, Friendship>();
+        data.currentUser.addedFriends
+            .forEach(friendship => friends.set(
+                friendship.target.id,
+                {id: friendship.id, accepted: friendship.accepted, createdAt: friendship.createdAt}
+            ));
+        data.currentUser.acceptedFriends
+            .filter(friendship => friendship.accepted)
+            .forEach(friendship => friends.set(
+                friendship.initiator.id,
+                {id: friendship.id, accepted: friendship.accepted, createdAt: friendship.createdAt}
+            ));
+        this.friendlist.next(friends);
+    }
+
+    private updateFriendRequestList(data: any) {
+        const requests = new Map<string, Friendship>();
+        data.currentUser.acceptedFriends
+            .filter(friendship => !friendship.accepted)
+            .forEach(friendship => requests.set(
+                friendship.initiator.id,
+                {id: friendship.id, createdAt: friendship.createdAt}
+            ));
+        this.friendRequests.next(requests);
     }
 
     addFriend(target: User) {

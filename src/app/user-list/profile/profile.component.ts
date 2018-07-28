@@ -5,6 +5,7 @@ import {Subscription} from 'rxjs';
 import {Post, UserDetails, User} from '../../models';
 import {FETCH_PROFILE} from '../../queries/profile';
 import {faBirthdayCake, faEnvelope, faMapMarker, faMobileAlt} from '@fortawesome/free-solid-svg-icons';
+import {UserService} from '../../services/user.service';
 
 @Component({
     selector: 'app-profile',
@@ -15,7 +16,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     private routeSub: Subscription;
     private profileSub: Subscription;
+    private userSub: Subscription;
+
     profile: UserDetails;
+    isSelf = true;
 
     phoneIcon = faMobileAlt;
     emailIcon = faEnvelope;
@@ -23,7 +27,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
     birthdayIcon = faBirthdayCake;
 
     constructor(
-        private route: ActivatedRoute, private router: Router, private apollo: Apollo) { }
+        private route: ActivatedRoute,
+        private router: Router,
+        private apollo: Apollo,
+        private userService: UserService
+    ) { }
 
     ngOnInit() {
         this.routeSub = this.route.params.subscribe((params: Params) => {
@@ -32,6 +40,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
                 return this.router.navigate(['/lobby']);
             }
             this.fetchProfile(id);
+            this.userSub = this.userService.currentUser.subscribe(user => {
+                if (user && user.id !== id) {
+                    this.isSelf = false;
+                }
+            });
         });
     }
 
@@ -57,6 +70,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.routeSub.unsubscribe();
-        this.profileSub.unsubscribe();
+        if (this.profileSub) this.profileSub.unsubscribe();
+        if (this.userSub) this.userSub.unsubscribe();
     }
 }

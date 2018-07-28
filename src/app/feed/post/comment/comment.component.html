@@ -27,7 +27,7 @@
   <div>
       <span class="text-muted">At: {{ comment.createdAt | date:'mediumTime' }}</span>
       <fa-icon [icon]="likeIcon" (click)="onLike()" class="green-icon" [ngClass]="{'disabled': liked}"></fa-icon>
-      {{ comment.likes.length }} likes
+      {{ comment.likes.length }} {{ comment.likes.length > 1 ? 'likes' : 'like' }}
       <fa-icon [icon]="dislikeIcon" (click)="onDislike()" class="red-icon" [ngClass]="{'disabled': !liked}"></fa-icon>
   </div>
 </div>

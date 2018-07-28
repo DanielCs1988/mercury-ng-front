@@ -3,10 +3,8 @@ import {Friendship, User} from '../models';
 import {UserService} from '../services/user.service';
 import {Subscription} from 'rxjs';
 import {faCheckCircle, faComments, faHandshake, faSignal, faTimesCircle, faUserAlt, faUserFriends} from '@fortawesome/free-solid-svg-icons';
-import {Apollo, QueryRef} from 'apollo-angular';
-import {FETCH_FRIENDS, FRIENDSHIP_SUBSCRIPTION} from '../queries/friendship';
+import {Apollo} from 'apollo-angular';
 import {FriendService} from '../services/friend.service';
-import {FriendshipSubscription} from '../services/subscriptions/friendship.subscription';
 
 @Component({
   selector: 'app-user-list',
@@ -15,15 +13,16 @@ import {FriendshipSubscription} from '../services/subscriptions/friendship.subsc
 })
 export class UserListComponent implements OnInit, OnDestroy {
 
+    private friendlistSub: Subscription;
+    private friendRequestSub: Subscription;
     private onlineUsersSub: Subscription;
     private usersSubscription: Subscription;
     private currentUserSub: Subscription;
     private unreadMsgSub: Subscription;
-    private friendsQuery: QueryRef<any>;
 
+    friendRequests: Map<string, Friendship>;
+    friendlist: Map<string, Friendship>;
     unreadMessages = new Map<string, number>();
-    friendRequests = new Map<string, Friendship>();
-    friends = new Map<string, Friendship>();
     onlineUsers = new Set<string>();
     users: User[] = [];
     currentUser: User;
@@ -36,56 +35,15 @@ export class UserListComponent implements OnInit, OnDestroy {
     removeFriendIcon = faTimesCircle;
     profileIcon = faUserAlt;
 
-    constructor(
-        private userService: UserService,
-        private apollo: Apollo,
-        private friendService: FriendService,
-        private friendshipReducer: FriendshipSubscription
-    ) { }
+    constructor(private userService: UserService, private apollo: Apollo, private friendService: FriendService) { }
 
     ngOnInit() {
         this.currentUserSub = this.userService.currentUser.subscribe(user => this.currentUser = user);
         this.onlineUsersSub = this.userService.onlineUsers.subscribe(users => this.onlineUsers = users);
         this.usersSubscription = this.userService.users.subscribe(users => this.users = Array.from(users.values()));
         this.unreadMsgSub = this.userService.onUnreadMessagesChange.subscribe(unread => this.unreadMessages = unread);
-        this.processFriends();
-    }
-
-    private processFriends() {
-        this.friendsQuery = this.apollo.watchQuery<any>({ query: FETCH_FRIENDS });
-        this.friendsQuery.valueChanges.subscribe(({ data }) => {
-            this.updateFriendList(data);
-            this.updateFriendRequestList(data);
-        });
-        this.friendsQuery.subscribeToMore({
-            document: FRIENDSHIP_SUBSCRIPTION,
-            updateQuery: this.friendshipReducer.friendshipReducer
-        });
-    }
-
-    private updateFriendList(data: any) {
-        this.friends.clear();
-        data.currentUser.addedFriends
-            .forEach(friendship => this.friends.set(
-                friendship.target.id,
-                {id: friendship.id, accepted: friendship.accepted, createdAt: friendship.createdAt}
-            ));
-        data.currentUser.acceptedFriends
-            .filter(friendship => friendship.accepted)
-            .forEach(friendship => this.friends.set(
-                friendship.initiator.id,
-                {id: friendship.id, accepted: friendship.accepted, createdAt: friendship.createdAt}
-            ));
-    }
-
-    private updateFriendRequestList(data: any) {
-        this.friendRequests.clear();
-        data.currentUser.acceptedFriends
-            .filter(friendship => !friendship.accepted)
-            .forEach(friendship => this.friendRequests.set(
-                friendship.initiator.id,
-                {id: friendship.id, createdAt: friendship.createdAt}
-            ));
+        this.friendlistSub = this.friendService.friendlist.subscribe(friends => this.friendlist = friends);
+        this.friendRequestSub = this.friendService.friendRequests.subscribe(requests => this.friendRequests = requests);
     }
 
     onAddFriend(target: User) {
@@ -98,11 +56,13 @@ export class UserListComponent implements OnInit, OnDestroy {
     }
 
     onRemoveFriend(targetId: string) {
-        const friendShipId = this.friends.get(targetId).id;
+        const friendShipId = this.friendlist.get(targetId).id;
         this.friendService.removeFriend(friendShipId);
     }
 
     ngOnDestroy(): void {
+        this.friendlistSub.unsubscribe();
+        this.friendRequestSub.unsubscribe();
         this.currentUserSub.unsubscribe();
         this.usersSubscription.unsubscribe();
         this.unreadMsgSub.unsubscribe();
