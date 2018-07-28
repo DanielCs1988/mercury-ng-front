@@ -43,8 +43,6 @@ export class UserService implements OnDestroy {
         this.userQuery.subscribeToMore({
             document: NEW_USER_SUBSCRIPTION,
             updateQuery: (prev, { subscriptionData }) => {
-                console.log(prev);
-                console.log(subscriptionData);
                 if (!subscriptionData.data.newUser) {
                     return;
                 }

@@ -68,6 +68,12 @@ export interface Weather {
     temperature: number;
 }
 
+export interface Friendship {
+    id: string;
+    createdAt: Date;
+    accepted?: boolean;
+}
+
 export const enum Mutation {
     CREATED = 'CREATED',
     UPDATED = 'UPDATED',

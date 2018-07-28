@@ -11,10 +11,11 @@ import {Subscription} from 'rxjs';
 })
 export class PostService implements OnDestroy {
 
-    readonly POSTS_PER_PAGE = 10;
     private userSubscription: Subscription;
     private currentUser: User;
-    private readonly QUERY_VARIABLES = {
+
+    readonly POSTS_PER_PAGE = 10;
+    readonly QUERY_VARIABLES = {
         first: this.POSTS_PER_PAGE,
         skip: 0
     };

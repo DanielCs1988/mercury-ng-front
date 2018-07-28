@@ -1,18 +1,12 @@
 import gql from 'graphql-tag';
 import {MIN_USER_FRAGMENT} from './users';
 
-const FRIENDSHIP_CORE = gql`
-    fragment FriendshipCore on Friendship {
+export const FRIENDSHIP_FRAGMENT = gql`
+    fragment FriendshipParts on Friendship {
         __typename
         id
         createdAt
         accepted
-    }
-`;
-
-export const FRIENDSHIP_FRAGMENT = gql`
-    fragment FriendshipParts on Friendship {
-        ...FriendshipCore
         initiator {
             ...MinUserInfo
         }
@@ -21,7 +15,22 @@ export const FRIENDSHIP_FRAGMENT = gql`
         }
     }
     ${MIN_USER_FRAGMENT}
-    ${FRIENDSHIP_CORE}
+`;
+
+export const FETCH_FRIENDS = gql`
+    query fetchFriends {
+        currentUser {
+            ...MinUserInfo
+            addedFriends {
+                ...FriendshipParts
+            }
+            acceptedFriends {
+                ...FriendshipParts
+            }
+        }
+    }
+    ${MIN_USER_FRAGMENT}
+    ${FRIENDSHIP_FRAGMENT}
 `;
 
 export const ADD_FRIEND = gql`
@@ -30,15 +39,17 @@ export const ADD_FRIEND = gql`
             ...FriendshipParts
         }
     }
+    ${FRIENDSHIP_FRAGMENT}
 `;
 
 export const ACCEPT_FRIEND = gql`
     mutation acceptFriend($id: ID!) {
         acceptFriend(id: $id) {
-            ...FriendshipCore
+            __typename
+            id
+            accepted
         }
     }
-    ${FRIENDSHIP_CORE}
 `;
 
 export const DELETE_FRIEND = gql`
@@ -53,22 +64,26 @@ export const DELETE_FRIEND = gql`
 export const FRIENDSHIP_SUBSCRIPTION = gql`
     subscription friendshipSub {
         friendshipSub {
-            __typename
-            id
-            createdAt
-            accepted
-        }
-        initiator {
-            id
-            givenName
-            familyName
-            pictureUrl
-        }
-        target {
-            id
-            givenName
-            familyName
-            pictureUrl
+            mutation
+            node {
+                __typename
+                id
+                createdAt
+                accepted
+                initiator {
+                    id
+                    givenName
+                    familyName
+                    pictureUrl
+                }
+                target {
+                    id
+                    givenName
+                    familyName
+                    pictureUrl
+                }
+            }
+            previousValues { id }
         }
     }
 `;
