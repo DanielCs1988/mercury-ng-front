@@ -1,6 +1,4 @@
 import {Injectable} from '@angular/core';
-import {QueryRef} from 'apollo-angular';
-import {COMMENT_SUBSCRIPTION} from '../../queries/comment';
 import {Mutation} from '../../models';
 
 @Injectable({
@@ -8,15 +6,7 @@ import {Mutation} from '../../models';
 })
 export class CommentSubscription {
 
-    subscribeToComments(postId: string, commentsQuery: QueryRef<any>) {
-        commentsQuery.subscribeToMore({
-            document: COMMENT_SUBSCRIPTION,
-            variables: { postId },
-            updateQuery: this.commentReducer
-        })
-    }
-
-    private commentReducer(state, { subscriptionData }) {
+    commentReducer(state, { subscriptionData }) {
         if (!subscriptionData.hasOwnProperty('data')) {
             return;
         }

@@ -5,12 +5,13 @@ import {PostService} from '../../services/post.service';
 import {CommentService} from '../../services/comment.service';
 import {LikeService} from '../../services/like.service';
 import {UserService} from '../../services/user.service';
-import {Observable, Subscription} from 'rxjs';
+import {Subscription} from 'rxjs';
 import {faEdit, faThumbsDown, faThumbsUp, faTrashAlt} from '@fortawesome/free-solid-svg-icons';
 import {Apollo, QueryRef} from 'apollo-angular';
-import {FETCH_COMMENTS} from '../../queries/comment';
+import {COMMENT_SUBSCRIPTION, FETCH_COMMENTS} from '../../queries/comment';
 import {CommentSubscription} from '../../services/subscriptions/comment.subscription';
 import {CommentLikeSubscription} from '../../services/subscriptions/comment-like.subscription';
+import {COMMENT_LIKE_SUBSCRIPTION} from '../../queries/likes';
 
 @Component({
   selector: 'app-post',
@@ -71,8 +72,16 @@ export class PostComponent implements OnInit, OnDestroy {
         this.commentsSub = this.commentsQuery.valueChanges.subscribe(({data, loading}) => {
             this.comments = data.comments;
         });
-        this.commentChanges.subscribeToComments(this.post.id, this.commentsQuery);
-        this.commentLikeChanges.subscribeToCommentLikes(this.post.id, this.commentsQuery);
+        this.commentsQuery.subscribeToMore({
+            document: COMMENT_SUBSCRIPTION,
+            variables: { postId: this.post.id },
+            updateQuery: this.commentChanges.commentReducer
+        });
+        this.commentsQuery.subscribeToMore({
+            document: COMMENT_LIKE_SUBSCRIPTION,
+            variables: { postId: this.post.id },
+            updateQuery: this.commentLikeChanges.commentLikeReducer
+        })
     }
 
     onUpdate() {
@@ -123,5 +132,8 @@ export class PostComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.userSubscription.unsubscribe();
+        if (this.commentsSub) {
+            this.commentsSub.unsubscribe();
+        }
     }
 }
