@@ -59,12 +59,12 @@ export class EventEditComponent implements OnInit {
         }
 
         this.eventForm = new FormGroup({
-            'name': new FormControl(name, [Validators.required, Validators.minLength(1)]),
-            'description': new FormControl(description, [Validators.required, Validators.minLength(1)]),
-            'pictureUrl': new FormControl(pictureUrl),
+            'name': new FormControl(name, [Validators.required, Validators.pattern(/.{1,50}/)]),
+            'description': new FormControl(description, [Validators.required, Validators.pattern(/.{1,1000}/)]),
+            'pictureUrl': new FormControl(pictureUrl, Validators.maxLength(100)),
             'startDate': new FormControl(startDate, Validators.required),
             'endDate': new FormControl(endDate, Validators.required),
-            'location': new FormControl(location, [Validators.required, Validators.minLength(1)])
+            'location': new FormControl(location, [Validators.required, Validators.pattern(/.{1,100}/)])
         });
     }
 

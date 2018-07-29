@@ -75,6 +75,7 @@ export interface Friendship {
 }
 
 export interface Profile {
+    id?: string;
     introduction?: string;
     birthday?: number;
     address?: string;

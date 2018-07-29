@@ -1,0 +1,51 @@
+<form *ngIf="profileForm" [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+    <div class="row mt-3">
+        <div class="col-6">
+            <button type="submit" class="btn btn-block btn-outline-success" [disabled]="!profileForm.valid">
+                Save
+            </button>
+        </div>
+        <div class="col-6">
+            <button type="button" class="btn btn-block btn-outline-danger" (click)="closeEditor()">
+                Cancel
+            </button>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-6">
+
+            <div class="form-group">
+                <label for="picture">Profile picture:</label>
+                <input type="text" id="picture" class="form-control" formControlName="pictureUrl" #pictureUrl>
+            </div>
+            <img *ngIf="pictureUrl.value" [src]="pictureUrl.value" alt="profile picture" class="img-fluid rounded">
+
+        </div>
+        <div class="col-md-6">
+
+            <div class="form-group">
+                <label for="birthday">Birthday:</label>
+                <input type="date" id="birthday" class="form-control" formControlName="birthday">
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="text" id="email" class="form-control" formControlName="email">
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone number:</label>
+                <input type="text" id="phone" class="form-control" formControlName="phone">
+            </div>
+            <div class="form-group">
+                <label for="address">Address:</label>
+                <input type="text" id="address" class="form-control" formControlName="address">
+            </div>
+
+        </div>
+    </div>
+
+    <div class="form-group mt-3">
+        <label for="introduction">Introduction:</label>
+        <textarea id="introduction" class="form-control" formControlName="introduction" rows="10"></textarea>
+    </div>
+</form>

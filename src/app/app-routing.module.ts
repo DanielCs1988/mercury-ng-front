@@ -18,7 +18,7 @@ const routes: Routes = [
     {path: 'feed', component: FeedComponent, canActivate: [AuthGuard]},
     {path: 'news', component: NewsPaneComponent, canActivate: [AuthGuard]},
     {path: 'chat/:id', component: ChatPaneComponent, canActivate: [AuthGuard, UsersGuard]},
-    {path: 'profile/:id', component: ProfileComponent, canActivate: [AuthGuard]},
+    {path: 'profile/:id', component: ProfileComponent, canActivate: [AuthGuard, UsersGuard]},
     {path: 'events', component: EventPaneComponent, canActivate: [AuthGuard, UsersGuard], children: [
             {path: '', pathMatch: 'full', component: EventListComponent},
             {path: 'new', component: EventEditComponent},

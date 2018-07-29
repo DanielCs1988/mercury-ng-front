@@ -19,6 +19,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private userSub: Subscription;
 
     profile: UserDetails;
+    editMode = false;
     isSelf = true;
 
     phoneIcon = faMobileAlt;
@@ -66,6 +67,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
                 friends: friends.sort((a: User, b: User) => a.givenName.localeCompare(b.givenName))
             };
         });
+    }
+
+    toggleEditMode() {
+        this.editMode = !this.editMode;
     }
 
     ngOnDestroy(): void {

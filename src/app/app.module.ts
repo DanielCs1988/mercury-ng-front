@@ -34,6 +34,7 @@ import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {AppApolloModule} from './app-apollo.module';
 import {ChatEffects} from './store/message/chat.effects';
 import {ProfileComponent} from './user-list/profile/profile.component';
+import {EditProfileComponent} from './user-list/edit-profile/edit-profile.component';
 
 @NgModule({
     declarations: [
@@ -55,7 +56,8 @@ import {ProfileComponent} from './user-list/profile/profile.component';
         NewsFilterComponent,
         WeatherComponent,
         LobbyComponent,
-        ProfileComponent
+        ProfileComponent,
+        EditProfileComponent
     ],
     imports: [
         BrowserModule,

@@ -1,6 +1,6 @@
-export function getCurrentDate(timestamp?: number): string {
+export function getCurrentDate(timestamp?: number, long = true): string {
     const currentDate = timestamp ? new Date(timestamp) : new Date();
-    return currentDate.toISOString().substring(0, 16);
+    return long ? currentDate.toISOString().substring(0, 16) : currentDate.toISOString().substring(0, 10);
 }
 
 export function validateDatetimes(dt1: string, dt2: string): boolean {
