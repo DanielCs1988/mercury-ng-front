@@ -1,15 +1,17 @@
-<div *ngIf="user" class="pane">
+<div *ngIf="user">
 
-    <span *ngIf="!editing">
-        <a routerLink="/profile/{{ comment.user.id }}">
+    <div *ngIf="!editing" class="comment-grid">
+        <div class="avatar">
             <img src="{{ comment.user.pictureUrl }}" width="30" height="30"
                  alt="Profile picture" class="rounded-circle">
-            <span class="ml-1" *ngIf="!editing">
-                {{ comment.user.givenName }} {{ comment.user.familyName }}
-            </span>
-        </a>
-        <span> {{ comment.text }}</span>
-    </span>
+        </div>
+        <div class="text pane">
+            <a routerLink="/profile/{{ comment.user.id }}" class="mr-2 profile-link">
+                <span *ngIf="!editing">{{ comment.user.givenName }} {{ comment.user.familyName }}</span>
+            </a>
+            <span>{{ comment.text }}</span>
+        </div>
+    </div>
 
     <form *ngIf="editing" #commentForm="ngForm" (ngSubmit)="onUpdateComment()">
         <div class="form-group">
@@ -24,10 +26,10 @@
         <fa-icon [icon]="deleteIcon" class="red-icon" (click)="onDeleteComment()"></fa-icon>
     </span>
 
-  <div>
-      <span class="text-muted">At: {{ comment.createdAt | date:'mediumTime' }}</span>
+  <div class="my-2 mb-3 ml-5">
       <fa-icon [icon]="likeIcon" (click)="onLike()" class="green-icon" [ngClass]="{'disabled': liked}"></fa-icon>
       {{ comment.likes.length }} {{ comment.likes.length > 1 ? 'likes' : 'like' }}
       <fa-icon [icon]="dislikeIcon" (click)="onDislike()" class="red-icon" [ngClass]="{'disabled': !liked}"></fa-icon>
+      <span class="text-muted ml-3">{{ comment.createdAt | date:'mediumTime' }}</span>
   </div>
 </div>

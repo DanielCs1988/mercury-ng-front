@@ -1,18 +1,15 @@
-<form #chatForm="ngForm" (ngSubmit)="onSendMessage()" class="pane">
-    <div class="form-group">
-        <input type="text" class="form-control" name="content" placeholder="Write your message here..."
-               ngModel required minlength="1">
-        <button type="submit" class="btn btn-primary btn-block my-3" [disabled]="!chatForm.valid">
-            Send
-        </button>
-    </div>
-</form>
-
 <div class="pane chat-window">
     <div class="chat-message" *ngFor="let msg of messages"
          [ngClass]="{'own-message': currentUser.googleId === msg.from}">
         <img src="{{ owner(msg).pictureUrl }}" width="30" height="30" alt="Profile picture" class="rounded-circle mr-2">
-        {{ owner(msg).givenName }} {{ owner(msg).familyName }}: {{ msg.content }}
-        <div class="text-muted">@{{ msg.createdAt | date:'shortTime' }}</div>
+        <div class="chat-text d-inline-block">{{ msg.content }}</div>
+        <div class="text-muted small">{{ msg.createdAt | date:'shortTime' }}</div>
     </div>
 </div>
+
+<form #chatForm="ngForm" (ngSubmit)="onSendMessage()" class="pane chat-form">
+    <div class="form-group">
+        <input type="text" class="form-control" name="content" placeholder="Write your message here..."
+               ngModel required minlength="1">
+    </div>
+</form>

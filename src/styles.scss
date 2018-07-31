@@ -3,6 +3,7 @@ $green: #4CAF50;
 $red: #e51c23;
 $dark: #222;
 $blue: #2196F3;
+$bg-color: rgba(33, 150, 243, 0.1);
 
 @mixin colored-shadow($color) {
   box-shadow: 1px 1px 5px 2px rgba($color, 0.6);
@@ -51,6 +52,14 @@ textarea {
     @include button-icon($blue);
 }
 
+.profile-link {
+    color: rgba(0, 0, 0, 0.7);
+    font-weight: 600;
+    &:hover {
+        font-weight: 900;
+    }
+}
+
 .post-form {
   max-height: 20rem;
   position: relative;
@@ -78,25 +87,12 @@ textarea {
   left: 1rem;
 }
 
-.chat-message {
-  padding: 0.15rem 0.3rem;
-  margin: 0.5rem 0.5rem 0.2rem auto;
-  background: green;
-  color: white;
-  border-radius: 10px;
-  width: fit-content;
-
-  &.own-message {
-    background: darkgreen;
-    margin: 0.5rem 0.5rem;
-  }
-}
-
 .pane {
   padding: 10px;
   border-radius: 3px;
   box-shadow: $fancy-shadow;
   margin-bottom: 0.5rem;
+    background-color: $bg-color;
 }
 .center-block {
   width: 30rem;

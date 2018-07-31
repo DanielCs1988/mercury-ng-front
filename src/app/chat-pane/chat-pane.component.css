@@ -1,4 +1,28 @@
 .chat-window {
-    height: 40rem;
+    height: 29rem;
     overflow-y: auto;
+    margin-top: 1rem;
+}
+.chat-form {
+    height: 4rem;
+}
+
+.chat-message {
+    margin: 0.5rem 0.5rem 2rem auto;
+    width: fit-content;
+    position: relative;
+}
+.own-message {
+     margin: 1rem 1rem;
+}
+.chat-text {
+    background: #4CAF50;
+    color: white;
+    padding: 0.25rem 0.4rem;
+    border-radius: 10px;
+}
+.text-muted {
+    position: absolute;
+    top: 100%;
+    right: 0;
 }
