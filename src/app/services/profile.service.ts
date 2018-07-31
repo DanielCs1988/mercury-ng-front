@@ -10,10 +10,11 @@ export class ProfileService {
 
     constructor(private apollo: Apollo) { }
 
-    createProfile(id: string, profile: Profile) {
+    createProfile(userId: string, profile: Profile) {
+        const { id, ...data } = profile;
         this.apollo.mutate({
             mutation: CREATE_PROFILE,
-            variables: { data: { ...profile } },
+            variables: { data },
 
             optimisticResponse: {
                 __typename: 'Mutation',
@@ -24,15 +25,16 @@ export class ProfileService {
             },
 
             update: (proxy, { data: { createProfile } }) => {
-                const data: any = proxy.readQuery({ query: FETCH_PROFILE, variables: { id } });
-                data.user = { ...data.user, profile: createProfile };
-                proxy.writeQuery({ query: FETCH_PROFILE, variables: { id }, data });
+                const userProfile: any = proxy.readQuery({ query: FETCH_PROFILE, variables: { id: userId } });
+                userProfile.user = { ...userProfile.user, profile: createProfile };
+                proxy.writeQuery({ query: FETCH_PROFILE, variables: { id: userId }, data: userProfile });
             }
         });
     }
 
-    updateProfile(userId: string, profile: Profile) {
+    updateProfile(profile: Profile) {
         const { id, ...data } = profile; // Aah, the beauty of it. Puts the id in a const and the rest in a separate object.
+        console.log(id, data);
         this.apollo.mutate({
             mutation: UPDATE_PROFILE,
             variables: { id, data },

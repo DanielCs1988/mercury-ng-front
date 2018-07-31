@@ -47,7 +47,9 @@ export class CommentComponent implements OnInit, OnDestroy {
     }
 
     onDeleteComment() {
-        this.commentService.deleteComment(this.comment.id, this.postId);
+        if (confirm('Are you sure you want to delete your comment?')) {
+            this.commentService.deleteComment(this.comment.id, this.postId);
+        }
     }
 
     onUpdateComment() {

@@ -13,13 +13,8 @@
     </div>
     <div class="row mt-3">
         <div class="col-md-6">
-
-            <div class="form-group">
-                <label for="picture">Profile picture:</label>
-                <input type="text" id="picture" class="form-control" formControlName="pictureUrl" #pictureUrl>
-            </div>
-            <img *ngIf="pictureUrl.value" [src]="pictureUrl.value" alt="profile picture" class="img-fluid rounded">
-
+            <label for="introduction">Introduction:</label>
+            <textarea id="introduction" class="form-control" formControlName="introduction" rows="10"></textarea>
         </div>
         <div class="col-md-6">
 
@@ -42,10 +37,5 @@
             </div>
 
         </div>
-    </div>
-
-    <div class="form-group mt-3">
-        <label for="introduction">Introduction:</label>
-        <textarea id="introduction" class="form-control" formControlName="introduction" rows="10"></textarea>
     </div>
 </form>

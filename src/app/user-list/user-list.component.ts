@@ -56,8 +56,10 @@ export class UserListComponent implements OnInit, OnDestroy {
     }
 
     onRemoveFriend(targetId: string) {
-        const friendShipId = this.friendlist.get(targetId).id;
-        this.friendService.removeFriend(friendShipId);
+        if (confirm('Are you sure you want to destroy your friendship? :-(')) {
+            const friendShipId = this.friendlist.get(targetId).id;
+            this.friendService.removeFriend(friendShipId);
+        }
     }
 
     ngOnDestroy(): void {

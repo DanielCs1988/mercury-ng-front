@@ -52,7 +52,9 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
     }
 
     onDelete() {
-        this.store.dispatch(new DeleteEvent(this.event._id));
+        if (confirm('Are you sure you want to delete your event?')) {
+            this.store.dispatch(new DeleteEvent(this.event._id));
+        }
     }
 
     onChangeParticipation() {

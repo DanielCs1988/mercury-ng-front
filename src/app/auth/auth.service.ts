@@ -12,7 +12,7 @@ import {UserService} from '../services/user.service';
 export class AuthService {
 
     private auth0 = new auth0.WebAuth({
-        clientID: 'hf9N-twx_HdoCwvbTjfXuEEh0AW2lHPi',
+        clientID: 'U0md6yXC6L9uTAq7bMDdEOn59At5pzOO',
         domain: 'danielcs88.eu.auth0.com',
         responseType: 'token id_token',
         audience: 'Mercury-App',

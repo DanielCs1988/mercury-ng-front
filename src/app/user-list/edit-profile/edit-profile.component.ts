@@ -19,15 +19,14 @@ export class EditProfileComponent implements OnInit {
     constructor(private profileService: ProfileService) { }
 
     ngOnInit() {
-        const profile = { ...this.user.profile };
+        const profile = this.user.profile ? { ...this.user.profile } : {};
         this.profileForm = new FormGroup({
-            'id': new FormControl(this.user.id || ''),
-            'pictureUrl': new FormControl(this.user.pictureUrl, Validators.pattern(/.{10,100}/)),
+            'id': new FormControl(profile.id),
             'introduction': new FormControl(profile.introduction, Validators.maxLength(1000)),
             'birthday': new FormControl(getCurrentDate(profile.birthday, false)),
             'address': new FormControl(profile.address, Validators.maxLength(100)),
             'email': new FormControl(profile.email, Validators.email),
-            'phone': new FormControl(profile.phone, Validators.maxLength(20))
+            'phone': new FormControl(profile.phone, Validators.maxLength(30))
         });
     }
 
@@ -35,7 +34,15 @@ export class EditProfileComponent implements OnInit {
         if (!this.profileForm.valid) {
             this.closeEditor();
         }
-        console.log({...this.profileForm.value, birthday: new Date(this.profileForm.value.birthday).getTime() });
+        const profile = {
+            ...this.profileForm.value,
+            birthday: new Date(this.profileForm.value.birthday).getTime() / 1000
+        };
+        if (this.user.profile) {
+            this.profileService.updateProfile(profile);
+        } else {
+            this.profileService.createProfile(this.user.id, profile);
+        }
         this.closeEditor();
     }
 
