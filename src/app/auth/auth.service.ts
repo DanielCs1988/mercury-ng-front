@@ -32,14 +32,13 @@ export class AuthService {
             if (authResult && authResult.accessToken && authResult.idToken) {
                 window.location.hash = '';
                 this.setSession(authResult);
-                this.initServices();
-                this.router.navigate(['/feed']);
             } else if (err) {
                 console.error(err);
                 alert(`Error: ${err.error}. Check the console for further details.`);
             } else {
                 if (this.isAuthenticated()) {
                     this.initServices();
+                    this.router.navigate(['/feed']);
                 }
             }
         })
@@ -62,6 +61,7 @@ export class AuthService {
         localStorage.setItem("access_token", authResult.accessToken);
         localStorage.setItem("id_token", authResult.idToken);
         localStorage.setItem("expires_at", expiresAt);
+        location.reload();
     }
 
     isAuthenticated(): boolean {
