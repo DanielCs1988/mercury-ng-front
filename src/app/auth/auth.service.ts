@@ -16,8 +16,7 @@ export class AuthService {
         domain: 'danielcs88.eu.auth0.com',
         responseType: 'token id_token',
         audience: 'Mercury-App',
-        redirectUri: 'http://localhost:4200/callback',
-        // redirectUri: 'https://mercury-nexus.herokuapp.com/callback',
+        redirectUri: 'https://mercury-nexus.herokuapp.com/callback',
         scope: 'openid profile'
     });
 
