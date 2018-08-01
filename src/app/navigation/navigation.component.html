@@ -1,7 +1,9 @@
 <nav class="navbar navbar-light bg-light fixed-top">
-    <a *ngIf="user" routerLink="/profile/{{ user.id }}" class="navbar-brand">
-        <img [src]="user.pictureUrl" width="30" height="30" alt="Profile picture" class="rounded-circle">
-        {{ user.givenName }}
+
+    <a routerLink="/feed" class="navbar-brand">
+        <img src="http://www.carlogos.org/logo/Mercury-symbol-black-1920x1080.png"
+             alt="Mercury" height="40px" width="auto">
+        <span class="font-weight-bold">Mercury</span>
     </a>
 
     <ul *ngIf="isLoggedIn()" class="navbar-nav navbar-expand">
@@ -22,10 +24,17 @@
         </li>
     </ul>
 
-    <a *ngIf="isLoggedIn()" class="btn btn-outline-danger" (click)="logout()">
-        <fa-icon [icon]="logoutIcon"></fa-icon>
+    <span>
+        <a *ngIf="user" routerLink="/profile/{{ user.id }}" class="navbar-brand mr-4">
+        <img [src]="user.pictureUrl" width="30" height="30" alt="Profile picture" class="rounded-circle">
+        {{ user.givenName }}
     </a>
-    <a *ngIf="!isLoggedIn()" class="btn btn-outline-success" (click)="login()">
-        <fa-icon [icon]="loginIcon"></fa-icon>
+
+    <a *ngIf="isLoggedIn()" class="btn btn-outline-danger mr-3" (click)="logout()">
+        <fa-icon [icon]="logoutIcon" class="icon"></fa-icon>
     </a>
+    <a *ngIf="!isLoggedIn()" class="btn btn-outline-success mr-3" (click)="login()">
+        <fa-icon [icon]="loginIcon" class="icon"></fa-icon>
+    </a>
+    </span>
 </nav>

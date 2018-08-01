@@ -35,6 +35,7 @@ import {AppApolloModule} from './app-apollo.module';
 import {ChatEffects} from './store/message/chat.effects';
 import {ProfileComponent} from './user-list/profile/profile.component';
 import {EditProfileComponent} from './user-list/edit-profile/edit-profile.component';
+import {MomentModule} from 'angular2-moment';
 
 @NgModule({
     declarations: [
@@ -66,6 +67,7 @@ import {EditProfileComponent} from './user-list/edit-profile/edit-profile.compon
         ReactiveFormsModule,
         AppApolloModule,
         FontAwesomeModule,
+        MomentModule,
         StoreModule.forRoot(reducers),
         EffectsModule.forRoot([EventEffects, ChatEffects]),
         StoreRouterConnectingModule,

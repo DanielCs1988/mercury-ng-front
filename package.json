@@ -30,6 +30,7 @@
         "@ngrx/router-store": "^6.0.1",
         "@ngrx/store": "^6.0.1",
         "@ngrx/store-devtools": "^6.0.1",
+        "angular2-moment": "^1.9.0",
         "apollo-angular": "^1.1.2",
         "apollo-angular-link-http": "^1.1.1",
         "apollo-cache-inmemory": "^1.2.5",

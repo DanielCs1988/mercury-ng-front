@@ -3,7 +3,7 @@
          [ngClass]="{'own-message': currentUser.googleId === msg.from}">
         <img src="{{ owner(msg).pictureUrl }}" width="30" height="30" alt="Profile picture" class="rounded-circle mr-2">
         <div class="chat-text d-inline-block">{{ msg.content }}</div>
-        <div class="text-muted small">{{ msg.createdAt | date:'shortTime' }}</div>
+        <div class="text-muted small">{{ msg.createdAt | amTimeAgo }}</div>
     </div>
 </div>
 

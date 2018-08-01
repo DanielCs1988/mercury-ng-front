@@ -1,3 +1,12 @@
+.navbar {
+  padding: 4px 16px 6px 16px; }
+
+.btn {
+  border-radius: 50%; }
+
+.icon:hover {
+  color: white; }
+
 .nav-link {
   padding: 0;
   font-size: 1.4rem;

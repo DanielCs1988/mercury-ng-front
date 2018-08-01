@@ -1,5 +1,5 @@
 <div *ngIf="!formClicked" (click)="toggleEditor()" class="mt-2 mb-3">
-    <input type="text" class="form-control" placeholder="I want to express myself...">
+    <input type="text" class="form-control" value="Write your thoughts here...">
 </div>
 
 <form *ngIf="formClicked" #postForm="ngForm" (ngSubmit)="onPost()" class="post-form">

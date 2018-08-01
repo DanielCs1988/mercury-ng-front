@@ -33,6 +33,7 @@ export class PostComponent implements OnInit, OnDestroy {
     user: User;
     liked: boolean;
     editing = false;
+    zoomed = false;
 
     editIcon = faEdit;
     deleteIcon = faTrashAlt;
@@ -137,5 +138,9 @@ export class PostComponent implements OnInit, OnDestroy {
         if (this.commentsSub) {
             this.commentsSub.unsubscribe();
         }
+    }
+
+    toggleImageView() {
+        this.zoomed = !this.zoomed;
     }
 }

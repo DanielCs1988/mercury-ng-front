@@ -1,12 +1,14 @@
 .controls {
     display: none;
 }
-.pane:hover .controls {
+div:hover .controls {
     display: inline-block;
 }
 .pane {
     border-radius: 2rem;
-
+}
+.rounded-circle {
+    margin: 0.3rem 0 0 0.5rem;
 }
 .comment-grid {
     display: grid;

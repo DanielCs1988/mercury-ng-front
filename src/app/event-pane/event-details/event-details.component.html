@@ -31,7 +31,7 @@
                          class="rounded-circle m-3">
                     {{ event.organizer.givenName }} {{ event.organizer.familyName }}
                 </a>
-                <span class="ml-2 text-muted small">Created at: {{ event.createdAt | date:'medium' }}</span>
+                <span class="text-muted"><span class="mx-2">·</span>{{ event.createdAt | amTimeAgo }}</span>
 
                 <div class="float-right">
                     <span *ngIf="event.organizer.id === currentUser.id">
@@ -45,13 +45,14 @@
 
             </div>
 
-            <span>{{ event.startDate | date:'medium' }} - {{ event.endDate | date:'medium' }}</span>
+            <span>{{ event.startDate | amLocal | amDateFormat: 'YYYY-MM-DD HH:mm' }} -
+                {{ event.endDate | amLocal | amDateFormat: 'YYYY-MM-DD HH:mm' }}</span>
             <button *ngIf="!joinedEvent()" class="btn btn-primary join-btn" (click)="onChangeParticipation()">
-                <fa-icon [icon]="joinIcon"></fa-icon>
+                <fa-icon [icon]="joinIcon" class="mr-2"></fa-icon>
                 I will be there
             </button>
             <button *ngIf="joinedEvent()" class="btn btn-danger join-btn" (click)="onChangeParticipation()">
-                <fa-icon [icon]="leaveIcon"></fa-icon>
+                <fa-icon [icon]="leaveIcon" class="mr-2"></fa-icon>
                 I won't be there
             </button>
         </div>

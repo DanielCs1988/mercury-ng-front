@@ -2,8 +2,8 @@
 <div class="grid">
     <div *ngFor="let event of events" class="pane event" routerLink="{{ event._id }}">
         <h3>{{ event.name }}</h3>
-        <div>From: {{ event.startDate | date:'short' }}</div>
-        <div>To: {{ event.endDate | date:'short' }}</div>
+        <div>From: {{ event.startDate | amLocal | amDateFormat: 'YYYY-MM-DD HH:mm' }}</div>
+        <div>To: {{ event.endDate | amLocal | amDateFormat: 'YYYY-MM-DD HH:mm' }}</div>
         <div>
             <fa-icon [icon]="locationIcon" class="green-icon"></fa-icon>
             {{ event.location }}

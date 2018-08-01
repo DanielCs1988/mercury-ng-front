@@ -18,8 +18,9 @@
 .chat-text {
     background: #4CAF50;
     color: white;
-    padding: 0.25rem 0.4rem;
+    padding: 0.4rem 0.6rem;
     border-radius: 10px;
+    font-size: 0.9rem;
 }
 .text-muted {
     position: absolute;

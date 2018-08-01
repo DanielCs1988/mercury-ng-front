@@ -21,15 +21,14 @@
         </div>
     </form>
 
-    <span *ngIf="comment.user.id === user.id && !editing" class="controls">
-        <fa-icon [icon]="editIcon" class="green-icon" (click)="onStartEditing()"></fa-icon>
-        <fa-icon [icon]="deleteIcon" class="red-icon" (click)="onDeleteComment()"></fa-icon>
-    </span>
-
-  <div class="my-2 mb-3 ml-5">
+  <div class="mb-2 mb-3 ml-5">
       <fa-icon [icon]="likeIcon" (click)="onLike()" class="green-icon" [ngClass]="{'disabled': liked}"></fa-icon>
       {{ comment.likes.length }} {{ comment.likes.length > 1 ? 'likes' : 'like' }}
       <fa-icon [icon]="dislikeIcon" (click)="onDislike()" class="red-icon" [ngClass]="{'disabled': !liked}"></fa-icon>
-      <span class="text-muted ml-3">{{ comment.createdAt | date:'mediumTime' }}</span>
+      <span class="text-muted ml-2">{{ comment.createdAt | amTimeAgo }}</span>
+      <span *ngIf="comment.user.id === user.id && !editing" class="controls">
+        <fa-icon [icon]="editIcon" class="green-icon" (click)="onStartEditing()"></fa-icon>
+        <fa-icon [icon]="deleteIcon" class="red-icon" (click)="onDeleteComment()"></fa-icon>
+    </span>
   </div>
 </div>
