@@ -23,11 +23,11 @@
     </div>
 
     <div *ngIf="editing">
-        <form #postForm="ngForm" (ngSubmit)="onUpdate()">
-            <div class="editor">
+        <form #postForm="ngForm" (ngSubmit)="onUpdate()" class="row">
+            <div class="col-md-6">
                 <div class="form-group">
-          <textarea name="post" id="post" rows="5" class="form-control"
-                    required minlength="1" ngModel></textarea>
+                  <textarea name="post" id="post" rows="5" class="form-control"
+                            required minlength="1" ngModel></textarea>
                 </div>
                 <div class="form-group">
                     <input type="text" id="picture" class="form-control" name="picture"
@@ -35,8 +35,8 @@
                 </div>
                 <button class="btn btn-success btn-block mt-2" type="submit" [disabled]="!postForm.valid">Update</button>
             </div>
-            <div class="preview">
-                <img [src]="pictureUrl.value" class="rounded preview-image" alt="preview">
+            <div class="col-md-6">
+                <img [src]="pictureUrl.value" class="rounded img-fluid" alt="preview">
             </div>
         </form>
     </div>

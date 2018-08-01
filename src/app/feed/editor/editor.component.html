@@ -4,22 +4,24 @@
 
 <form *ngIf="formClicked" #postForm="ngForm" (ngSubmit)="onPost()" class="post-form">
 
-  <div class="editor">
-    <div class="form-group">
-      <textarea name="post" id="post" rows="5" placeholder="What's on your mind?" class="form-control"
-                required minlength="1" ngModel></textarea>
-    </div>
+  <div class="row">
+      <div class="col-md-6">
+          <div class="form-group">
+              <textarea name="post" id="post" rows="5" placeholder="What's on your mind?" class="form-control"
+                        required minlength="1" ngModel></textarea>
+          </div>
 
-    <div class="form-group">
-      <input type="text" id="picture" class="form-control" name="picture"
-             placeholder="Picture url here..." ngModel #pictureUrl>
-    </div>
+          <div class="form-group">
+              <input type="text" id="picture" class="form-control" name="picture"
+                     placeholder="Picture url here..." ngModel #pictureUrl>
+          </div>
 
-    <button class="btn btn-success btn-block mt-2 bouncy" type="submit" [disabled]="!postForm.valid">Post</button>
-  </div>
+          <button class="btn btn-success btn-block mt-2 bouncy" type="submit" [disabled]="!postForm.valid">Post</button>
+      </div>
 
-  <div class="preview">
-    <img *ngIf="pictureUrl.value" [src]="pictureUrl.value" class="rounded preview-image" alt="preview">
+      <div class="col-md-6">
+          <img *ngIf="pictureUrl.value" [src]="pictureUrl.value" class="rounded img-fluid" alt="preview">
+      </div>
   </div>
 
 </form>

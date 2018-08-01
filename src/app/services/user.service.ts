@@ -6,7 +6,6 @@ import {User} from '../models';
 import {SocketClient} from './SocketClient';
 import {Store} from '@ngrx/store';
 import {AppState} from '../store/app.reducers';
-import {ResetChat} from '../store/message/chat.actions';
 import {Endpoints} from '../utils/endpoints';
 
 @Injectable({
@@ -26,8 +25,11 @@ export class UserService implements OnDestroy {
     private unreadMessages = new Map<string, number>();
     onUnreadMessagesChange = new Subject<Map<string, number>>();
 
-    constructor(private apollo: Apollo, private socket: SocketClient, private store: Store<AppState>) {
-        this.userQuery = this.apollo.watchQuery<any>({ query: USERS_QUERY });
+    constructor(private apollo: Apollo, private socket: SocketClient, private store: Store<AppState>) { }
+
+    initUserList() {
+        this.getUserProfile();
+        this.userQuery = this.apollo.watchQuery<any>({query: USERS_QUERY});
         this.querySubscription = this.userQuery
             .valueChanges
             .subscribe(({data}) => {
@@ -55,19 +57,10 @@ export class UserService implements OnDestroy {
      * Called after logging in with Auth0 or when a valid token is found in the cache.
      * Can initiate user-info-dependent processes here.
      */
-    async getUserProfile() {
+    private async getUserProfile() {
         const {data} = await this.apollo.query<any>({ query: CURRENT_USER_QUERY }).toPromise();
         this.currentUser.next(data.currentUser);
         this.initSocketConnection();
-    }
-
-    /**
-     * Called when user is logged out. Cleanup processes should be called here.
-     */
-    removeUserProfile() {
-        this.currentUser.next(null);
-        this.socket.disconnect();
-        this.store.dispatch(new ResetChat());
     }
 
     getUserById(id: string): User {

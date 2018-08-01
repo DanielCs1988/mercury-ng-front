@@ -3,6 +3,7 @@ import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import {Auth0DecodedHash} from 'auth0-js';
 import {UserService} from '../services/user.service';
+import {FriendService} from '../services/friend.service';
 
 (window as any).global = window;
 
@@ -16,11 +17,12 @@ export class AuthService {
         domain: 'danielcs88.eu.auth0.com',
         responseType: 'token id_token',
         audience: 'Mercury-App',
-        redirectUri: 'http://mercury-nexus.herokuapp.com/callback',
+        redirectUri: 'http://localhost:4200/callback',
+        // redirectUri: 'http://mercury-nexus.herokuapp.com/callback',
         scope: 'openid profile'
     });
 
-    constructor(private router: Router, private userService: UserService) { }
+    constructor(private router: Router, private userService: UserService, private friendService: FriendService) { }
 
     login(): void {
         this.auth0.authorize();
@@ -31,25 +33,29 @@ export class AuthService {
             if (authResult && authResult.accessToken && authResult.idToken) {
                 window.location.hash = '';
                 this.setSession(authResult);
-                this.userService.getUserProfile();
+                this.initServices();
                 this.router.navigate(['/feed']);
             } else if (err) {
                 console.error(err);
                 alert(`Error: ${err.error}. Check the console for further details.`);
             } else {
                 if (this.isAuthenticated()) {
-                    this.userService.getUserProfile();
+                    this.initServices();
                 }
             }
         })
+    }
+
+    private initServices() {
+        this.userService.initUserList();
+        this.friendService.fetchFriendlist();
     }
 
     logout() {
         localStorage.removeItem("access_token");
         localStorage.removeItem("id_token");
         localStorage.removeItem("expires_at");
-        this.userService.removeUserProfile();
-        this.router.navigate(['/lobby']);
+        location.reload();
     }
 
     private setSession(authResult: Auth0DecodedHash) {

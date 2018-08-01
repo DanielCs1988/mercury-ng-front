@@ -29,10 +29,9 @@ export class FriendService implements OnDestroy {
 
     constructor(private apollo: Apollo, private userService: UserService, private friendshipReducer: FriendshipSubscription) {
         this.userSub = userService.currentUser.subscribe(user => this.currentUser = user);
-        this.fetchFriendlist();
     }
 
-    private fetchFriendlist() {
+    fetchFriendlist() {
         this.friendsQuery = this.apollo.watchQuery<any>({ query: FETCH_FRIENDS });
         this.friendsQuery.valueChanges.subscribe(({ data }) => {
             this.updateFriendList(data);
