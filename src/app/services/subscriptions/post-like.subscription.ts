@@ -1,7 +1,7 @@
 import {Apollo, QueryRef} from 'apollo-angular';
 import {Injectable} from '@angular/core';
 import {POST_LIKE_FRAGMENT, POST_LIKE_SUBSCRIPTION} from '../../queries/likes';
-import {Mutation} from '../../models';
+import {Like, Mutation} from '../../models';
 
 @Injectable({
     providedIn: 'root'
@@ -17,11 +17,11 @@ export class PostLikeSubscription {
         });
     }
 
-    private postLikeReducer(state, { subscriptionData }) {
+    postLikeReducer(state, { subscriptionData }) {
         if (!subscriptionData.hasOwnProperty('data')) {
             return;
         }
-        const action = subscriptionData.data.postLikeSub;
+        const action: PostLikeSubPayload = subscriptionData.data.postLikeSub;
         const updatedFeed = [...state.feed];
 
         switch (action.mutation) {
@@ -53,5 +53,17 @@ export class PostLikeSubscription {
             fragmentName: 'PostLikeParts'
         });
         return data.post.id;
+    }
+}
+
+export interface PostLikeSub {
+    data?: { postLikeSub: PostLikeSubPayload };
+}
+
+export interface PostLikeSubPayload {
+    mutation: Mutation;
+    node?: Like;
+    previousValues?: {
+        id: string;
     }
 }

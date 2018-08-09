@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {QueryRef} from 'apollo-angular';
 import {POST_SUBSCRIPTION} from '../../queries/post';
-import {Mutation} from '../../models';
+import {Mutation, Post} from '../../models';
 
 @Injectable({
     providedIn: 'root'
@@ -15,12 +15,12 @@ export class PostSubscription {
         });
     }
 
-    private postReducer(state, { subscriptionData }) {
+    postReducer(state, { subscriptionData }) {
         if (!subscriptionData.hasOwnProperty('data')) {
             // Why does this not purge the store? Throws an error if I return state, makes no sense.
             return;
         }
-        const action = subscriptionData.data.postSub;
+        const action: PostSubPayload = subscriptionData.data.postSub;
         switch (action.mutation) {
             case Mutation.CREATED:
                 return { ...state, feed: [{...action.node}, ...state.feed] };
@@ -38,5 +38,16 @@ export class PostSubscription {
                 return state;
         }
     }
+}
 
+export interface PostSub {
+    data?: { postSub: PostSubPayload };
+}
+
+export interface PostSubPayload {
+    mutation: Mutation;
+    node?: Post;
+    previousValues?: {
+        id: string;
+    }
 }

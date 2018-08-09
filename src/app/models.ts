@@ -1,33 +1,37 @@
 export interface Post {
-  id: string;
-  text: string;
-  pictureUrl: string;
-  createdAt: Date;
-  user?: User;
-  likes: Like[];
-  comments: Comment[];
+    id: string;
+    text?: string;
+    pictureUrl?: string;
+    createdAt?: Date;
+    user?: User;
+    likes?: Like[];
+    comments?: Comment[];
 }
 
 export interface Comment {
-  id: string;
-  text: string;
-  createdAt: Date;
-  user: User;
-  likes: Like[];
+    id: string;
+    text?: string;
+    createdAt?: Date;
+    user?: User;
+    likes?: Like[];
 }
 
 export interface User {
-  id: string;
-  googleId?: string;
-  givenName?: string;
-  familyName?: string;
-  pictureUrl?: string;
-  createdAt?: Date;
+    id: string;
+    googleId?: string;
+    givenName?: string;
+    familyName?: string;
+    pictureUrl?: string;
+    createdAt?: Date;
+    acceptedFriends?: Friendship[];
+    addedFriends?: Friendship[];
 }
 
 export interface Like {
-  id: string;
-  user: User;
+    id: string;
+    user: User;
+    comment?: Comment,
+    post?: Post
 }
 
 export interface Event {
@@ -72,6 +76,8 @@ export interface Friendship {
     id: string;
     createdAt: Date;
     accepted?: boolean;
+    initiator?: User;
+    target?: User;
 }
 
 export interface Profile {

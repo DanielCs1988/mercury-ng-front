@@ -91,6 +91,10 @@ export class PostService implements OnDestroy {
         }).subscribe();
     }
 
+    triggerRefetch() {
+        this.refetchNeeded.next();
+    }
+
     ngOnDestroy(): void {
         this.userSubscription.unsubscribe();
     }

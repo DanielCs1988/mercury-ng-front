@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Mutation} from '../../models';
+import {Comment, Mutation} from '../../models';
 
 @Injectable({
     providedIn: 'root'
@@ -10,7 +10,7 @@ export class CommentSubscription {
         if (!subscriptionData.hasOwnProperty('data')) {
             return;
         }
-        const action = subscriptionData.data.commentSub;
+        const action: CommentSubPayload = subscriptionData.data.commentSub;
         switch (action.mutation) {
             case Mutation.CREATED:
                 return { ...state, comments: [...state.comments, {...action.node}] };
@@ -27,5 +27,17 @@ export class CommentSubscription {
             default:
                 return state;
         }
+    }
+}
+
+export interface CommentSub {
+    data?: { commentSub: CommentSubPayload };
+}
+
+export interface CommentSubPayload {
+    mutation: Mutation;
+    node?: Comment;
+    previousValues?: {
+        id: string;
     }
 }

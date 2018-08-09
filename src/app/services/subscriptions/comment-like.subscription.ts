@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Apollo} from 'apollo-angular';
 import {COMMENT_LIKE_FRAGMENT} from '../../queries/likes';
-import {Mutation} from '../../models';
+import {Like, Mutation} from '../../models';
 
 @Injectable({
     providedIn: 'root'
@@ -16,7 +16,7 @@ export class CommentLikeSubscription {
         if (!subscriptionData.hasOwnProperty('data')) {
             return;
         }
-        const action = subscriptionData.data.commentLikeSub;
+        const action: CommentLikeSubPayload = subscriptionData.data.commentLikeSub;
         const updatedComments = [...state.comments];
 
         switch (action.mutation) {
@@ -51,5 +51,17 @@ export class CommentLikeSubscription {
             fragmentName: 'CommentLikeParts'
         });
         return data.comment.id;
+    }
+}
+
+export interface CommentLikeSub {
+    data?: { commentLikeSub: CommentLikeSubPayload };
+}
+
+export interface CommentLikeSubPayload {
+    mutation: Mutation;
+    node?: Like;
+    previousValues?: {
+        id: string;
     }
 }
