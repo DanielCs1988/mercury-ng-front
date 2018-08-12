@@ -44,17 +44,17 @@ export class EventUpdated implements Action {
 
 export class DeleteEvent implements Action {
     readonly type = ActionTypes.DELETE_EVENT;
-    constructor(public payload: string) {}
+    constructor(public payload: number) {}
 }
 
 export class EventDeleted implements Action {
     readonly type = ActionTypes.EVENT_DELETED;
-    constructor(public payload: string) {}
+    constructor(public payload: number) {}
 }
 
 export class ChangeParticipation implements Action {
     readonly type = ActionTypes.CHANGE_PARTICIPATION;
-    constructor(public payload: string) {}
+    constructor(public payload: number) {}
 }
 
 export type EventActions = FetchEvents | EventsFetched | CreateEvent | EventCreated | UpdateEvent | EventUpdated |

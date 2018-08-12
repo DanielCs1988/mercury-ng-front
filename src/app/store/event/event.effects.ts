@@ -44,7 +44,7 @@ export class EventEffects implements OnDestroy {
         tap((action: CreateEvent) => {
             const optimisticResponse = {
                 ...action.payload,
-                _id: '',
+                id: -1,
                 createdAt: new Date().getTime(),
                 organizer: this.currentUser,
                 participants: []
@@ -66,9 +66,14 @@ export class EventEffects implements OnDestroy {
         tap((action: UpdateEvent) => {
             this.store.dispatch(new EventUpdated(action.payload));
         }),
+        map((action: UpdateEvent) => ({
+            ...action, payload: {
+                ...action.payload, organizer: '', participants: []
+            }
+        })),
         switchMap((action: UpdateEvent) => {
             const event = action.payload;
-            return this.http.put<any>(`${Endpoints.EVENTS}/${event._id}`, event);
+            return this.http.put<any>(`${Endpoints.EVENTS}/${event.id}`, event);
         }),
         map(event => ({
             ...event,

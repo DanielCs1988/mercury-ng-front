@@ -41,7 +41,7 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
         this.route.params.subscribe((params: Params) => {
             this.eventSub = this.store.select('events').subscribe((eventState: EventState) => {
                 const id = params['id'];
-                this.event = eventState.events.find(event => event._id === id);
+                this.event = eventState.events.find(event => event.id === id);
             })
         });
     }
@@ -53,12 +53,12 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
 
     onDelete() {
         if (confirm('Are you sure you want to delete your event?')) {
-            this.store.dispatch(new DeleteEvent(this.event._id));
+            this.store.dispatch(new DeleteEvent(this.event.id));
         }
     }
 
     onChangeParticipation() {
-        this.store.dispatch(new ChangeParticipation(this.event._id));
+        this.store.dispatch(new ChangeParticipation(this.event.id));
     }
 
     navigateBack() {

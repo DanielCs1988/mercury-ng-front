@@ -35,7 +35,7 @@ export interface Like {
 }
 
 export interface Event {
-    _id: string;
+    id: number;
     name: string;
     description: string;
     pictureUrl?: string;
