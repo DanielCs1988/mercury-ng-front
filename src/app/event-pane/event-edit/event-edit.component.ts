@@ -28,7 +28,7 @@ export class EventEditComponent implements OnInit {
             this.editing = id !== undefined;
             if (this.editing) {
                 this.store.select('events').pipe(take(1)).subscribe((eventState: EventState) => {
-                    this.editedEvent = eventState.events.find(event => event.id === id);
+                    this.editedEvent = eventState.events.find(event => event.id == id);
                     if (this.editedEvent === undefined) {
                         this.router.navigate(['../'], {relativeTo: this.route});
                     } else {

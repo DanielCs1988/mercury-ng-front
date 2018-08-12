@@ -41,7 +41,7 @@ export class EventDetailsComponent implements OnInit, OnDestroy {
         this.route.params.subscribe((params: Params) => {
             this.eventSub = this.store.select('events').subscribe((eventState: EventState) => {
                 const id = params['id'];
-                this.event = eventState.events.find(event => event.id === id);
+                this.event = eventState.events.find(event => event.id == id);
             })
         });
     }
