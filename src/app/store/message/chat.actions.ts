@@ -48,7 +48,6 @@ export class ChangeTarget implements Action {
     constructor(public payload: string) {}
 }
 
-// Store needs a full clear when someone logs out. We wouldn't want any else to see their private message now, wouldn't we? ;)
 export class ResetChat implements Action {
     readonly type = ActionTypes.RESET_CHAT;
 }

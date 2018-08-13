@@ -3,12 +3,13 @@ import {Actions, Effect} from '@ngrx/effects';
 import {Store} from '@ngrx/store';
 import {AppState} from '../app.reducers';
 import {SocketClient} from '../../services/SocketClient';
-import {map, switchMap, tap} from 'rxjs/operators';
+import {map, switchMap, take, tap} from 'rxjs/operators';
 import {Message, User} from '../../models';
 import {Subscription} from 'rxjs';
 import {ChatState} from './chat.reducers';
 import {UserService} from '../../services/user.service';
 import {ActionTypes, MessageSent, SendMessage, FetchHistory, ReceiveMessage} from './chat.actions';
+import {Chat} from '../../utils/chat.routes';
 
 @Injectable()
 export class ChatEffects implements OnDestroy {
@@ -18,14 +19,14 @@ export class ChatEffects implements OnDestroy {
         tap((action: SendMessage) => {
             const optimisticResponse = {
                 ...action.payload,
-                id: -1,
+                _id: '',
                 from: this.currentUser.googleId,
                 createdAt: new Date().getTime()
             };
             this.store.dispatch(new MessageSent(optimisticResponse));
         }),
         switchMap((action: SendMessage) => {
-            return this.socket.sendAnd<Message>('private/send', action.payload);
+            return this.socket.sendAnd<Message>(Chat.SEND_PRIVATE_MESSAGE, action.payload);
         }),
         map(message => ({
             type: ActionTypes.MESSAGE_SENT,
@@ -36,7 +37,7 @@ export class ChatEffects implements OnDestroy {
     @Effect()
     fetchHistory = this.actions$.ofType(ActionTypes.FETCH_HISTORY).pipe(
         switchMap((action: FetchHistory) => {
-            return this.socket.sendAnd<Message[]>('private/history', action.payload);
+            return this.socket.sendAnd<Message[]>(Chat.GET_PRIVATE_HISTORY, action.payload);
         }),
         map(messages => ({
             type: ActionTypes.HISTORY_FETCHED,
@@ -63,11 +64,11 @@ export class ChatEffects implements OnDestroy {
             this.openChannels = new Set<string>(chatState.openChannels);
             this.currentTarget = chatState.target;
         });
-        this.initMessageListener();
+        this.socket.onConnect().pipe(take(1)).subscribe(() => this.initMessageListener());
     }
 
     private initMessageListener() {
-        this.chatSub = this.socket.on<Message>('private/receive').subscribe(message => {
+        this.chatSub = this.socket.on<Message>(Chat.RECEIVE_PRIVATE_MESSAGE).subscribe(message => {
             if (this.openChannels.has(message.from) && message.from !== this.currentUser.googleId) {
                 this.store.dispatch(new ReceiveMessage(message));
             }

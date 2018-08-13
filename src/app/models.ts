@@ -48,7 +48,7 @@ export interface Event {
 }
 
 export interface Message {
-    id?: number;
+    _id?: string;
     content: string;
     from?: string;
     to: string;

@@ -12,12 +12,13 @@ import {UsersGuard} from './utils/users.guard';
 import {EventEditComponent} from './event-pane/event-edit/event-edit.component';
 import {LobbyComponent} from './lobby/lobby.component';
 import {ProfileComponent} from './user-list/profile/profile.component';
+import {FriendshipGuard} from './utils/friendship.guard';
 
 const routes: Routes = [
     {path: 'lobby', component: LobbyComponent},
     {path: 'feed', component: FeedComponent, canActivate: [AuthGuard]},
     {path: 'news', component: NewsPaneComponent, canActivate: [AuthGuard]},
-    {path: 'chat/:id', component: ChatPaneComponent, canActivate: [AuthGuard, UsersGuard]},
+    {path: 'chat/:id', component: ChatPaneComponent, canActivate: [AuthGuard, UsersGuard, FriendshipGuard]},
     {path: 'profile/:id', component: ProfileComponent, canActivate: [AuthGuard, UsersGuard]},
     {path: 'events', component: EventPaneComponent, canActivate: [AuthGuard, UsersGuard], children: [
             {path: '', pathMatch: 'full', component: EventListComponent},

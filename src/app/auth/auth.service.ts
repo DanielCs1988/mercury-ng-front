@@ -5,8 +5,6 @@ import {Auth0DecodedHash} from 'auth0-js';
 import {UserService} from '../services/user.service';
 import {FriendService} from '../services/friend.service';
 
-(window as any).global = window;
-
 @Injectable({
   providedIn: 'root'
 })
@@ -17,7 +15,7 @@ export class AuthService {
         domain: 'danielcs88.eu.auth0.com',
         responseType: 'token id_token',
         audience: 'Mercury-App',
-        redirectUri: 'http://mercury-nexus.herokuapp.com/callback',
+        redirectUri: 'https://mercury-nexus.herokuapp.com/callback',
         scope: 'openid profile'
     });
 

@@ -23,8 +23,8 @@ export function chatReducer(state = defaultState, action: ChatActions) {
         case ActionTypes.MESSAGE_SENT:
             const ownMessage = action.payload;
             // Getting rid of all the optimistic UI messages if the new message is not one itself.
-            const filteredHistory = ownMessage.id !== -1 ?
-                [...state.history[ownMessage.to]].filter(msg => msg.id !== -1) :
+            const filteredHistory = ownMessage._id !== '' ?
+                [...state.history[ownMessage.to]].filter(msg => msg._id !== '') :
                 [...state.history[ownMessage.to]];
             return {
                 ...state,

@@ -7,6 +7,7 @@ import {SocketClient} from './SocketClient';
 import {Store} from '@ngrx/store';
 import {AppState} from '../store/app.reducers';
 import {Endpoints} from '../utils/endpoints';
+import {Chat} from '../utils/chat.routes';
 
 @Injectable({
     providedIn: 'root'
@@ -91,7 +92,7 @@ export class UserService implements OnDestroy {
         const token = localStorage.getItem('access_token');
         this.socket.connect(Endpoints.CHAT, token);
         if (!this.onlineUsersSub) {
-            this.onlineUsersSub = this.socket.on<string[]>('users').subscribe(users => {
+            this.onlineUsersSub = this.socket.on<string[]>(Chat.GET_USERLIST).subscribe(users => {
                 this.onlineUsers.next(new Set<string>(users));
             });
         }
