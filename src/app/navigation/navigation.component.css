@@ -3,9 +3,8 @@
 
 .btn {
   border-radius: 50%; }
-
-.icon:hover {
-  color: white; }
+  .btn:hover .icon {
+    color: white; }
 
 .nav-link {
   padding: 0;

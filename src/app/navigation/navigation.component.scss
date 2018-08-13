@@ -3,9 +3,7 @@
 }
 .btn {
     border-radius: 50%;
-}
-.icon {
-    &:hover {
+    &:hover .icon {
         color: white;
     }
 }
