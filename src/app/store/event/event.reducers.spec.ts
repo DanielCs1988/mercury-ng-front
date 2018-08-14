@@ -6,12 +6,12 @@ const person1: User = { id: 'asd', googleId: 'wasd', givenName: 'Jack', familyNa
 const person2: User = { id: '123', googleId: '456', givenName: 'Jane', familyName: 'Smith', pictureUrl: 'blah', createdAt: null };
 
 const event1: Event = {
-    _id: 'id1', name: 'name1', description: 'too lazy to write one',
+    id: 1, name: 'name1', description: 'too lazy to write one',
     createdAt: 123, startDate: 234, endDate: 345, pictureUrl: 'smh nice',
     location: 'here', organizer: person1, participants: [person1, person2]
 };
 const event2: Event = {
-    _id: 'id2', name: 'name2', description: 'still too lazy to write one',
+    id: 2, name: 'name2', description: 'still too lazy to write one',
     createdAt: 124, startDate: 235, endDate: 346, pictureUrl: 'smh nicer',
     location: 'there', organizer: person2, participants: [person2]
 };
@@ -47,7 +47,7 @@ describe('EventReducer', () => {
         it('should add new events to the store, clearing the optimistic responses ', () => {
             const defaultState = {
                 ...fromEvents.defaultState,
-                events: [{ ...event1, _id: '' }]
+                events: [{ ...event1, id: -1 }]
             };
             const expected = {
                 ...defaultState,
@@ -62,16 +62,16 @@ describe('EventReducer', () => {
         it('should add the optimistic response to the store, leaving others untouched ', () => {
             const defaultState = {
                 ...fromEvents.defaultState,
-                events: [{ ...event1, _id: '' }]
+                events: [{ ...event1, id: -1 }]
             };
             const expected = {
                 ...defaultState,
                 events: [
-                    { ...event1, _id: '' },
-                    { ...event2, _id: '' }
+                    { ...event1, id: -1 },
+                    { ...event2, id: -1 }
                 ]
             };
-            const action = new fromActions.EventCreated({ ...event2, _id: '' });
+            const action = new fromActions.EventCreated({ ...event2, id: -1 });
             const state = fromEvents.eventReducer(defaultState, action);
 
             expect(state).toEqual(expected);
@@ -110,7 +110,7 @@ describe('EventReducer', () => {
                 ...defaultState,
                 events: [event1]
             };
-            const action = new fromActions.EventDeleted(event2._id);
+            const action = new fromActions.EventDeleted(event2.id);
             const state = fromEvents.eventReducer(defaultState, action);
 
             expect(state).toEqual(expected);

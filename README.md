@@ -1,7 +1,8 @@
 # Mercury App
 
 Mercuy is a social media app using Angular 6 and 4 + 1 microservices with multiple backend technologies, 
-including my own Java microframework, Spring, NodeJS, GraphQL and Websockets.
+including my own Java microframework, Spring, NodeJS, GraphQL and Websockets. I have recently switched out
+the event API and chat API, you can find the details and the legacy repos below.
 
 1. [Social Feed](https://github.com/DanielCs1988/mercury-feed-api)
 2. [Chat](https://github.com/DanielCs1988/mercury-chat-node)
@@ -9,6 +10,10 @@ including my own Java microframework, Spring, NodeJS, GraphQL and Websockets.
 4. [News](https://github.com/DanielCs1988/mercury-news-api)
 
 +1: The Prisma API, more information below (there is no repository I can expose).
+
+Legacy repos:
+1. [Events](https://github.com/DanielCs1988/mercury-events-api): used Node Express before, switched to my own Java microframework.
+2. [Chat](https://github.com/DanielCs1988/mercury-chat-api): used my homegrown Java WebSocket server before, switched to Node Express and socket.io.
 
 ## Social Feed API
 

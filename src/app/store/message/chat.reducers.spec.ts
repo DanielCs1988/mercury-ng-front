@@ -2,8 +2,8 @@ import {Message} from '../../models';
 import * as fromActions from './chat.actions';
 import * as fromChat from './chat.reducers';
 
-const received: Message = { content: 'your stuff', to: 'me', from: 'target', createdAt: 123, id: 1 };
-const sent: Message = { content: 'my stuff', to: 'target', from: 'me', createdAt: 223, id: 2 };
+const received: Message = { content: 'your stuff', to: 'me', from: 'target', createdAt: 123, _id: 'msg01' };
+const sent: Message = { content: 'my stuff', to: 'target', from: 'me', createdAt: 223, _id: 'msg02' };
 
 describe('ChatReducer', () => {
 
@@ -39,7 +39,7 @@ describe('ChatReducer', () => {
 
     describe('MESSAGE_SENT action', () => {
         it('should add own messages to the target user\'s history, clearing optimistic responses ', () => {
-            const optimisticResponse = {...sent, id: -1};
+            const optimisticResponse = {...sent, _id: ''};
             const defaultState = {
                 ...fromChat.defaultState,
                 history: {
@@ -59,7 +59,7 @@ describe('ChatReducer', () => {
         });
 
         it('should add the optimistic response to the history without running the clearing algorithm ', () => {
-            const optimisticResponse = {...sent, id: -1};
+            const optimisticResponse = {...sent, _id: ''};
             const defaultState = {
                 ...fromChat.defaultState,
                 history: {
