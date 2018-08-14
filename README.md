@@ -22,7 +22,7 @@ database, with a [Prisma](https://www.prisma.io/docs/) ORM wrapped around it. It
 configured to handle data using GraphQL queries. It supports all the three major
 operations of the specification: queries, mutations and subscriptions. However, features such as authentication and
 caching (via Redis for example) is not possible on this level, so another API is needed to filter the information,
-providing a secure way to access it. 
+providing a secure way to access it. The server and the database are both deployed on AWS, a recent change to improve stability and performance.
 
 That is exactly what the business layer is there for. It is using [GraphQL-Yoga](https://github.com/prismagraphql/graphql-yoga), which
  is a GraphQL library based on
@@ -79,10 +79,7 @@ The project is also deployed on Heroku. A few notes if you decide to check it ou
 1. Heroku puts the servers to sleep after being idle for an hour, so you will most likely have to wait a couple of seconds for them
    to wake up. Refreshing the page may be needed. The social feed and chat API-s, as well as the Prisma will start to wake up immediately, but the events and news
    servers only do so when you click on the relevant links.
-2. One other thing Heroku does is to run out of memory with the Prisma API, sadly there is nothing I can do about that,
-   restarting it manually solves the problem though. I am migrating everything to Azure or AWS soon. Please contact me before checking it out and I can make sure it will
-   work as intended. :-)
-3. You will see a blank page initially, because the feeds are only visible to friends. Feel free to tag me, I will
+2. You will see a blank page initially, because the feeds are only visible to friends. Feel free to tag me, I will
    accept it ASAP, then you will have access to my feed.
-4. The page is using google authentication and is only asking for your basic profile info. I respect your privacy.   
+3. The page is using google authentication and is only asking for your basic profile info. I respect your privacy.   
 4. By the way, here is the [link](https://mercury-nexus.herokuapp.com/).      
