@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Comment, Mutation} from '../../models';
+import {getFixedId} from '../../utils/id.fix';
 
 @Injectable({
     providedIn: 'root'
@@ -20,9 +21,10 @@ export class CommentSubscription {
                 updatedComments[indexOfComment] = {...action.node};
                 return { ...state, comments: updatedComments };
             case Mutation.DELETED:
+                const id = getFixedId(action.previousValues.id);
                 return {
                     ...state,
-                    comments: state.comments.filter(comment => comment.id !== action.previousValues.id)
+                    comments: state.comments.filter(comment => comment.id !== id)
                 };
             default:
                 return state;

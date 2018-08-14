@@ -2,6 +2,7 @@ import {Apollo, QueryRef} from 'apollo-angular';
 import {Injectable} from '@angular/core';
 import {POST_LIKE_FRAGMENT, POST_LIKE_SUBSCRIPTION} from '../../queries/likes';
 import {Like, Mutation} from '../../models';
+import {getFixedId} from '../../utils/id.fix';
 
 @Injectable({
     providedIn: 'root'
@@ -33,7 +34,7 @@ export class PostLikeSubscription {
                 };
                 return { ...state, feed: updatedFeed };
             case Mutation.DELETED:
-                const likeId = action.previousValues.id;
+                const likeId = getFixedId(action.previousValues.id);
                 const postId = this.fetchPostId(likeId);
                 const postIndex = updatedFeed.findIndex(post => post.id === postId);
                 updatedFeed[postIndex] = {

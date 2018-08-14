@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {QueryRef} from 'apollo-angular';
 import {POST_SUBSCRIPTION} from '../../queries/post';
 import {Mutation, Post} from '../../models';
+import {getFixedId} from '../../utils/id.fix';
 
 @Injectable({
     providedIn: 'root'
@@ -30,9 +31,10 @@ export class PostSubscription {
                 updatedFeed[indexOfPost] = {...action.node};
                 return { ...state, feed: updatedFeed };
             case Mutation.DELETED:
+                const id = getFixedId(action.previousValues.id);
                 return {
                     ...state,
-                    feed: state.feed.filter(post => post.id !== action.previousValues.id)
+                    feed: state.feed.filter(post => post.id !== id)
                 };
             default:
                 return state;

@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Friendship, Mutation} from '../../models';
 import {PostService} from '../post.service';
+import {getFixedId} from '../../utils/id.fix';
 
 @Injectable({
     providedIn: 'root'
@@ -38,11 +39,12 @@ export class FriendshipSubscription {
                     }
                 };
             case Mutation.DELETED:
+                const id = getFixedId(action.previousValues.id);
                 this.postService.triggerRefetch();
                 const filteredAcceptedFriends = state.currentUser.acceptedFriends
-                    .filter(friend => friend.id !== action.previousValues.id);
+                    .filter(friend => friend.id !== id);
                 const filteredAddedFriends = state.currentUser.addedFriends
-                    .filter(friend => friend.id !== action.previousValues.id);
+                    .filter(friend => friend.id !== id);
                 return {
                     ...state,
                     currentUser: {

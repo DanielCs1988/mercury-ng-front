@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {Apollo} from 'apollo-angular';
 import {COMMENT_LIKE_FRAGMENT} from '../../queries/likes';
 import {Like, Mutation} from '../../models';
+import {getFixedId} from '../../utils/id.fix';
 
 @Injectable({
     providedIn: 'root'
@@ -28,7 +29,7 @@ export class CommentLikeSubscription {
                 };
                 return { ...state, comments: updatedComments };
             case Mutation.DELETED:
-                const likeId = action.previousValues.id;
+                const likeId = getFixedId(action.previousValues.id);
                 const commentId = this.fetchCommentId(likeId);
                 const commentIndex = updatedComments.findIndex(comment => comment.id === commentId);
                 if (commentIndex === -1) {
