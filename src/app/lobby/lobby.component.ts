@@ -12,8 +12,8 @@ export class LobbyComponent {
         GitHub: 'https://github.com/DanielCs1988',
         Frontend: 'https://github.com/DanielCs1988/mercury-ng-front',
         FeedApi: 'https://github.com/DanielCs1988/mercury-feed-api',
-        ChatApi: 'https://github.com/DanielCs1988/mercury-chat-api',
-        EventsApi: 'https://github.com/DanielCs1988/mercury-events-api',
+        ChatApi: 'https://github.com/DanielCs1988/mercury-chat-node',
+        EventsApi: 'https://github.com/DanielCs1988/mercury-events-java',
         NewsApi: 'https://github.com/DanielCs1988/mercury-news-api'
     }
 
