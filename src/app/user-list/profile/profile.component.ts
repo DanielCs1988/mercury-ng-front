@@ -62,7 +62,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
             ];
             this.profile = {
                 id: user.id, googleId: user.googleId, familyName: user.familyName, givenName: user.givenName,
-                pictureUrl: user.pictureUrl, createdAt: user.createdAt, profile: user.profile,
+                pictureUrl: user.pictureUrl, createdAt: user.createdAt, profile: {...user.profile, birthday: user.profile.birthday * 1000},
                 posts: posts.sort((a: Post, b: Post) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
                 friends: friends.sort((a: User, b: User) => a.givenName.localeCompare(b.givenName))
             };
