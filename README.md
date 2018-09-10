@@ -22,7 +22,7 @@ database, with a [Prisma](https://www.prisma.io/docs/) ORM wrapped around it. It
 configured to handle data using GraphQL queries. It supports all the three major
 operations of the specification: queries, mutations and subscriptions. However, features such as authentication and
 caching (via Redis for example) is not possible on this level, so another API is needed to filter the information,
-providing a secure way to access it. The server and the database are both deployed on AWS, a recent change to improve stability and performance.
+providing a secure way to access it.
 
 That is exactly what the business layer is there for. It is using [GraphQL-Yoga](https://github.com/prismagraphql/graphql-yoga), which
  is a GraphQL library based on
@@ -60,7 +60,7 @@ providing a personal experience from the get-go.
 
 ## The Angular App
 
-All these microservices are connected in the Angular 6 SPA. The feed API is the special case here, because it uses the
+All these microservices are connected in the Angular 6 SPA, which is hosted on Google Firebase. The feed API is the special case here, because it uses the
 GraphQL specification instead of REST, so I have chosen to work with the new [Apollo 2](https://www.apollographql.com/)
 client, also employed by New York Times. This library is integrated into Angular, and is using the Angular 6 HttpClient internally. Caching is
 handled by a datastore similar to Redux. The connection itself is split between regular HTTP for queries and mutations,
@@ -82,4 +82,4 @@ The project is also deployed on Heroku. A few notes if you decide to check it ou
 2. You will see a blank page initially, because the feeds are only visible to friends. Feel free to tag me, I will
    accept it ASAP, then you will have access to my feed.
 3. The page is using google authentication and is only asking for your basic profile info. I respect your privacy.   
-4. By the way, here is the [link](https://mercury-nexus.herokuapp.com/).      
+4. By the way, here is the [link](https://mercury-nexus.firebaseapp.com).      

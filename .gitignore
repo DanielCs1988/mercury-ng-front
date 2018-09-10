@@ -3,6 +3,12 @@
 # dependencies
 /node_modules
 
+# Production Build Folder
+/dist
+
+# Firebase Folder
+/.firebase
+
 # IDEs and editors
 /.idea
 .project
